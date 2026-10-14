@@ -14077,7 +14077,6 @@
       if (tile.effect === "collect") {
         if (!player.isCpu) {
           if (!hasCollectableMarketTile(player.id)) {
-            context.messages.push("キープ不発");
             return;
           }
           beginQuestionAction("collect", slot, context);
@@ -14086,8 +14085,6 @@
         const collected = collectMarketTileForQuestion(player.id);
         if (collected) {
           addLog(player.name + " が共有札から " + collected.name + " をキープしました。");
-        } else {
-          context.messages.push("キープ不発");
         }
         return;
       }
@@ -14508,8 +14505,6 @@
       const collected = collectMarketTileAt(index, action.playerId);
       if (collected) {
         addLog(currentPlayer().name + " が共有札から " + collected.name + " をキープしました。");
-      } else {
-        context.messages.push("キープ不発");
       }
       finishPendingQuestionAction();
     }
@@ -15255,7 +15250,6 @@
       state.selectedRotation = next.rotation;
       state.selectedHandIndex = player.isCpu ? null : next.index;
       if (!player.isCpu) {
-        state.scoreText = "キープ放出: 追加手札を続けて置けます。";
         state.scoreToastText = "";
         state.scoreToastHtml = "";
       }
@@ -16885,7 +16879,9 @@
         } else {
           state.sharedMarket.splice(placedMarketIndex, 1);
           clearMarketTileRotation(placedMarketIndex);
-          refillSharedMarket({ animate: true });
+          if (!isPopjamScoreMode()) {
+            refillSharedMarket({ animate: true });
+          }
         }
         const nextMarketIndex = findFirstClassicMarketIndex();
         state.selectedHandIndex = !player.isCpu && nextMarketIndex >= 0 ? nextMarketIndex : null;
@@ -20590,7 +20586,7 @@
         return "スワップする外周ハテナを選ぶ";
       }
       if (state.pendingAction.type === "collect") {
-        return "キープする共有札を選ぶ";
+        return "キープ発動";
       }
       if (state.pendingAction.type === "replace") {
         return "ムーブするタイルを選ぶ";

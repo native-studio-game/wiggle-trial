@@ -14149,17 +14149,17 @@
       };
 
       if (type === "delete") {
-        state.scoreText = "デリート: 盤面のタイルを1枚選びます。山札がなければ自分の追加手札になります。";
+        state.scoreText = "デリート";
       } else if (type === "swap") {
-        state.scoreText = "スワップ: 外周ハテナを2枚選んで場所を入れ替えます。";
+        state.scoreText = "スワップ";
       } else if (type === "salvage") {
-        state.scoreText = "コレクト: 他のプレイヤーの捨て札から1枚選んで盤面に置きます。";
+        state.scoreText = "コレクト";
       } else if (type === "collect") {
-        state.scoreText = "キープ: 共有札から1枚選んで、追加手札に回収します。";
+        state.scoreText = "キープ";
       } else if (type === "replace") {
-        state.scoreText = "ムーブ: 盤面のタイルを1枚選んで、別の場所へ置きなおします。";
+        state.scoreText = "ムーブ";
       } else if (type === "present") {
-        state.scoreText = "プレゼント: 手札から2枚を選び、渡す相手を選びます。";
+        state.scoreText = "プレゼント";
       }
       scheduleToastHide();
     }
@@ -14528,7 +14528,7 @@
         rotation: cell.rotation || 0,
         source: { row: row, col: col }
       });
-      state.scoreText = "ムーブ: 移動先を選んでください。";
+      state.scoreText = "ムーブ先";
       scheduleToastHide();
       render();
     }
@@ -20447,37 +20447,37 @@
       panel.appendChild(title);
 
       if (action.type === "delete") {
-        title.textContent = "盤面からデリートするタイルを選んでください";
+        title.textContent = "デリートするタイルを選ぶ";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "山札があれば山札の下へ、山札がなければ自分の追加手札になります。";
+        note.textContent = "山札があれば下へ、なければ自分の追加手札になります。";
         panel.appendChild(note);
       } else if (action.type === "swap") {
-        title.textContent = "外周ハテナを2枚選んでください";
+        title.textContent = "入れ替える2つを選ぶ";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "選んだ2か所のハテナの場所を入れ替えます。";
+        note.textContent = "選んだ2つの位置が入れ替わります。";
         panel.appendChild(note);
       } else if (action.type === "salvage") {
         title.textContent = "他プレイヤーの捨て札から1枚選んでください";
         renderSalvageChoices(panel);
       } else if (action.type === "collect") {
-        title.textContent = "共有札からキープするタイルを選んでください";
+        title.textContent = "共有札から1枚キープ";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "回収したタイルは、自分の手番で追加手札として使えます。";
+        note.textContent = "次の自分の手番で追加手札として使えます。";
         panel.appendChild(note);
       } else if (action.type === "replace") {
-        title.textContent = "ムーブする盤面タイルを選んでください";
+        title.textContent = "ムーブするタイルを選ぶ";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "選んだタイルを別の場所へ置きなおします。";
+        note.textContent = "別の場所へ置きなおします。";
         panel.appendChild(note);
       } else if (action.type === "replace-place") {
-        title.textContent = "ムーブ先を選んでください";
+        title.textContent = "ムーブ先を選ぶ";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "回転してから、通常ルールで置ける空きマスへ移動できます。";
+        note.textContent = "回転してから、置ける空きマスへ移せます。";
         panel.appendChild(note);
       } else if (action.type === "salvage-place") {
         title.textContent = "選んだタイルを盤面に置いてください";

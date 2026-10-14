@@ -2029,6 +2029,8 @@
       opacity: 0.5;
     }
 
+    .ghost-preview.spare-preview { opacity: 0.4; }
+
     .ghost-preview img {
       width: 100%;
       height: 100%;
@@ -15969,7 +15971,7 @@
     function clearAllPlacementPreviews(exceptNode) {
       const placementAssist = currentPlacementAssistMode();
       clearPlacementFeedback();
-      document.querySelectorAll(".ghost-preview").forEach(function (ghost) {
+      document.querySelectorAll(".ghost-preview:not(.spare-preview)").forEach(function (ghost) {
         if (!exceptNode || !exceptNode.contains(ghost)) {
           ghost.remove();
         }
@@ -18867,6 +18869,20 @@
         }
         if (state.pendingAction && state.pendingAction.type === "replace-place") {
           cell.classList.add("salvage-placeable");
+        }
+        // 手札・共有札のタイルを選んでいるとき、置ける空きマスに半透明の予備配置を出す
+        if (!boardTile && !state.pendingAction && !hasPendingQuestionEffects()) {
+          const spareTile = selectedPlacementTile();
+          if (spareTile) {
+            const spare = document.createElement("div");
+            spare.className = "ghost-preview spare-preview";
+            const spareImg = document.createElement("img");
+            spareImg.src = tilePath + displayTileSrc(spareTile, { forceFace: true });
+            spareImg.alt = "";
+            applyRotationStyle(spareImg, state.selectedRotation, null);
+            spare.appendChild(spareImg);
+            cell.appendChild(spare);
+          }
         }
       } else if (!boardTile && showPlacementCandidates) {
         cell.classList.add("blocked");

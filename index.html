@@ -8817,33 +8817,208 @@
       gap: 10px;
     }
 
-    /* 勝敗リボン: 盤面の中央に大きく表示（元の見た目を復元） */
-    .deal-result-ribbon:not([hidden]) {
+    .deal-result-ribbon {
       position: absolute;
-      left: 50%;
+      z-index: 34;
       top: 50%;
+      left: 50%;
+      right: auto;
+      width: min(88%, 520px);
+      display: inline-grid;
+      place-items: center;
+      min-height: 52px;
+      padding: 10px 18px;
+      border: 0;
+      background:
+        linear-gradient(90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.64) 16%,
+          rgba(255, 255, 255, 0.76) 50%,
+          rgba(255, 255, 255, 0.64) 84%,
+          rgba(255, 255, 255, 0) 100%);
+      color: #0f172a;
+      font-size: clamp(24px, 4.2vw, 44px);
+      font-weight: 950;
+      line-height: 1;
+      letter-spacing: 0;
       transform: translate(-50%, -50%);
-      z-index: 6;
-      width: min(86%, 520px);
-      box-sizing: border-box;
-      padding: 18px 22px;
-      border-radius: 22px;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.94);
-      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .deal-result-ribbon::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(105deg,
+          rgba(239, 68, 68, 0) 0%,
+          rgba(239, 68, 68, 0.13) 28%,
+          rgba(14, 165, 233, 0.14) 48%,
+          rgba(245, 205, 66, 0.16) 68%,
+          rgba(239, 68, 68, 0) 100%);
+      background-size: 220% 100%;
+      opacity: 0.85;
+      animation: result-ribbon-wave 2600ms ease-in-out infinite alternate;
       pointer-events: none;
     }
-    .deal-result-ribbon:not([hidden]) strong {
-      display: block;
-      font-size: clamp(34px, 9vw, 60px);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: 0.04em;
-      color: #d6453d;
+
+    .deal-result-ribbon strong {
+      position: relative;
+      z-index: 1;
+      background:
+        linear-gradient(100deg, #0f172a 0%, #0f172a 34%, #3b5578 48%, #0f172a 62%, #0f172a 100%);
+      background-size: 240% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: result-title-wave 3000ms ease-in-out infinite alternate;
     }
-    .deal-result-ribbon.win:not([hidden]) strong { color: #0b7d52; }
-    .deal-result-ribbon.draw:not([hidden]) strong { color: #3b4a5f; }
-    .deal-result-ribbon.tiebreak-result-ribbon:not([hidden]) strong { font-size: clamp(28px, 7vw, 44px); }
+
+    .deal-result-ribbon.lose {
+      background:
+        linear-gradient(90deg,
+          rgba(255, 248, 248, 0) 0%,
+          rgba(255, 248, 248, 0.66) 16%,
+          rgba(255, 248, 248, 0.78) 50%,
+          rgba(255, 248, 248, 0.66) 84%,
+          rgba(255, 248, 248, 0) 100%);
+    }
+
+    .deal-result-ribbon.score-result-ribbon {
+      width: min(88%, 520px);
+      min-height: 58px;
+      padding: 10px 18px;
+    }
+
+    .deal-result-ribbon.score-result-ribbon strong {
+      font-size: clamp(24px, 4.2vw, 44px);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .deal-result-ribbon.score-result-ribbon.draw {
+      width: min(92%, 660px);
+      min-height: 122px;
+      padding-block: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .deal-result-ribbon .result-rows.result-score-rows {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+      width: min(210px, 100%);
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .deal-result-ribbon .result-score-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 12px;
+      min-height: 24px;
+    }
+
+    .deal-result-ribbon .result-score-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .deal-result-ribbon .result-score-points {
+      min-width: 28px;
+      text-align: right;
+      font-size: 19px;
+      font-weight: 950;
+      color: #0f172a;
+    }
+
+    .deal-result-ribbon .result-score-detail {
+      grid-column: 1 / -1;
+      margin-top: -2px;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .deal-result-ribbon .tiebreak {
+      width: min(560px, 100%);
+      margin-top: 2px;
+      padding-top: 7px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.55);
+      color: #5f4d2c;
+      font-size: 11px;
+      font-weight: 850;
+      text-align: left;
+    }
+
+    .deal-result-ribbon .tiebreak .tb-head {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .deal-result-ribbon .tiebreak .tb-row {
+      margin: 2px 0;
+    }
+
+    .deal-result-ribbon .tiebreak .tb-value,
+    .deal-result-ribbon .tiebreak .tb-result {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .deal-result-ribbon .tiebreak .tb-player-name {
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .deal-result-ribbon .tiebreak .tb-player-name.red { color: var(--red); }
+    .deal-result-ribbon .tiebreak .tb-player-name.yellow {
+      color: #d6a800;
+      text-shadow: 0 1px 1px rgba(23, 18, 8, 0.15);
+    }
+    .deal-result-ribbon .tiebreak .tb-player-name.blue { color: var(--blue); }
+    .deal-result-ribbon .tiebreak .tb-player-name.green { color: var(--green); }
+
+    .deal-result-ribbon[hidden] {
+      display: none !important;
+    }
+
+    body.view-mobile .deal-result-ribbon {
+      min-height: 45px;
+      padding-inline: 14px;
+      font-size: 28px;
+    }
+
+    body.view-mobile .deal-result-ribbon.score-result-ribbon {
+      width: min(92%, 420px);
+      min-height: 54px;
+      padding: 10px 16px;
+    }
+
+    body.view-mobile .deal-result-ribbon.score-result-ribbon.draw {
+      min-height: 116px;
+      font-size: 13px;
+    }
+
+    body.view-mobile .deal-result-ribbon.score-result-ribbon strong {
+      font-size: 28px;
+    }
 
     .board-result-overlay {
       inset: 0;

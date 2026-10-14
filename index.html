@@ -10712,6 +10712,23 @@
   .inline-confirm-actions { display: flex; flex: 0 0 auto; gap: 6px; }
   .inline-confirm-actions button { min-height: 30px; padding: 4px 12px; border-radius: 999px; border: 1px solid #94a3b8; background: #ffffff; color: #1f2937; font-size: 13px; font-weight: 700; line-height: 1; cursor: pointer; }
   .inline-confirm-actions button.inline-confirm-yes { background: #1f2937; border-color: #1f2937; color: #ffffff; }
+  main.app { position: relative; }
+  body .topbar { display: none !important; }
+  #titleScreen { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 16px; background: #f4f6f8; }
+  #titleScreen[hidden] { display: none; }
+  .title-card { width: min(86vw, 320px); background: #ffffff; border-radius: 22px; padding: 28px 22px; box-shadow: 0 12px 28px rgba(15,23,42,0.14); display: flex; flex-direction: column; gap: 18px; text-align: center; }
+  .title-logo { margin: 0; font-size: 40px; font-weight: 800; color: #1f2937; }
+  .title-mode { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+  #titleScreen #modeSelect { width: 100%; font-size: 16px; padding: 10px 12px; border-radius: 12px; }
+  body #titleScreen .title-card #newGameButton { display: flex; justify-content: center; position: static; width: 100%; min-width: 0; max-width: none; height: auto; min-height: 0; padding: 14px; margin: 0; border: 0; border-radius: 999px; background: #1f2937; color: #ffffff; font-size: 18px; font-weight: 800; line-height: 1.2; overflow: visible; text-indent: 0; }
+  body #titleScreen .title-card #newGameButton::before, body #titleScreen .title-card #newGameButton::after { content: none !important; display: none !important; }
+  .corner-controls { position: absolute; top: 6px; right: 6px; display: flex; gap: 8px; z-index: 6; }
+  body #cornerControls .corner-button { width: 34px; height: 34px; min-height: 0; padding: 0; margin: 0; border-radius: 50%; border: 1px solid #d1d5db; background: #ffffff; color: #374151; box-shadow: 0 2px 6px rgba(15,23,42,0.12); font-size: 16px; font-weight: 800; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; cursor: pointer; }
+  body #cornerControls .corner-button::before, body #cornerControls .corner-button::after { content: none !important; display: none !important; }
+  body #cornerControls #settingsButton span { display: block; width: 14px; height: 2px; background: #374151; border-radius: 2px; }
+  .settings-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .settings-actions + .button-row { margin-top: 14px; }
+  .settings-actions button { padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 700; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -10724,31 +10741,42 @@
 </head>
 <body>
   <div class="deal-animation-layer" id="dealAnimationLayer"></div>
+    <section class="title-screen" id="titleScreen" aria-label="はじめる">
+    <div class="title-card">
+      <h1 class="title-logo">Wiggle</h1>
+      <label class="title-mode">
+        <span class="label">モード</span>
+          <select id="modeSelect" title="モード">
+            <option value="classic">クラシック</option>
+            <option value="popjamScoreOpen">ポップジャム</option>
+            <!-- 内部モード（フリーダム / クラシックBT）はメニューに出さず、?mode= 指定時のみ init で追加 -->?
+          </select>
+      </label>
+  <button type="button" id="newGameButton" class="primary" title="開始">▶ 開始</button>
+    </div>
+  </section>
   <main class="app">
+    <div class="corner-controls" id="cornerControls">
+      <button type="button" id="guideCornerButton" class="corner-button" title="ガイドを見る" aria-label="ガイドを見る">?</button>
+      <button type="button" id="settingsButton" class="corner-button" title="設定" aria-label="設定" aria-haspopup="dialog" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
     <header class="topbar">
       <div class="title">
         <h1>Wiggle</h1>
       </div>
       <div class="controls">
         <button type="button" id="goalButton" class="settings-button help-button" title="目標・説明" aria-haspopup="dialog" aria-expanded="false">?</button>
-        <select id="modeSelect" title="モード">
-          <option value="classic">クラシック</option>
-          <option value="popjamScoreOpen">ポップジャム</option>
-          <!-- 内部モード（フリーダム / クラシックBT）はメニューに出さず、?mode= 指定時のみ init で追加 -->?
-        </select>
         <select id="playerCountSelect" title="人数" hidden aria-hidden="true">
           <option value="cpu2">1人 + CPU</option>
           <option value="cpu3">1人 + CPU2人</option>
           <option value="2">2人</option>
           <option value="3">3人</option>
         </select>
-        <button type="button" id="newGameButton" class="primary" title="開始">▶ 開始</button>
         <button type="button" id="undoButton" class="icon-button" title="戻す" hidden disabled>↶</button>
         <button type="button" id="resetButton" title="リセット">⟳ リセット</button>
         <button type="button" id="settingsButtonMobile" class="settings-button mobile-settings-button" title="設定" aria-haspopup="dialog" aria-expanded="false">⚙ 設定</button>
       </div>
       <div class="utility-controls">
-        <button type="button" id="settingsButton" class="settings-button" title="設定" aria-haspopup="dialog" aria-expanded="false">⚙ 設定</button>
       </div>
     </header>
     <div class="layout">
@@ -10976,8 +11004,24 @@
           </select>
         </label>
       </div>
+      <div class="settings-actions">
+        <button type="button" id="settingsGoalButton">目標・説明を見る</button>
+        <button type="button" id="settingsResetButton">リセット</button>
+        <button type="button" id="settingsBackToTitleButton">モード選択に戻る</button>
+      </div>
       <div class="button-row">
         <button type="button" class="primary" id="settingsCloseButton">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-backdrop" id="backToTitleDialog" hidden role="dialog" aria-modal="true" aria-labelledby="backToTitleTitle">
+    <div class="confirm-dialog">
+      <h2 id="backToTitleTitle">モード選択に戻りますか？</h2>
+      <p class="note">今の対戦は終了します。</p>
+      <div class="button-row">
+        <button type="button" id="backToTitleNo">いいえ</button>
+        <button type="button" class="primary" id="backToTitleYes">はい</button>
       </div>
     </div>
   </div>
@@ -12302,6 +12346,8 @@
       closeCompletionConfirm();
       clearMobilePlacementConfirm();
       pushHistory();
+      const titleScreenEl = document.getElementById("titleScreen");
+      if (titleScreenEl) { titleScreenEl.hidden = true; }
       const setupConfig = getSetupConfig();
       state.mode = setupConfig.mode;
       state.cpuEnabled = setupConfig.cpuEnabled;
@@ -22059,6 +22105,34 @@
       }
     }
 
+    function returnToTitle() {
+      closeCompletionConfirm();
+      clearMobilePlacementConfirm();
+      inlineConfirm = null;
+      state.started = false;
+      document.getElementById("backToTitleDialog").hidden = true;
+      document.getElementById("titleScreen").hidden = false;
+      render();
+    }
+    document.getElementById("guideCornerButton").addEventListener("click", function () {
+      startGuide();
+    });
+    document.getElementById("settingsGoalButton").addEventListener("click", function () {
+      closeSettingsDialog(false);
+      openGoalDialog();
+    });
+    document.getElementById("settingsResetButton").addEventListener("click", function () {
+      closeSettingsDialog(false);
+      elements.resetButton.click();
+    });
+    document.getElementById("settingsBackToTitleButton").addEventListener("click", function () {
+      closeSettingsDialog(false);
+      document.getElementById("backToTitleDialog").hidden = false;
+    });
+    document.getElementById("backToTitleNo").addEventListener("click", function () {
+      document.getElementById("backToTitleDialog").hidden = true;
+    });
+    document.getElementById("backToTitleYes").addEventListener("click", returnToTitle);
     elements.settingsButton.addEventListener("click", openSettingsDialog);
     if (elements.settingsButtonMobile) {
       elements.settingsButtonMobile.addEventListener("click", openSettingsDialog);
@@ -22133,7 +22207,6 @@
       state.lifeReturnRule = setupConfig.lifeReturnRule || "none";
       state.playerCount = setupConfig.playerCount;
       renderCompletionControls();
-      setupGame();
     });
     elements.playerCountSelect.addEventListener("change", function () {
       const setupConfig = getSetupConfig();
@@ -26350,7 +26423,7 @@
     resetGame(false);
     trackPageViewOnce();
 
-    if (initialParams.get("autostart") !== "0") {
+    if (initialParams.get("autostart") === "1") {
       setupGame();
     }
   </script>

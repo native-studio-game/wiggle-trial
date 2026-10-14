@@ -10729,6 +10729,10 @@
   .settings-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
   .settings-actions + .button-row { margin-top: 14px; }
   .settings-actions button { padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 700; }
+  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 275px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
+  body.view-mobile.mode-popjam-score .board { width: 100%; min-width: 0; }
+  body.view-mobile main.app { padding-top: 44px; }
+  body #cornerControls { top: 4px; right: 8px; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>

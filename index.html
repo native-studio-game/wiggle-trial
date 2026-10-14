@@ -19173,6 +19173,8 @@
       if (!tile) {
         return;
       }
+      // 候補をタップ/ホバーした時の表示に切り替えるので、予備配置は消す（次の描画で戻る）
+      document.querySelectorAll(".spare-preview").forEach(function (spare) { spare.remove(); });
       clearAllPlacementPreviews(cell);
       clearGhost(cell);
       const rotation = state.pendingAction && state.pendingAction.type === "replace-place"

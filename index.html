@@ -10729,7 +10729,7 @@
   .settings-actions + .button-row { margin-top: 14px; }
   .settings-actions button { padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 700; }
   body.view-mobile.mode-popjam-score .board { width: 100%; min-width: 0; }
-  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 330px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
+  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 370px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
   .corner-controls { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
   body #cornerControls .corner-button { position: absolute; pointer-events: auto; width: 30px; height: 30px; top: calc(8px + (100% - 16px) / 14 - 15px); }
   body #cornerControls #guideCornerButton { left: calc(8px + (100% - 16px) / 14 - 15px); right: auto; }
@@ -10751,15 +10751,18 @@
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto !important; }
   body.view-mobile.mode-popjam-score .layout { align-content: start !important; height: auto !important; }
   body.view-mobile.mode-popjam-score .play-area { align-content: start !important; }
-  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 330px)) auto !important; }
-  body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 330px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 330px)) !important; aspect-ratio: auto !important; }
-  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 330px)) 60px auto !important; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 370px)) auto !important; }
+  body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 370px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 370px)) !important; aspect-ratio: auto !important; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 370px)) 60px auto !important; }
   body.view-mobile.mode-popjam-score .board-instruction { margin: 2px 0 2px !important; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel { display: flex !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel > strong { font-size: 14px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
   body.view-mobile.mode-popjam-score .board-instruction #instructionBody { width: 100%; }
   body.view-mobile.mode-popjam-score .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img { outline: none !important; }
+  .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
+  body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }
+  body.view-mobile.mode-popjam-score .hand-tile.selected { border-radius: 4px !important; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -10806,6 +10809,10 @@
       <div class="utility-controls">
       </div>
     </header>
+    <div class="corner-controls" id="cornerControls">
+  <button type="button" id="guideCornerButton" class="corner-button" title="ガイドを見る" aria-label="ガイドを見る">?</button>
+  <button type="button" id="settingsButton" class="corner-button" title="設定" aria-label="設定" aria-haspopup="dialog" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
     <div class="layout">
       <section class="play-area">
         <div class="inline-confirm" id="inlineConfirm" hidden></div>
@@ -10829,10 +10836,6 @@
         </div>
 
         <div class="board-wrap" id="boardWrap">
-      <div class="corner-controls" id="cornerControls">
-        <button type="button" id="guideCornerButton" class="corner-button" title="ガイドを見る" aria-label="ガイドを見る">?</button>
-        <button type="button" id="settingsButton" class="corner-button" title="設定" aria-label="設定" aria-haspopup="dialog" aria-expanded="false"><span></span><span></span><span></span></button>
-      </div>
           <div class="notification-lane" id="notificationLane" aria-live="polite">
             <div class="score-toast" id="scoreToast" hidden></div>
           </div>

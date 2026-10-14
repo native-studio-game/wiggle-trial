@@ -2773,7 +2773,6 @@
       background: rgba(35, 122, 87, 0.18);
       box-shadow: 0 0 0 4px rgba(35, 122, 87, 0.14), 0 10px 28px rgba(15, 23, 42, 0.12);
     }
-    body[data-placement-assist="simple"] .bl-ghost-armed,
     body[data-placement-assist="off"] .bl-ghost-armed {
       background: transparent;
       box-shadow: none;
@@ -10635,7 +10634,6 @@
           <span class="label">配置サポート</span>
           <select id="placementAssistSelect" title="配置サポート">
             <option value="off">OFF</option>
-            <option value="simple">簡易</option>
             <option value="on" selected>ON</option>
           </select>
         </label>
@@ -11695,7 +11693,7 @@
 
     function currentPlacementAssistMode() {
       const selected = elements.placementAssistSelect ? elements.placementAssistSelect.value : "off";
-      return ["on", "simple", "off"].indexOf(selected) >= 0 ? selected : "off";
+      return ["on", "off"].indexOf(selected) >= 0 ? selected : "off";
     }
 
     // 選択中モードに合わせて人数の選択肢を入れ替える（以前の選択は可能なら維持）。
@@ -25890,8 +25888,9 @@
       elements.viewModeSelect.value = "mobile";
     }
     const storedPlacementAssist = safeStorageGet(window.localStorage, "wiggle_placement_assist");
-    const initialPlacementAssist = initialParams.get("assist") || storedPlacementAssist || "on";
-    if (elements.placementAssistSelect && ["on", "simple", "off"].indexOf(initialPlacementAssist) >= 0) {
+    const requestedPlacementAssist = initialParams.get("assist") || storedPlacementAssist || "on";
+    const initialPlacementAssist = requestedPlacementAssist === "simple" ? "on" : requestedPlacementAssist;
+    if (elements.placementAssistSelect && ["on", "off"].indexOf(initialPlacementAssist) >= 0) {
       elements.placementAssistSelect.value = initialPlacementAssist;
     }
 

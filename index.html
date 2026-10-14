@@ -10330,8 +10330,14 @@
   body.view-mobile.mode-popjam-score .layout { padding-top: 6px !important; }
   /* 選んだ（確定候補の）タイルは、選べる対象のオレンジから濃い枠に変える。手札の選択と同じ濃い色 */
   .external-question.swap-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
-  .question-head { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-  .question-skip-button { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 700; }
+  body.view-mobile.mode-popjam-score .board-instruction { padding: 3px 12px !important; }
+  body.view-mobile.mode-popjam-score .board-instruction .action-target-panel { padding: 1px 0 !important; }
+  body.view-mobile .question-skip-button { font-size: 11px !important; padding: 4px 8px !important; line-height: 1.2 !important; }
+  .question-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .question-text { flex: 1 1 auto; min-width: 0; text-align: left; }
+  .question-text > strong { display: block; margin: 0; line-height: 1.3; }
+  .question-text .label, .question-text .note { display: block; margin: 0; font-size: 11px; line-height: 1.3; }
+  .question-skip-button { flex: 0 0 auto; white-space: nowrap; font-size: 11px; padding: 3px 7px; line-height: 1.2; border-radius: 999px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 700; }
   .hand-tile.collect-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
   /* 描画の優先順（上ほど前面）:
      得点マーカー 12 > 選択・効果元のハテナ枠 8 > ハテナ枠 4 > 盤面の演出オーバーレイ 2 > 盤面タイル */
@@ -19409,16 +19415,25 @@
       });
       // 発動したハテナ名を見出しの前に付けて、なぜこの操作が出ているかを示す。
       if (["swap", "collect", "replace"].indexOf(action.type) !== -1) {
+        // 左に見出しと説明、右に「使わず進める」を置く
         const head = document.createElement("div");
         head.className = "question-head";
-        panel.insertBefore(head, title);
-        head.appendChild(title);
+        const textBox = document.createElement("div");
+        textBox.className = "question-text";
+        Array.from(panel.children).forEach(function (child) {
+          if (child !== title && (child.classList.contains("label") || child.classList.contains("note"))) {
+            textBox.appendChild(child);
+          }
+        });
+        textBox.insertBefore(title, textBox.firstChild);
+        head.appendChild(textBox);
         const skip = document.createElement("button");
         skip.type = "button";
         skip.className = "question-skip-button";
         skip.textContent = "使わず進める";
         skip.addEventListener("click", skipPendingQuestionAction);
         head.appendChild(skip);
+        panel.insertBefore(head, panel.firstChild);
       }
       if (questionEffectFocus && questionEffectFocus.name && title.textContent.indexOf("発動") === -1
         && (questionEffectFocus.actionType === undefined || questionEffectFocus.actionType === action.type)) {

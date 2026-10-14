@@ -16355,9 +16355,6 @@
     }
 
     function tileEdgeMatchesQuestionSlot(tile, rotation, edge, slot) {
-      if (!isPopjamScoreTestMode()) {
-        return true;
-      }
       if (!isQuestionColorMatchSlot(slot)) {
         return true;
       }
@@ -16371,7 +16368,7 @@
     }
 
     function fixedQuestionEdgeIssue(row, col, tile, rotation) {
-      if (!isPopjamScoreTestMode() || !tile) {
+      if (!tile) {
         return "";
       }
       const checks = placementEdgeChecks(row, col);

@@ -133,14 +133,6 @@
       min-width: 0;
     }
 
-    .kicker {
-      margin: 0 0 2px;
-      color: #87691e;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-    }
-
     h1 {
       margin: 0;
       font-size: clamp(28px, 3.2vw, 40px);
@@ -180,47 +172,13 @@
       padding-right: 2px;
     }
 
-    .message-bar {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px 14px;
-      background: var(--panel);
-    }
-
-    .side .message-bar {
-      grid-template-columns: 1fr;
-      align-items: stretch;
-    }
-
     .side .instruction-panel {
       grid-column: 1 / -1;
-    }
-
-    .side .message-bar .label {
-      margin-bottom: 5px;
     }
 
     .side .main-info-value {
       min-height: 0;
       font-size: 18px;
-    }
-
-    .side .scoreline {
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    .side .score-pills {
-      display: grid;
-      grid-template-columns: 1fr;
-    }
-
-    .side .scoreline .score-pill {
-      justify-content: space-between;
     }
 
     .main-info-value {
@@ -230,51 +188,6 @@
       font-weight: 900;
       line-height: 1.25;
       white-space: normal;
-    }
-
-    .scoreline {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: 7px 10px;
-      align-items: center;
-      font-size: clamp(20px, 2.4vw, 30px);
-      line-height: 1.1;
-    }
-
-    .score-lead {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      border-radius: 999px;
-      padding: 5px 10px;
-      background: #2f3338;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 950;
-      white-space: nowrap;
-    }
-
-    .score-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      min-width: 0;
-    }
-
-    .scoreline .score-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border-radius: 999px;
-      padding: 4px 10px;
-      background: rgba(255, 255, 255, 0.68);
-      box-shadow: inset 0 0 0 1px rgba(32, 36, 42, 0.12);
-      font-size: 17px;
-    }
-
-    .scoreline .score-pill.current {
-      background: #fffdfa;
-      box-shadow: inset 0 0 0 2px rgba(32, 36, 42, 0.72);
     }
 
     .debug-status {
@@ -771,32 +684,7 @@
     }
 
     /* 完成した色と点数 → 得点欄へ飛ぶスコアポップ */
-    .score-fly-pop {
-      position: fixed;
-      left: 0;
-      top: 0;
-      display: inline-grid;
-      place-items: center;
-      min-width: 42px;
-      height: 34px;
-      padding: 0 12px;
-      border: 2px solid rgba(255, 255, 255, 0.72);
-      border-radius: 999px;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 950;
-      line-height: 1;
-      letter-spacing: 0;
-      box-shadow: 0 8px 18px rgba(38, 32, 20, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.28);
-      opacity: 0;
-      z-index: 60;
-      animation: score-pop-fly 720ms cubic-bezier(0.3, 0.7, 0.2, 1) forwards;
-      animation-delay: var(--delay, 0ms);
-    }
-    .score-fly-pop.red { background: #ef4444; }
-    .score-fly-pop.yellow { background: #f5c542; color: #fff; text-shadow: 0 1px 1px rgba(23, 18, 8, 0.35); }
-    .score-fly-pop.blue { background: #0ea5e9; }
-    .score-fly-pop.green { background: #4cc33f; }
+
     .score-marker .bonus-line,
     .score-fly-pop .bonus-line,
     .bl-score-marker .bonus-line {
@@ -1046,22 +934,6 @@
       color: #0f172a;
     }
 
-    .board-result-card .result-score-outcome {
-      justify-self: end;
-      border-radius: 999px;
-      padding: 3px 7px;
-      font-size: 10px;
-      font-weight: 950;
-      line-height: 1;
-      white-space: nowrap;
-      color: #fff;
-      background: #237a57;
-    }
-
-    .board-result-card .result-score-outcome.lose {
-      background: #c84242;
-    }
-
     .cell {
       position: relative;
       aspect-ratio: 1;
@@ -1158,10 +1030,6 @@
 
     .external-question.just-revealed img {
       animation: question-reveal 420ms cubic-bezier(0.18, 0.9, 0.2, 1.05);
-    }
-
-    .external-question.action-used img {
-      opacity: 0.78;
     }
 
     .external-question.pending-effect img,
@@ -1373,19 +1241,6 @@
       color: #9f3434;
     }
 
-    .current-turn-badge {
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
-      justify-self: end;
-      border-radius: 999px;
-      padding: 5px 10px;
-      background: #2f3338;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
     .button-row {
       display: flex;
       flex-wrap: wrap;
@@ -1583,18 +1438,6 @@
       background: var(--green);
     }
 
-    .turn-icon {
-      display: inline-grid;
-      place-items: center;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #20242a;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 900;
-    }
-
     .turn-radio {
       --turn-radio-color: #1f7a5b;
       --turn-radio-glow: rgba(31, 122, 91, 0.28);
@@ -1717,10 +1560,6 @@
       gap: 6px;
     }
 
-    .player-stats.compact-score {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .mini-stat {
       border-radius: 8px;
       padding: 6px;
@@ -1728,14 +1567,6 @@
       text-align: center;
       font-size: 12px;
       font-weight: 800;
-    }
-
-    .pending-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 8px;
-      min-height: 28px;
     }
 
     .small-tile {
@@ -1906,10 +1737,6 @@
         padding: 7px;
       }
 
-      .kicker {
-        display: none;
-      }
-
       h1 {
         font-size: 28px;
       }
@@ -1936,14 +1763,6 @@
         grid-template-columns: repeat(5, 1fr);
         width: min(86vw, calc(100dvh - 420px));
         min-width: min(250px, 86vw);
-      }
-
-      .scoreline {
-        grid-template-columns: 1fr;
-      }
-
-      .score-lead {
-        width: fit-content;
       }
 
       .play-area {
@@ -2042,10 +1861,6 @@
         padding: 6px 10px;
       }
 
-      .kicker {
-        font-size: 10px;
-      }
-
       h1 {
         font-size: 32px;
       }
@@ -2110,11 +1925,6 @@
                  marker-fade 600ms ease-in 2200ms both;
     }
 
-    .score-marker.score-marker-static {
-      animation: none;
-      opacity: 1;
-    }
-
     @keyframes marker-pop {
       0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
       70% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
@@ -2124,11 +1934,6 @@
     @keyframes marker-fade {
       0% { opacity: 1; }
       100% { opacity: 0; }
-    }
-
-    .score-marker .marker-sym {
-      margin-right: 3px;
-      font-size: 11px;
     }
 
     /* 完成した模様マスのグロー */
@@ -2201,10 +2006,6 @@
     .cell.tile-drop img,
     .bl-tile.tile-drop img {
       animation: tile-drop 420ms cubic-bezier(0.2, 0.9, 0.25, 1.05);
-    }
-
-    .cell.start-auto-place img {
-      animation: start-place 700ms cubic-bezier(0.18, 0.9, 0.2, 1.05);
     }
 
     @keyframes tile-drop {
@@ -2355,20 +2156,6 @@
       display: none;
     }
 
-    .toggle-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      font-size: 13px;
-      font-weight: 800;
-      color: #5d4e2e;
-    }
-
-    .toggle-row input {
-      width: auto;
-      margin: 0;
-    }
-
     .settings-button {
       min-width: 94px;
     }
@@ -2401,22 +2188,6 @@
       color: #4b5563;
       font-size: 12px;
       font-weight: 800;
-    }
-
-    .settings-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-weight: 850;
-    }
-
-    .settings-toggle input {
-      width: 22px;
-      height: 22px;
-      min-height: 0;
-      margin: 0;
-      box-shadow: none;
     }
 
     /* ===== ポップジャム: 川・放出UI ===== */
@@ -2614,17 +2385,6 @@
     }
 
     /* 川（麻雀の河のように一列に並べて捨てる） */
-    .river-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 3px;
-      margin-top: 8px;
-      padding: 6px;
-      min-height: 30px;
-      border-radius: 8px;
-      background: #efe6d2;
-      box-shadow: inset 0 0 0 1px rgba(120, 100, 60, 0.25);
-    }
 
     .river-empty {
       color: #9a8a66;
@@ -2662,51 +2422,6 @@
       padding: 0;
       background: transparent;
       box-shadow: none;
-    }
-
-    .hand-count-visual {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 8px;
-      padding: 7px;
-      border-radius: 9px;
-      background: #f3ecda;
-      box-shadow: inset 0 0 0 1px rgba(120, 100, 60, 0.2);
-    }
-
-    .hand-count-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 3px;
-      flex: 1;
-      min-height: 30px;
-    }
-
-    .hand-count-card {
-      width: 22px;
-      height: 28px;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(45, 36, 20, 0.16);
-    }
-
-    .hand-count-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .hand-count-number {
-      min-width: 42px;
-      border-radius: 999px;
-      padding: 5px 8px;
-      background: #2f3338;
-      color: #fff;
-      text-align: center;
-      font-size: 17px;
-      font-weight: 900;
     }
 
     /* ===== ボーダレスモード ===== */
@@ -2767,10 +2482,7 @@
     .bl-tile.inner-question.just-revealed img {
       animation: question-reveal 420ms cubic-bezier(0.18, 0.9, 0.2, 1.05);
     }
-    .bl-tile.action-selectable {
-      cursor: pointer;
-      box-shadow: inset 0 0 0 4px #ffd400, 0 7px 15px rgba(45, 36, 20, 0.18);
-    }
+
     .bl-ghost {
       position: absolute;
       width: 60px;
@@ -2829,34 +2541,7 @@
       pointer-events: none;
     }
     .bl-ghost-illegal img { opacity: 0.4; filter: grayscale(0.35); }
-    .bl-limit-shading {
-      position: absolute;
-      z-index: 1;
-      box-sizing: border-box;
-      pointer-events: none;
-      background:
-        repeating-linear-gradient(
-          -45deg,
-          rgba(220, 66, 66, 0.08) 0,
-          rgba(220, 66, 66, 0.08) 8px,
-          transparent 8px,
-          transparent 16px
-        );
-      background-color: rgba(220, 66, 66, 0.02);
-      transition: opacity 0.3s ease;
-    }
-    .bl-limit-shading-left {
-      border-right: 2px dashed rgba(220, 66, 66, 0.58);
-    }
-    .bl-limit-shading-right {
-      border-left: 2px dashed rgba(220, 66, 66, 0.58);
-    }
-    .bl-limit-shading-top {
-      border-bottom: 2px dashed rgba(220, 66, 66, 0.58);
-    }
-    .bl-limit-shading-bottom {
-      border-top: 2px dashed rgba(220, 66, 66, 0.58);
-    }
+
     @keyframes bl-marker-life {
       0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
       8% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
@@ -3011,22 +2696,9 @@
       font-weight: 950;
     }
     .player.win .player-rank { background: #1f7a5b; }
-    .hand-count-number .hand-count-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #74664e;
-      margin-right: 2px;
-    }
-    .hand-count-number .hand-count-unit { font-size: 13px; font-weight: 800; }
 
     /* ポップジャム順位欄: 残り手札／川を同じ形式で（左にラベル＋枚数→カード列） */
-    .pj-row { margin-top: 8px; }
-    .pj-row-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
-    .pj-label { font-size: 12px; font-weight: 800; color: #74664e; }
-    .pj-count { font-weight: 950; line-height: 1; }
-    .pj-unit { font-size: 11px; font-weight: 800; margin-left: 1px; }
-    .pj-hand .pj-count { font-size: 26px; color: #20242a; }
-    .pj-river .pj-count { font-size: 16px; color: #5d4e2e; }
+
     .pj-cards {
       display: flex;
       flex-wrap: wrap;
@@ -3102,12 +2774,6 @@
       padding: 10px 14px;
       background: rgba(255, 255, 255, 0.96);
       box-shadow: var(--shadow-soft);
-    }
-
-    .kicker {
-      color: #8a94a6;
-      font-size: 11px;
-      letter-spacing: 0.11em;
     }
 
     h1 {
@@ -3353,16 +3019,6 @@
       box-shadow: none;
     }
 
-    .scoreline .score-pill,
-    .scoreline .score-pill.current {
-      background: #ffffff;
-      box-shadow: inset 0 0 0 1px #dce4ef;
-    }
-
-    .scoreline .score-pill.current {
-      box-shadow: inset 0 0 0 2px #111827;
-    }
-
     .score-toast,
     .score-marker,
     .board-result-card {
@@ -3464,10 +3120,6 @@
       gap: var(--panel-gap);
     }
 
-    body.view-mobile .kicker {
-      display: none;
-    }
-
     body.view-mobile h1 {
       font-size: 28px;
     }
@@ -3553,14 +3205,6 @@
       min-width: 76px;
       padding: 6px 7px;
       font-size: 12px;
-    }
-
-    body.view-mobile .player-card {
-      padding: 7px;
-    }
-
-    body.view-mobile .score-value {
-      font-size: 20px;
     }
 
     body.view-mobile .log {
@@ -3754,14 +3398,6 @@
 
     body.mode-popjam .hand {
       max-height: min(18dvh, 150px);
-    }
-
-    .pj-row {
-      margin-top: 6px;
-    }
-
-    .pj-row-head {
-      margin-bottom: 3px;
     }
 
     .pj-cards {
@@ -4018,15 +3654,6 @@
       margin-bottom: 2px;
     }
 
-    body.mode-popjam .pj-row {
-      margin-top: 4px;
-    }
-
-    body.mode-popjam .pj-row-head {
-      margin-bottom: 2px;
-      font-size: 11px;
-    }
-
     body.mode-popjam .pj-cards {
       min-height: 18px;
       padding: 3px;
@@ -4050,13 +3677,6 @@
       padding: 0;
       font-size: 16px;
       font-weight: 950;
-    }
-
-    .settings-nested {
-      display: grid;
-      gap: 10px;
-      padding-left: 14px;
-      border-left: 2px solid #d7dee8;
     }
 
     .score-diamond.gold {
@@ -4819,61 +4439,6 @@
       line-height: 1.15;
     }
 
-    .hand-panel .hand-instruction {
-      display: block;
-      height: 52px;
-      min-height: 52px;
-      margin: 0 0 7px;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      overflow: auto;
-      scrollbar-width: thin;
-      transition: opacity 120ms ease;
-    }
-
-    .hand-panel .hand-instruction.is-empty {
-      visibility: hidden;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .hand-panel .hand-instruction .action-target-panel {
-      min-height: 42px;
-      padding: 8px 10px;
-      gap: 2px;
-      border-radius: 12px;
-      background: rgba(239, 246, 255, 0.92);
-      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.24);
-    }
-
-    .hand-panel .hand-instruction .placement-feedback {
-      background: rgba(255, 241, 242, 0.94);
-      box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.28);
-    }
-
-    .hand-panel .hand-instruction .action-target-panel strong {
-      display: block;
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .hand-panel .hand-instruction .action-target-panel .label,
-    .hand-panel .hand-instruction .action-target-panel .note {
-      font-size: 11px;
-      line-height: 1.25;
-    }
-
-    .hand-panel .hand-instruction .action-target-row,
-    .hand-panel .hand-instruction .question-choice-list {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 5px;
-      max-height: 34px;
-      overflow-x: auto;
-      overflow-y: hidden;
-    }
-
     .hand {
       --hand-tile-size: clamp(48px, 5.2vw, 68px);
       --hand-gap: clamp(6px, 0.7vw, 9px);
@@ -5019,28 +4584,6 @@
       padding: 3px 5px;
       border-radius: 10px;
       font-size: 11px;
-    }
-
-    body.view-mobile .hand-panel .hand-instruction {
-      height: 30px;
-      min-height: 30px;
-      margin-bottom: 5px;
-    }
-
-    body.view-mobile .hand-panel .hand-instruction .action-target-panel {
-      min-height: 34px;
-      padding: 6px 8px;
-      border-radius: 11px;
-    }
-
-    body.view-mobile .hand-panel .hand-instruction .action-target-panel strong {
-      font-size: 12px;
-    }
-
-    body.view-mobile .hand-panel .hand-instruction .action-target-panel .label,
-    body.view-mobile .hand-panel .hand-instruction .action-target-panel .note {
-      font-size: 10px;
-      line-height: 1.2;
     }
 
     body.view-mobile .hand {
@@ -10814,7 +10357,7 @@
           <select id="modeSelect" title="モード">
             <option value="classic">クラシック</option>
             <option value="popjamScoreOpen">ポップジャム</option>
-            <!-- 内部モード（フリーダム / クラシックBT）はメニューに出さず、?mode= 指定時のみ init で追加 -->?
+            <!-- 内部モード（フリーダム / クラシックBT）はメニューに出さず、?mode= 指定時のみ init で追加 -->
           </select>
       </label>
   <button type="button" id="newGameButton" class="primary" title="開始">▶ 開始</button>
@@ -11970,10 +11513,6 @@
       return mode === "popjamTrap";
     }
 
-    // モードごとの色数: popjam3 は検証用に3色25枚系、通常ポップジャムは4色追加タイル込み。
-    function deckDefinitionsForMode(mode) {
-      return tileDefinitions;
-    }
     function deckDefinitionsForSetup(mode, playerCount) {
       return tileDefinitions;
     }
@@ -12750,17 +12289,6 @@
       addLog(message + " " + active[0].name + " の負けです。");
       trackFinishOnce(message, "survival_deal_last_remaining");
       return true;
-    }
-
-    function finishDealSurvivalPlayer(player, reason) {
-      if (!isDealSurvivalMode() || !player || player.finished || state.over) {
-        return false;
-      }
-      player.finished = true;
-      state.selectedHandIndex = null;
-      state.selectedRotation = 0;
-      addLog(player.name + " は手札をなくして早抜けしました。");
-      return finishDealSurvivalIfReady(reason);
     }
 
     function nextDealSurvivalPlayerIndex(startIndex) {
@@ -14001,7 +13529,7 @@
       }
 
       slot.effectUsed = true;
-      questionEffectFocus = { slotId: slot.id, actionType: undefined, name: ({ swap: "スワップ", collect: "キープ", replace: "ムーブ", salvage: "コレクト", delete: "デリート", present: "プレゼント" })[tile.effect] || tile.name };
+      questionEffectFocus = { slotId: slot.id, actionType: undefined, name: ({ swap: "スワップ", collect: "キープ", replace: "ムーブ" })[tile.effect] || tile.name };
       if (["color", "super-color", "all-colors", "spotlight", "lock"].indexOf(tile.effect) !== -1) {
         flashQuestionGuide(tile.effect);
       }
@@ -14132,31 +13660,6 @@
       return tile;
     }
 
-    function hasOpponentRiverTile(playerId) {
-      return state.players.some(function (player) {
-        return player.id !== playerId && player.river.length > 0;
-      });
-    }
-
-    function hasDeletableBoardTile() {
-      if (isDynamicBoardMode()) {
-        return Object.keys(state.blBoard || {}).some(function (key) {
-          const cell = state.blBoard[key];
-          return Boolean(cell && cell.tile && !cell.tile.start);
-        });
-      }
-      const size = state.board.length || fixedBoardSize();
-      for (let row = 0; row < size; row++) {
-        for (let col = 0; col < size; col++) {
-          const cell = state.board[row][col];
-          if (cell && !cell.tile.start) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
     function beginQuestionAction(type, slot, context) {
       state.pendingQuestionContext = context;
       state.pendingAction = {
@@ -14201,148 +13704,6 @@
       }
 
       render();
-    }
-
-    function selectDeleteBoardTile(row, col) {
-      if (!state.pendingAction || state.pendingAction.type !== "delete") {
-        return;
-      }
-
-      const cell = isDynamicBoardMode()
-        ? (state.blBoard || {})[blCellKey(row, col)]
-        : (state.board[row] ? state.board[row][col] : null);
-      if (!cell || cell.tile.start) {
-        return;
-      }
-
-      pushHistory();
-      const player = currentPlayer();
-      const removed = moveBoardTileToDeckBottom(row, col, player.id);
-      if (removed) {
-        const context = state.pendingAction.context || createQuestionContext();
-        context.messages.push("デリート");
-        addLog(player.name + " が盤面の " + removed.tile.name + " をデリートして"
-          + removed.destinationLabel + "へ戻しました。");
-      }
-      finishPendingQuestionAction();
-    }
-
-    function moveBoardTileToRiver(row, col, playerId) {
-      const key = blCellKey(row, col);
-      const cell = isDynamicBoardMode()
-        ? (state.blBoard || {})[key]
-        : (state.board[row] ? state.board[row][col] : null);
-      const player = state.players.find(function (candidate) {
-        return candidate.id === playerId;
-      });
-      if (!cell || !player || cell.tile.start) {
-        return null;
-      }
-
-      const tile = cell.tile;
-      if (isDynamicBoardMode()) {
-        delete state.blBoard[key];
-      } else {
-        state.board[row][col] = null;
-      }
-      forgetBrokenCompletedPatterns();
-      player.river.push(tile);
-      queueRiverAnimation(null, player.id, tile);
-      return tile;
-    }
-
-    function moveBoardTileToDeckBottom(row, col, playerId) {
-      const key = blCellKey(row, col);
-      const cell = isDynamicBoardMode()
-        ? (state.blBoard || {})[key]
-        : (state.board[row] ? state.board[row][col] : null);
-      if (!cell || cell.tile.start) {
-        return null;
-      }
-
-      const tile = cell.tile;
-      if (isDynamicBoardMode()) {
-        delete state.blBoard[key];
-      } else {
-        state.board[row][col] = null;
-      }
-      forgetBrokenCompletedPatterns();
-      const player = state.players.find(function (candidate) {
-        return candidate.id === playerId;
-      });
-      if (state.deck.length > 0 || !player) {
-        state.deck.push(tile);
-        return {
-          tile: tile,
-          destination: "deck",
-          destinationLabel: "山札の下"
-        };
-      }
-
-      player.hand.push(tile);
-      return {
-        tile: tile,
-        destination: "hand",
-        destinationLabel: "追加手札"
-      };
-    }
-
-    function deleteBoardTileForQuestion(playerId) {
-      const last = state.lastPlacedCell;
-      let fallback = null;
-
-      if (isDynamicBoardMode()) {
-        const keys = Object.keys(state.blBoard || {});
-        for (let i = 0; i < keys.length; i++) {
-          const parts = keys[i].split(",");
-          const row = Number(parts[0]);
-          const col = Number(parts[1]);
-          const cell = state.blBoard[keys[i]];
-          if (!cell || !cell.tile || cell.tile.start) {
-            continue;
-          }
-          if (last && last.row === row && last.col === col) {
-            fallback = { row: row, col: col, tile: cell.tile };
-            continue;
-          }
-
-          const moved = moveBoardTileToDeckBottom(row, col, playerId);
-          return moved ? Object.assign({ row: row, col: col }, moved) : null;
-        }
-
-        if (fallback) {
-          const moved = moveBoardTileToDeckBottom(fallback.row, fallback.col, playerId);
-          if (moved) {
-            fallback = Object.assign(fallback, moved);
-          }
-        }
-        return fallback;
-      }
-
-      const size = state.board.length || fixedBoardSize();
-      for (let row = 0; row < size; row++) {
-        for (let col = 0; col < size; col++) {
-          const cell = state.board[row][col];
-          if (!cell || cell.tile.start) {
-            continue;
-          }
-          if (last && last.row === row && last.col === col) {
-            fallback = { row: row, col: col, tile: cell.tile };
-            continue;
-          }
-
-          const moved = moveBoardTileToDeckBottom(row, col, playerId);
-          return moved ? Object.assign({ row: row, col: col }, moved) : null;
-        }
-      }
-
-      if (fallback) {
-        const moved = moveBoardTileToDeckBottom(fallback.row, fallback.col, playerId);
-        if (moved) {
-          fallback = Object.assign(fallback, moved);
-        }
-      }
-      return fallback;
     }
 
     function playerHasKeptTile(playerId) {
@@ -14626,80 +13987,6 @@
       return false;
     }
 
-    function salvageRiverTileForQuestion(playerId) {
-      let source = null;
-      state.players.forEach(function (player) {
-        if (player.id !== playerId && player.river.length > 0 && (!source || player.river.length > source.river.length)) {
-          source = player;
-        }
-      });
-
-      if (!source) {
-        return null;
-      }
-
-      return {
-        tile: source.river[source.river.length - 1],
-        sourcePlayerId: source.id,
-        sourceRiverIndex: source.river.length - 1
-      };
-    }
-
-    function selectSalvageRiverTile(sourcePlayerId, riverIndex) {
-      if (!state.pendingAction || state.pendingAction.type !== "salvage") {
-        return;
-      }
-
-      const source = state.players.find(function (player) {
-        return player.id === sourcePlayerId;
-      });
-      const tile = source && source.river[riverIndex];
-      if (!tile || sourcePlayerId === currentPlayer().id) {
-        return;
-      }
-
-      state.pendingAction = Object.assign({}, state.pendingAction, {
-        type: "salvage-place",
-        tile: tile,
-        sourcePlayerId: sourcePlayerId,
-        sourceRiverIndex: riverIndex,
-        rotation: 0
-      });
-      state.scoreText = hasAnyLegalMoveForTile(tile)
-        ? "サルベージ: 選んだタイルを盤面に配置してください。"
-        : "サルベージ: 置けないため、パスで自分の捨て札へ移せます。";
-      scheduleToastHide();
-      render();
-    }
-
-    function movePendingSalvageTileToOwnRiver() {
-      const action = state.pendingAction;
-      if (!action || action.type !== "salvage-place") {
-        return false;
-      }
-
-      const source = state.players.find(function (player) {
-        return player.id === action.sourcePlayerId;
-      });
-      const player = currentPlayer();
-      const tile = source && source.river[action.sourceRiverIndex];
-      if (!source || !player || !tile) {
-        finishPendingQuestionAction();
-        return true;
-      }
-
-      pushHistory();
-      source.river.splice(action.sourceRiverIndex, 1);
-      player.river.push(tile);
-      queueRiverAnimation(null, player.id, tile);
-      const context = action.context || createQuestionContext();
-      context.messages.push("サルベージ保留");
-      addLog(player.name + " は " + source.name + " の捨て札から " + tile.name
-        + " をサルベージし、自分の捨て札へ移しました。");
-      finishPendingQuestionAction();
-      return true;
-    }
-
     function hasAnyLegalMoveForTile(tile) {
       if (isDynamicBoardMode()) {
         return [0, 90, 180, 270].some(function (rotation) {
@@ -14719,258 +14006,6 @@
         }
       }
       return false;
-    }
-
-    function placePendingSalvageTile(row, col) {
-      const action = state.pendingAction;
-      if (!action || action.type !== "salvage-place") {
-        return;
-      }
-
-      if (isDynamicBoardMode()) {
-        placePendingSalvageTileDynamic(row, col);
-        return;
-      }
-
-      if (!canPlaceAt(row, col)) {
-        return;
-      }
-
-      clearMobilePlacementConfirm();
-      const source = state.players.find(function (player) {
-        return player.id === action.sourcePlayerId;
-      });
-      const tile = source && source.river[action.sourceRiverIndex];
-      if (!tile) {
-        finishPendingQuestionAction();
-        return;
-      }
-
-      pushHistory();
-      source.river.splice(action.sourceRiverIndex, 1);
-      state.board[row][col] = {
-        tile: tile,
-        rotation: action.rotation || 0
-      };
-      state.lastPlacedCell = { row: row, col: col };
-      pendingDropCell = { row: row, col: col, rotation: action.rotation || 0 };
-      state.stats.placedTiles++;
-
-      const context = action.context || createQuestionContext();
-      context.messages.push("サルベージ");
-      addLog(currentPlayer().name + " が " + source.name + " の捨て札から " + tile.name + " を盤面に配置しました。");
-      state.pendingAction = null;
-      state.popjamPostDiscardPlacement = {
-        row: row,
-        col: col,
-        playerId: currentPlayer().id,
-        context: context
-      };
-      if (interruptQuestionEffectsForPopjamScore(context, state.pendingQuestionEffects.slice(), currentPlayer().id)) {
-        render();
-        return;
-      }
-      state.popjamPostDiscardPlacement = null;
-      const questionContext = beginQuestionEffectsForPlacement(row, col, currentPlayer(), context);
-      if (!questionContext) {
-        render();
-        return;
-      }
-      if (state.pendingQuestionEffects.length > 0 || hasPendingAction()) {
-        state.pendingQuestionContext = questionContext;
-        render();
-        return;
-      }
-      finishPopjamPlacement(currentPlayer().id, questionContext);
-    }
-
-    function placePendingSalvageTileDynamic(row, col) {
-      const action = state.pendingAction;
-      if (!action || action.type !== "salvage-place") {
-        return;
-      }
-
-      const tile = action.tile;
-      const rotation = action.rotation || 0;
-      if (!canPlaceDynamicShared(row, col, tile, rotation)) {
-        return;
-      }
-
-      clearMobilePlacementConfirm();
-      const source = state.players.find(function (player) {
-        return player.id === action.sourcePlayerId;
-      });
-      const sourceTile = source && source.river[action.sourceRiverIndex];
-      if (!sourceTile) {
-        finishPendingQuestionAction();
-        return;
-      }
-
-      pushHistory();
-      source.river.splice(action.sourceRiverIndex, 1);
-      state.blBoard[blCellKey(row, col)] = {
-        tile: isInnerQuestionTile(sourceTile) ? cloneQuestionTile(sourceTile) : cloneTile(sourceTile),
-        rotation: isInnerQuestionTile(sourceTile) ? 0 : rotation
-      };
-      state.lastPlacedCell = { row: row, col: col, borderless: true };
-      pendingDropCell = { row: row, col: col, rotation: rotation, borderless: true };
-      state.stats.placedTiles++;
-
-      const context = action.context || createQuestionContext();
-      context.messages.push("サルベージ");
-      addLog(currentPlayer().name + " が " + source.name + " の捨て札から " + sourceTile.name + " を盤面に配置しました。");
-      state.pendingAction = null;
-      state.popjamPostDiscardPlacement = {
-        row: row,
-        col: col,
-        playerId: currentPlayer().id,
-        context: context
-      };
-      if (interruptQuestionEffectsForPopjamScore(context, state.pendingQuestionEffects.slice(), currentPlayer().id)) {
-        render();
-        return;
-      }
-      state.popjamPostDiscardPlacement = null;
-      const questionContext = beginQuestionEffectsForPlacement(row, col, currentPlayer(), context);
-      if (!questionContext) {
-        render();
-        return;
-      }
-      if (state.pendingQuestionEffects.length > 0 || hasPendingAction()) {
-        state.pendingQuestionContext = questionContext;
-        render();
-        return;
-      }
-      finishPopjamPlacement(currentPlayer().id, questionContext);
-    }
-
-    function placeSalvagedTileAutomatically(tile, sourcePlayerId, sourceRiverIndex, context) {
-      if (isDynamicBoardMode()) {
-        for (let i = 0; i < 4; i++) {
-          const rotation = i * 90;
-          const spots = dynamicPlaceableSpots(tile, rotation);
-          for (let j = 0; j < spots.length; j++) {
-            if (!canPlaceDynamicShared(spots[j].r, spots[j].c, tile, rotation)) {
-              continue;
-            }
-            const source = state.players.find(function (player) {
-              return player.id === sourcePlayerId;
-            });
-            if (!source || !source.river[sourceRiverIndex]) {
-              return false;
-            }
-            source.river.splice(sourceRiverIndex, 1);
-            state.blBoard[blCellKey(spots[j].r, spots[j].c)] = {
-              tile: isInnerQuestionTile(tile) ? cloneQuestionTile(tile) : cloneTile(tile),
-              rotation: isInnerQuestionTile(tile) ? 0 : rotation
-            };
-            state.lastPlacedCell = { row: spots[j].r, col: spots[j].c, borderless: true };
-            pendingDropCell = { row: spots[j].r, col: spots[j].c, rotation: rotation, borderless: true };
-            state.stats.placedTiles++;
-            const questionContext = context || createQuestionContext();
-            state.popjamPostDiscardPlacement = {
-              row: spots[j].r,
-              col: spots[j].c,
-              playerId: currentPlayer().id,
-              context: questionContext
-            };
-            if (interruptQuestionEffectsForPopjamScore(questionContext, state.pendingQuestionEffects.slice(), currentPlayer().id)) {
-              return true;
-            }
-            state.popjamPostDiscardPlacement = null;
-            beginQuestionEffectsForPlacement(spots[j].r, spots[j].c, currentPlayer(), questionContext);
-            return true;
-          }
-        }
-        return false;
-      }
-      for (let row = 0; row < 5; row++) {
-        for (let col = 0; col < 5; col++) {
-          for (let i = 0; i < 4; i++) {
-            const rotation = i * 90;
-            if (canPlaceTileAt(row, col, tile, rotation)) {
-              const source = state.players.find(function (player) {
-                return player.id === sourcePlayerId;
-              });
-              if (!source || !source.river[sourceRiverIndex]) {
-                return false;
-              }
-              source.river.splice(sourceRiverIndex, 1);
-              state.board[row][col] = { tile: tile, rotation: rotation };
-              state.lastPlacedCell = { row: row, col: col };
-              pendingDropCell = { row: row, col: col, rotation: rotation };
-              state.stats.placedTiles++;
-              const questionContext = context || createQuestionContext();
-              state.popjamPostDiscardPlacement = {
-                row: row,
-                col: col,
-                playerId: currentPlayer().id,
-                context: questionContext
-              };
-              if (interruptQuestionEffectsForPopjamScore(questionContext, state.pendingQuestionEffects.slice(), currentPlayer().id)) {
-                return true;
-              }
-              state.popjamPostDiscardPlacement = null;
-              beginQuestionEffectsForPlacement(row, col, currentPlayer(), questionContext);
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    function togglePresentHandTile(index) {
-      const action = state.pendingAction;
-      if (!action || action.type !== "present") {
-        return;
-      }
-
-      const existing = action.selectedHandIndexes.indexOf(index);
-      if (existing !== -1) {
-        action.selectedHandIndexes.splice(existing, 1);
-      } else if (action.selectedHandIndexes.length < 2) {
-        action.selectedHandIndexes.push(index);
-      }
-      render();
-    }
-
-    function selectPresentTarget(playerId) {
-      const action = state.pendingAction;
-      if (!action || action.type !== "present" || action.selectedHandIndexes.length === 0) {
-        return;
-      }
-
-      const player = currentPlayer();
-      const target = state.players.find(function (candidate) {
-        return candidate.id === playerId && candidate.id !== player.id;
-      });
-      if (!target) {
-        return;
-      }
-
-      pushHistory();
-      const indexes = action.selectedHandIndexes.slice().sort(function (a, b) {
-        return b - a;
-      });
-      const gifts = [];
-      indexes.forEach(function (index) {
-        const tile = player.hand[index];
-        if (tile) {
-          gifts.unshift(tile);
-          player.hand.splice(index, 1);
-        }
-      });
-
-      target.hand = target.hand.concat(gifts);
-      const context = action.context || createQuestionContext();
-      if (gifts.length > 0) {
-        context.messages.push("プレゼント");
-        addLog(player.name + " が " + target.name + " に手札" + gifts.length + "枚を渡しました。");
-      } else {
-        context.messages.push("プレゼント不発");
-      }
-      finishPendingQuestionAction();
     }
 
     // カラーズ/スーパーカラーズは、入れ替え先の盤面の色とつながる場所にだけ動ける（オールカラーズは例外）
@@ -15183,13 +14218,6 @@
       }
       addLog(player.name + " はキープしたタイルを続けて置けます。");
       return true;
-    }
-
-    function declarePopjamWin(player) {
-      state.over = true;
-      state.stats.endedAt = Date.now();
-      updatePopjamWinnersByRank();
-      addLog(player.name + " が手札を全て出し切りました。残り手札数で順位を確定します。");
     }
 
     function finishPopjamByHandCount() {
@@ -15947,30 +14975,6 @@
       return results;
     }
 
-    function createScoreColorMap(scoringColor, width, height, size) {
-      const colorMap = new Array(width * height).fill("");
-
-      state.board.forEach(function (row, rowIndex) {
-        row.forEach(function (cell, colIndex) {
-          if (!cell || isInnerQuestionCell(cell)) {
-            return;
-          }
-
-          for (let localY = 0; localY < size; localY++) {
-            for (let localX = 0; localX < size; localX++) {
-              const tileColor = sampleTileColor(cell.tile.id, cell.rotation || 0, localX, localY);
-              const color = cell.tile.start && tileColor ? scoringColor : tileColor;
-              const x = colIndex * size + localX;
-              const y = rowIndex * size + localY;
-              colorMap[y * width + x] = color;
-            }
-          }
-        });
-      });
-
-      return colorMap;
-    }
-
     function sampleTileColor(tileId, rotation, localX, localY) {
       let x = (localX + 0.5) / detectionSampleSize;
       let y = (localY + 0.5) / detectionSampleSize;
@@ -16103,164 +15107,6 @@
       }
 
       return "";
-    }
-
-    function detectColorComponents(color, colorMap, width, height) {
-      const visited = new Uint8Array(width * height);
-      const patterns = [];
-
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const index = y * width + x;
-          if (visited[index] || colorMap[index] !== color) {
-            visited[index] = 1;
-            continue;
-          }
-
-          const component = floodColorComponent(color, colorMap, width, height, x, y, visited);
-          if (!component.open && component.cells.size > 0 && component.count > onePointPixelArea * 0.45) {
-            const cells = Array.from(component.cells).sort();
-            const center = getPatternCenter(component);
-            const points = Math.max(1, Math.round(component.count / onePointPixelArea));
-            patterns.push({
-              color: color,
-              points: points,
-              row: center.row,
-              col: center.col,
-              localX: center.localX,
-              localY: center.localY,
-              key: color + ":" + cells.join("|") + ":" + points
-            });
-          }
-        }
-      }
-
-      return patterns;
-    }
-
-    function getPatternCenter(component) {
-      const averageX = component.sumX / component.count;
-      const averageY = component.sumY / component.count;
-      const size = state.board.length || fixedBoardSize();
-      const row = Math.max(0, Math.min(size - 1, Math.floor(averageY / detectionSampleSize)));
-      const col = Math.max(0, Math.min(size - 1, Math.floor(averageX / detectionSampleSize)));
-
-      return {
-        row: row,
-        col: col,
-        localX: ((averageX - col * detectionSampleSize) / detectionSampleSize) * 100,
-        localY: ((averageY - row * detectionSampleSize) / detectionSampleSize) * 100
-      };
-    }
-
-    function floodColorComponent(color, colorMap, width, height, startX, startY, visited) {
-      const stack = [[startX, startY]];
-      const cells = new Set();
-      let count = 0;
-      let open = false;
-      let sumX = 0;
-      let sumY = 0;
-
-      while (stack.length > 0) {
-        const point = stack.pop();
-        const x = point[0];
-        const y = point[1];
-
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-          open = true;
-          continue;
-        }
-
-        const index = y * width + x;
-        if (visited[index]) {
-          continue;
-        }
-
-        visited[index] = 1;
-        if (colorMap[index] !== color) {
-          continue;
-        }
-
-        count++;
-        sumX += x;
-        sumY += y;
-        cells.add(Math.floor(y / detectionSampleSize) + "," + Math.floor(x / detectionSampleSize));
-
-        if (colorPixelTouchesOpenSpace(x, y, color, colorMap, width, height)) {
-          open = true;
-        }
-
-        stack.push([x + 1, y]);
-        stack.push([x - 1, y]);
-        stack.push([x, y + 1]);
-        stack.push([x, y - 1]);
-        pushSeamBridgeNeighbors(color, colorMap, width, height, x, y, stack);
-      }
-
-      return {
-        count: count,
-        cells: cells,
-        open: open,
-        sumX: sumX,
-        sumY: sumY
-      };
-    }
-
-    function pushSeamBridgeNeighbors(color, colorMap, width, height, x, y, stack) {
-      const size = detectionSampleSize;
-      const row = Math.floor(y / size);
-      const col = Math.floor(x / size);
-      const localX = x % size;
-      const localY = y % size;
-      const bridges = [
-        { active: localX === 0, dx: -1, dy: 0, row: row, col: col - 1 },
-        { active: localX === size - 1, dx: 1, dy: 0, row: row, col: col + 1 },
-        { active: localY === 0, dx: 0, dy: -1, row: row - 1, col: col },
-        { active: localY === size - 1, dx: 0, dy: 1, row: row + 1, col: col }
-      ];
-
-      bridges.forEach(function (bridge) {
-        if (!bridge.active || !hasPlacedTile(bridge.row, bridge.col)) {
-          return;
-        }
-
-        for (let distance = 1; distance <= seamBridgeDistance; distance++) {
-          const nextX = x + bridge.dx * distance;
-          const nextY = y + bridge.dy * distance;
-
-          if (nextX < 0 || nextX >= width || nextY < 0 || nextY >= height) {
-            return;
-          }
-
-          if (colorMap[nextY * width + nextX] === color) {
-            stack.push([nextX, nextY]);
-            return;
-          }
-        }
-      });
-    }
-
-    function colorPixelTouchesOpenSpace(x, y, color, colorMap, width, height) {
-      const size = detectionSampleSize;
-      const row = Math.floor(y / size);
-      const col = Math.floor(x / size);
-      const localX = x % size;
-      const localY = y % size;
-
-      const checks = [
-        { edge: localX === 0, x: x - 1, y: y, row: row, col: col - 1 },
-        { edge: localX === size - 1, x: x + 1, y: y, row: row, col: col + 1 },
-        { edge: localY === 0, x: x, y: y - 1, row: row - 1, col: col },
-        { edge: localY === size - 1, x: x, y: y + 1, row: row + 1, col: col }
-      ];
-
-      return checks.some(function (check) {
-        if (!check.edge) {
-          return false;
-        }
-
-        return !hasPlacedTile(check.row, check.col);
-      });
     }
 
     function isInnerQuestionTile(tile) {
@@ -16464,22 +15310,6 @@
         return { x: -0.28, y: slot.boardRow + 0.5 };
       }
       return { x: size + 0.28, y: slot.boardRow + 0.5 };
-    }
-
-    function isAdjacentToTile(row, col) {
-      const directions = [
-        [-1, 0],
-        [1, 0],
-        [0, -1],
-        [0, 1]
-      ];
-
-      return directions.some(function (direction) {
-        const size = state.board.length || fixedBoardSize();
-        const nextRow = row + direction[0];
-        const nextCol = col + direction[1];
-        return nextRow >= 0 && nextRow < size && nextCol >= 0 && nextCol < size && state.board[nextRow][nextCol];
-      });
     }
 
     function isAdjacentToAnyBoardCard(row, col) {
@@ -16713,14 +15543,6 @@
         return canReplaceTileTo(row, col, state.pendingAction);
       }
 
-      if (hasPendingAction() && state.pendingAction.type === "salvage-place") {
-        const action = state.pendingAction;
-        if (state.board[row][col]) {
-          return false;
-        }
-        return canPlaceTileAt(row, col, action.tile, action.rotation || 0);
-      }
-
       if (hasPendingQuestionEffects() || hasPendingAction()) {
         return false;
       }
@@ -16744,11 +15566,6 @@
     function placeSelectedTile(row, col) {
       if (hasPendingAction() && state.pendingAction.type === "replace-place") {
         placePendingReplaceTile(row, col);
-        return;
-      }
-
-      if (hasPendingAction() && state.pendingAction.type === "salvage-place") {
-        placePendingSalvageTile(row, col);
         return;
       }
 
@@ -16930,11 +15747,6 @@
         return;
       }
 
-      if (state.pendingAction && state.pendingAction.type === "present") {
-        togglePresentHandTile(index);
-        return;
-      }
-
       if (state.pendingAction && state.pendingAction.type === "collect") {
         if (isPopjamScoreMode() && index >= state.sharedMarket.length) {
           rememberMarketTileRotation();
@@ -17013,7 +15825,7 @@
       }
 
       const actionPlacement = hasPendingAction()
-        && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place");
+        && state.pendingAction.type === "replace-place";
       if ((hasPendingQuestionEffects() && !actionPlacement)
         || (hasPendingAction() && !actionPlacement && state.pendingAction.type !== "life-damage")) {
         return false;
@@ -17054,7 +15866,7 @@
       }
 
       const actionPlacement = hasPendingAction()
-        && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place");
+        && state.pendingAction.type === "replace-place";
       if ((hasPendingQuestionEffects() && !actionPlacement)
         || (hasPendingAction() && !actionPlacement && state.pendingAction.type !== "life-damage")) {
         return false;
@@ -17083,14 +15895,14 @@
     }
 
     function currentSelectedRotation() {
-      if (hasPendingAction() && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place")) {
+      if (hasPendingAction() && state.pendingAction.type === "replace-place") {
         return state.pendingAction.rotation || 0;
       }
       return state.selectedRotation || 0;
     }
 
     function rotationAnimationKey() {
-      if (hasPendingAction() && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place")) {
+      if (hasPendingAction() && state.pendingAction.type === "replace-place") {
         return state.pendingAction.type;
       }
       return "hand:" + String(state.selectedHandIndex);
@@ -17123,7 +15935,7 @@
     }
 
     function mobilePlacementSelectionKey() {
-      const tile = state.pendingAction && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place")
+      const tile = state.pendingAction && state.pendingAction.type === "replace-place"
         ? state.pendingAction.tile
         : selectedPlacementTile();
       if (!tile) {
@@ -17467,70 +16279,6 @@
       }
       const index = Math.floor(Math.random() * player.hand.length);
       return player.hand.splice(index, 1)[0] || null;
-    }
-
-    function deliverDealSurvivalTiles(color, points, source, scorer, targets) {
-      const completingPlayer = currentPlayer();
-      const targetRecords = (targets || [])
-        .filter(function (target) {
-          return target && target.player && !target.player.finished && target.player.id !== completingPlayer.id;
-        })
-        .map(function (target) {
-          return {
-            player: target.player,
-            drawn: []
-          };
-        });
-
-      if (!completingPlayer || targetRecords.length === 0) {
-        if (scorer) {
-          const scoreMessageOnly = scoreLabel(scorer, color, points);
-          state.scoreText = state.scoreText ? state.scoreText + " / " + scoreMessageOnly : scoreMessageOnly;
-          scheduleToastHide();
-        }
-        return;
-      }
-
-      let totalSent = 0;
-      for (let i = 0; i < points; i++) {
-        targetRecords.forEach(function (record) {
-          const tile = takeRandomHandTile(completingPlayer);
-          if (!tile) {
-            return;
-          }
-          record.drawn.push(tile);
-          record.player.hand.push(tile);
-          record.player.received++;
-          completingPlayer.sent++;
-          totalSent++;
-        });
-        if (!completingPlayer.hand || completingPlayer.hand.length === 0) {
-          break;
-        }
-      }
-
-      targetRecords.forEach(function (record) {
-        if (record.drawn.length > 0) {
-          queueDealAnimation(record.player.id, record.drawn.length, color, {
-            sourcePlayerId: completingPlayer.id
-          });
-        }
-      });
-
-      state.stats.sentTiles += totalSent;
-      const prefix = source === "auto" ? "自動判定: " : "";
-      const deliveries = targetRecords.map(function (record) {
-        return record.player.name + " +" + record.drawn.length + "枚";
-      });
-      const deliveryText = deliveries.join(" / ");
-      const scoreMessage = deliveryText;
-      state.scoreText = state.scoreText ? state.scoreText + " / " + scoreMessage : scoreMessage;
-      state.scoreToastHtml = dealSurvivalDeliveryToastHtml(targetRecords);
-      state.scoreToastText = state.scoreText;
-      scheduleToastHide();
-
-      addLog(prefix + completingPlayer.name + " が" + colorNames[color] + points + "点を完成。"
-        + deliveryText + " をランダムに渡しました。");
     }
 
     function sendFallingTiles(color, points, source, origin) {
@@ -18447,11 +17195,6 @@
         return;
       }
 
-      if (movePendingSalvageTileToOwnRiver()) {
-        render();
-        return;
-      }
-
       // ポップジャムではこのボタンは「パス」。完成宣言や敗北宣言にはしない。
       if (isPopjamMode()) {
         trackFirstAction("pass", { turn: state.turn });
@@ -19314,61 +18057,6 @@
       });
     }
 
-    function buildMainInfoHtml(player) {
-      if (!state.started) {
-        return "開始を押してください。";
-      }
-
-      if (state.over) {
-        // 順位の長文は右の順位パネルに集約。状況バーは短い勝者ラインのみ。
-        if (isPopjamMode()) {
-          return "🏁 ゲーム終了 ｜ " + escapeHtml(buildPopjamWinnerLine());
-        }
-        return escapeHtml(buildResultText());
-      }
-
-      if (isClassicSharedMode() || state.mode === "borderless") {
-        return (state.scoreText ? "<span>" + escapeHtml(state.scoreText) + "</span> " : "") + buildScoreLineHtml();
-      }
-
-      if (state.scoreText) {
-        return escapeHtml(state.scoreText);
-      }
-
-      if (isPopjamMode() && state.discardPending > 0) {
-        const target = discardPlayer();
-        return playerNameHtml(target) + " が手札から " + state.discardPending + "枚を選んで捨て札へ移します。";
-      }
-
-      if (hasPendingQuestionEffects()) {
-        return playerNameHtml(player) + " はハテナの発動順を選択中です。";
-      }
-
-      if (hasPendingAction()) {
-        return playerNameHtml(player) + " は " + escapeHtml(actionHandTitle()) + " 操作中です。";
-      }
-
-      if (isOpen7Mode()) {
-        const thinking = player.isCpu && state.cpuThinking ? "（考え中）" : "";
-        return playerNameHtml(player) + " の手番" + thinking
-          + "。外周タイル " + availableTileCount(state.sharedMarket) + "枚";
-      }
-
-      const falling = state.players
-        .filter(function (target) {
-          return target.pending.length > 0;
-        })
-        .map(function (target) {
-          return playerNameHtml(target) + "に" + target.pending.length + "枚";
-        })
-        .join(" / ");
-
-      const thinking = player.isCpu && state.cpuThinking ? "（考え中）" : "";
-      return playerNameHtml(player) + " の手番" + thinking
-        + "。手札 " + player.hand.length + "枚"
-        + (falling ? " / 降る: " + falling : "");
-    }
-
     function buildGoalText() {
       if (state.mode === "classic") {
         return "担当色の模様を作り、合計得点が多いプレイヤーの勝ち。縦横は5マス分まで。全タイルを置ききると全員勝利。";
@@ -19444,20 +18132,6 @@
       }
 
       return "モードごとの勝利条件を目指す。";
-    }
-
-    function buildScoreLineHtml() {
-      const player = currentPlayer();
-      const thinking = player && player.isCpu && state.cpuThinking ? "（考え中）" : "";
-      const scoreHtml = state.players.map(function (target) {
-        const current = player && target.id === player.id ? " current" : "";
-        return "<span class=\"score-pill" + current + "\"><span class=\"swatch " + target.color + "\">"
-          + colorSymbols[target.color] + "</span>" + escapeHtml(target.name)
-          + " " + target.score + "点</span>";
-      }).join("");
-      const lead = player ? "T" + state.turn + " " + playerNameHtml(player) + thinking : "-";
-      return "<span class=\"scoreline\"><span class=\"score-lead\">" + lead
-        + "</span><span class=\"score-pills\">" + scoreHtml + "</span></span>";
     }
 
     function updateDeckVisual(deckCount) {
@@ -19624,15 +18298,11 @@
         : "× 置けない";
       elements.loseButton.hidden = isDealSurvivalMode() ? !dealSurvivalNoMove : false;
       elements.undoButton.disabled = true;
-      const salvagePlacing = Boolean(state.pendingAction && state.pendingAction.type === "salvage-place");
       const replacePlacing = Boolean(state.pendingAction && state.pendingAction.type === "replace-place");
       const choosingQuestion = hasPendingQuestionEffects() || hasPendingAction();
-      const blockingAction = choosingQuestion && !salvagePlacing && !replacePlacing;
+      const blockingAction = choosingQuestion && !replacePlacing;
       const winShowcase = hasPopjamWinDiscardShowcase();
-      if (salvagePlacing) {
-        elements.loseButton.textContent = "⏭ パスして捨て札へ";
-      }
-      setLoseButtonTone(!isTacticsMode() && !isPopjamMode() && !salvagePlacing ? "danger" : "");
+      setLoseButtonTone(!isTacticsMode() && !isPopjamMode() ? "danger" : "");
       elements.drawButton.disabled = hasSharedMarket() || !state.started || state.over || state.deck.length === 0 || isCpuTurn() || choosingQuestion || winShowcase;
       const popDiscarding = isPopjamMode() && state.discardPending > 0;
       // ポップジャムは1手で自動的に手番が進むため手番終了ボタンは使わない
@@ -19640,8 +18310,8 @@
         || isPopjamMode() || isTacticsMode() || player.hand.length > 0 || blockingAction || winShowcase;
       elements.loseButton.disabled = !state.started || state.over || popDiscarding || isCpuTurn() || blockingAction || winShowcase
         || (isDealSurvivalMode() && !dealSurvivalNoMove);
-      elements.rotateLeftButton.disabled = !state.started || state.over || (!salvagePlacing && state.selectedHandIndex === null) || blockingAction || winShowcase;
-      elements.rotateRightButton.disabled = !state.started || state.over || (!salvagePlacing && state.selectedHandIndex === null) || blockingAction || winShowcase;
+      elements.rotateLeftButton.disabled = !state.started || state.over || state.selectedHandIndex === null || blockingAction || winShowcase;
+      elements.rotateRightButton.disabled = !state.started || state.over || state.selectedHandIndex === null || blockingAction || winShowcase;
       elements.applyCompletionButton.disabled = !state.started || state.over || isCpuTurn() || choosingQuestion || winShowcase;
       elements.newGameButton.disabled = !tileImagesReady;
     }
@@ -20158,9 +18828,6 @@
           cell.classList.add("tile-drop");
           renderContext.usedStartAnimation = true;
         }
-        if (state.pendingAction && state.pendingAction.type === "delete" && !boardTile.tile.start) {
-          cell.classList.add("action-target", "pick-target");
-        }
         if (state.pendingAction && state.pendingAction.type === "replace" && !boardTile.tile.start && !isInnerQuestionTile(boardTile.tile)) {
           cell.classList.add("action-target", "pick-target");
         }
@@ -20176,9 +18843,6 @@
         if (showPlacementCandidates) {
           cell.classList.add("placeable");
         }
-        if (state.pendingAction && state.pendingAction.type === "salvage-place") {
-          cell.classList.add("salvage-placeable");
-        }
         if (state.pendingAction && state.pendingAction.type === "replace-place") {
           cell.classList.add("salvage-placeable");
         }
@@ -20188,10 +18852,6 @@
 
       cell.addEventListener("click", function () {
         if (Date.now() < blSwipeSuppressClickUntil) {
-          return;
-        }
-        if (state.pendingAction && state.pendingAction.type === "delete") {
-          selectDeleteBoardTile(row, col);
           return;
         }
         if (state.pendingAction && state.pendingAction.type === "replace") {
@@ -20205,12 +18865,6 @@
         if (state.pendingAction && state.pendingAction.type === "replace-place") {
           requestPlacementConfirm(row, col, false, function () {
             placePendingReplaceTile(row, col);
-          });
-          return;
-        }
-        if (state.pendingAction && state.pendingAction.type === "salvage-place") {
-          requestPlacementConfirm(row, col, false, function () {
-            placePendingSalvageTile(row, col);
           });
           return;
         }
@@ -20250,7 +18904,7 @@
         }
         cell.appendChild(img);
       } else if ((state.selectedHandIndex !== null
-        || (state.pendingAction && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place")))
+        || (state.pendingAction && state.pendingAction.type === "replace-place"))
         && !state.over && !isCpuTurn()) {
         cell.addEventListener("mouseenter", function () {
           hoverCell = { r: row, c: col };
@@ -20461,7 +19115,7 @@
       if (!player) {
         return;
       }
-      const tile = state.pendingAction && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place")
+      const tile = state.pendingAction && state.pendingAction.type === "replace-place"
         ? state.pendingAction.tile
         : selectedPlacementTile();
       if (!tile) {
@@ -20469,7 +19123,7 @@
       }
       clearAllPlacementPreviews(cell);
       clearGhost(cell);
-      const rotation = state.pendingAction && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "replace-place")
+      const rotation = state.pendingAction && state.pendingAction.type === "replace-place"
         ? (state.pendingAction.rotation || 0)
         : state.selectedRotation;
       const legal = canPlaceTileAt(row, col, tile, rotation);
@@ -20517,9 +19171,6 @@
       if (!state.pendingAction) {
         return "手札";
       }
-      if (state.pendingAction.type === "delete") {
-        return "デリート対象を選ぶ";
-      }
       if (state.pendingAction.type === "swap") {
         return "スワップする外周ハテナを選ぶ";
       }
@@ -20531,15 +19182,6 @@
       }
       if (state.pendingAction.type === "replace-place") {
         return "ムーブ先を選ぶ";
-      }
-      if (state.pendingAction.type === "salvage") {
-        return "サルベージする捨て札を選ぶ";
-      }
-      if (state.pendingAction.type === "salvage-place") {
-        return "サルベージしたタイルを置く";
-      }
-      if (state.pendingAction.type === "present") {
-        return "プレゼントする手札を選ぶ";
       }
       if (state.pendingAction.type === "survival-gift") {
         return "渡すタイルを選ぶ";
@@ -20600,21 +19242,12 @@
       const title = document.createElement("strong");
       panel.appendChild(title);
 
-      if (action.type === "delete") {
-        title.textContent = "デリートするタイルを選ぶ";
-        const note = document.createElement("span");
-        note.className = "label";
-        note.textContent = "山札があれば下へ、なければ自分の追加手札になります。";
-        panel.appendChild(note);
-      } else if (action.type === "swap") {
+      if (action.type === "swap") {
         title.textContent = "スワップ発動";
         const note = document.createElement("span");
         note.className = "label";
         appendBodyLines(note, questionEffectGuide.swap.body);
         panel.appendChild(note);
-      } else if (action.type === "salvage") {
-        title.textContent = "他プレイヤーの捨て札から1枚選んでください";
-        renderSalvageChoices(panel);
       } else if (action.type === "collect") {
         title.textContent = "キープ発動";
         const note = document.createElement("span");
@@ -20633,50 +19266,6 @@
         note.className = "label";
         note.textContent = "回転してから、置ける空きマスへ移せます。";
         panel.appendChild(note);
-      } else if (action.type === "salvage-place") {
-        title.textContent = "選んだタイルを盤面に置いてください";
-        const note = document.createElement("span");
-        note.className = "label";
-        note.textContent = "置けない、または置かない場合は「パス」で自分の捨て札へ移します。";
-        panel.appendChild(note);
-        const tileBox = document.createElement("div");
-        tileBox.className = "question-choice-list";
-        const tileView = document.createElement("button");
-        tileView.type = "button";
-        tileView.className = "question-choice-button selected";
-        tileView.addEventListener("wheel", function (event) {
-          rotateSelectedByWheel(event);
-        }, { passive: false });
-        tileView.innerHTML = "<img src=\"" + tilePath + action.tile.src + "\" alt=\"\">"
-          + "<span>" + action.tile.name + "</span>";
-        applyRotationStyle(tileView.querySelector("img"), action.rotation || 0, "salvage");
-        tileBox.appendChild(tileView);
-        panel.appendChild(tileBox);
-      } else if (action.type === "present") {
-        title.textContent = "手札を最大2枚選び、渡す相手を選んでください";
-        const note = document.createElement("span");
-        note.className = "label";
-        note.textContent = "選択中: " + action.selectedHandIndexes.length + " / 2";
-        panel.appendChild(note);
-        if (action.selectedHandIndexes.length > 0) {
-          const row = document.createElement("div");
-          row.className = "action-target-row";
-          state.players.forEach(function (target) {
-            if (target.id === currentPlayer().id) {
-              return;
-            }
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = "target-player-button";
-            button.innerHTML = "<span class=\"swatch " + target.color + "\">" + colorSymbols[target.color] + "</span>"
-              + escapeHtml(target.name);
-            button.addEventListener("click", function () {
-              selectPresentTarget(target.id);
-            });
-            row.appendChild(button);
-          });
-          panel.appendChild(row);
-        }
       } else if (action.type === "survival-gift") {
         const giver = state.players.find(function (candidate) {
           return candidate.id === action.playerId;
@@ -20999,43 +19588,6 @@
       elements.instructionPanel.hidden = false;
     }
 
-    function renderSalvageChoices(panel) {
-      let hasChoice = false;
-      state.players.forEach(function (source) {
-        if (source.id === currentPlayer().id || source.river.length === 0) {
-          return;
-        }
-
-        const label = document.createElement("span");
-        label.className = "label";
-        label.textContent = source.name + " の捨て札";
-        panel.appendChild(label);
-
-        const row = document.createElement("div");
-        row.className = "action-target-row";
-        source.river.forEach(function (tile, index) {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "small-tile selectable pick-target";
-          button.innerHTML = "<img src=\"" + tilePath + tile.src + "\" alt=\"\">";
-          button.title = tile.name;
-          button.addEventListener("click", function () {
-            selectSalvageRiverTile(source.id, index);
-          });
-          row.appendChild(button);
-          hasChoice = true;
-        });
-        panel.appendChild(row);
-      });
-
-      if (!hasChoice) {
-        const empty = document.createElement("span");
-        empty.className = "river-empty";
-        empty.textContent = "選べる捨て札がありません。";
-        panel.appendChild(empty);
-      }
-    }
-
     function syncHandFit(player) {
       if (!elements.hand) {
         return;
@@ -21189,10 +19741,6 @@
         button.dataset.marketIndex = String(placementIndex);
         if (state.selectedHandIndex === placementIndex) {
           button.classList.add("selected");
-        }
-        if (state.pendingAction && state.pendingAction.type === "present"
-          && state.pendingAction.selectedHandIndexes.indexOf(index) !== -1) {
-          button.classList.add("action-selected");
         }
         if (state.pendingAction && state.pendingAction.type === "survival-gift") {
           button.classList.add("giftable");
@@ -21567,25 +20115,6 @@
       });
     }
 
-    // ポップジャム順位欄の共通行（左にラベル＋枚数、その下にカード列）
-    function buildPjRow(label, count, extraClass, riverPlayerId, fillCards) {
-      const row = document.createElement("div");
-      row.className = "pj-row " + (extraClass || "");
-      const head = document.createElement("div");
-      head.className = "pj-row-head";
-      head.innerHTML = "<span class=\"pj-label\">" + label + "</span>"
-        + "<span class=\"pj-count\">" + count + "<span class=\"pj-unit\">枚</span></span>";
-      row.appendChild(head);
-      const cards = document.createElement("div");
-      cards.className = "pj-cards";
-      if (riverPlayerId !== null && riverPlayerId !== undefined) {
-        cards.dataset.riverPlayer = String(riverPlayerId);
-      }
-      fillCards(cards);
-      row.appendChild(cards);
-      return row;
-    }
-
     function bonusDiamondHtml(count) {
       let html = "";
       for (let i = 0; i < Math.max(0, count || 0); i++) {
@@ -21757,12 +20286,6 @@
                 const small = document.createElement("div");
                 small.className = "pj-card";
                 small.innerHTML = "<img src=\"" + tilePath + tile.src + "\" alt=\"\">";
-                if (state.pendingAction && state.pendingAction.type === "salvage" && player.id !== currentPlayer().id) {
-                  small.classList.add("selectable", "pick-target");
-                  small.addEventListener("click", function () {
-                    selectSalvageRiverTile(player.id, actualIndex);
-                  });
-                }
                 cards.appendChild(small);
               });
               if (player.river.length > 18) {
@@ -21927,15 +20450,6 @@
         blOverlay.hidden = true;
         blOverlay.innerHTML = "";
       }
-    }
-
-    function setResultOverlayVisible(visible) {
-      if (!state.started || !state.over) {
-        return;
-      }
-      state.resultViewStep = visible ? 0 : 2;
-      state.resultOverlayHidden = !visible;
-      render();
     }
 
     function resultViewMode() {
@@ -22501,13 +21015,6 @@
         world: document.getElementById("blWorld"),
         overlay: document.getElementById("blResultOverlay")
       };
-    }
-
-    function borderlessColors(playerCount) {
-      if (playerCount <= 1) { return ["red"]; }
-      if (playerCount === 2) { return ["red", "blue"]; }
-      if (playerCount === 3) { return ["red", "yellow", "blue"]; }
-      return ["red", "yellow", "blue", "green"];
     }
 
     function blCellKey(r, c) { return r + "," + c; }
@@ -23513,10 +22020,6 @@
       render();
     }
 
-    function harvestTargetScore() {
-      return 8;
-    }
-
     function defaultHarvestSeasonState() {
       return {
         targetScore: 9,
@@ -23694,19 +22197,6 @@
       render();
     }
 
-    function drawHarvestTurnTile(player) {
-      if (!player || state.deck.length === 0) {
-        return false;
-      }
-      player.hand.push(state.deck.shift());
-      if (state.turn > 1) {
-        // 開始時（最初の手番）は手札が飛んでくる演出を出さない
-        queueDealAnimation(player.id, 1, player.color);
-      }
-      addLog(player.name + " が山札から1枚引きました。");
-      return true;
-    }
-
     function harvestHasAnyMove(player) {
       // 共有札5枚のどれかが置けるか（全プレイヤー共通）
       const tiles = state.sharedMarket || [];
@@ -23767,24 +22257,6 @@
       return Array.isArray(pattern.cells) && pattern.cells.every(function (cell) {
         return Boolean((state.blBoard || {})[blCellKey(cell.r, cell.c)]);
       });
-    }
-
-    function removeHarvestPatternCells(pattern) {
-      const removed = [];
-      if (!Array.isArray(pattern.cells)) {
-        return removed;
-      }
-      pattern.cells.forEach(function (cell) {
-        const key = blCellKey(cell.r, cell.c);
-        const slot = (state.blBoard || {})[key];
-        if (!slot || !slot.tile) {
-          return;
-        }
-        removed.push(cloneTile(slot.tile));
-        delete state.blBoard[key];
-      });
-      forgetBrokenCompletedPatterns();
-      return removed;
     }
 
     function processHarvestCompletions(player) {
@@ -23899,11 +22371,6 @@
       return !isHarvestSeasonMode() || (row >= -2 && row <= 2 && col >= -2 && col <= 2);
     }
 
-    function harvestSeasonPlayerCanPrepare(player) {
-      const cfg = harvestSeasonConfig();
-      return Boolean(player && !player.finished && state.deck.length > 0 && player.hand.length < cfg.maxHandSize);
-    }
-
     function drawHarvestSeasonTurnTile(player) {
       if (!isHarvestSeasonMode() || !player || player.finished || state.deck.length === 0) {
         return false;
@@ -23918,12 +22385,6 @@
       queueDealAnimation(player.id, 1, player.color);
       addLog(player.name + " が季節の山札から1枚引きました。");
       return true;
-    }
-
-    function harvestSeasonCanPrepare(player) {
-      return isHarvestSeasonMode()
-        && state.harvestPlacedThisTurn === 0
-        && harvestSeasonPlayerCanPrepare(player);
     }
 
     function harvestSeasonPlayerHasMove(player) {
@@ -23999,15 +22460,6 @@
 
     function harvestSeasonEntryTile(entry) {
       return entry && entry.tile ? entry.tile : entry;
-    }
-
-    function harvestSeasonReturnToDeckBottom(entries) {
-      (entries || []).forEach(function (entry) {
-        const tile = harvestSeasonEntryTile(entry);
-        if (tile) {
-          state.deck.push(cloneTile(tile));
-        }
-      });
     }
 
     function harvestSeasonPatternEntries(pattern) {
@@ -24180,37 +22632,6 @@
       return processed;
     }
 
-    function prepareHarvestSeasonTurn(options) {
-      if (!isHarvestSeasonMode() || state.over || !state.started) {
-        return;
-      }
-      const player = currentPlayer();
-      if (!harvestSeasonCanPrepare(player)) {
-        if (!(options && options.silent)) {
-          addLog(player.name + " は準備できません。手札上限か山札切れです。");
-          render();
-        }
-        return;
-      }
-      if (!(options && (options.fromCpu || options.historyPushed))) {
-        pushHistory();
-      }
-      const cfg = harvestSeasonConfig();
-      const drawCount = Math.min(cfg.maxDrawOnPrepare, cfg.maxHandSize - player.hand.length, state.deck.length);
-      for (let i = 0; i < drawCount; i++) {
-        player.hand.push(state.deck.shift());
-      }
-      if (drawCount > 0) {
-        queueDealAnimation(player.id, drawCount, player.color);
-      }
-      state.passStreak = 0;
-      state.scoreText = player.name + " が準備して" + drawCount + "枚引きました";
-      addLog(player.name + " が準備して" + drawCount + "枚引きました。");
-      scheduleToastHide();
-      blAdvanceTurn();
-      render();
-    }
-
     function finishHarvestSeasonPlacement(options) {
       if (!isHarvestSeasonMode() || state.over || !state.started) {
         return;
@@ -24362,95 +22783,6 @@
         };
       });
       return { winnerId: winnerId, decidedIndex: decidedIndex, lines: lines };
-    }
-
-    function appendClassicLimitGuides(world) {
-      if (!isClassicSharedMode() || !world || !state.started || state.over) {
-        return;
-      }
-      const bounds = currentDynamicViewBounds(false);
-      if (!bounds || bounds.width <= 0 || bounds.height <= 0) {
-        return;
-      }
-
-      // 現在の幅と高さ
-      const currentWidth = bounds.width;
-      const currentHeight = bounds.height;
-
-      // だんだん近づく不透明度の計算 (1〜5段階)
-      // 1-2枚: 表示しない (opacity=0)
-      // 3枚: 少し薄く表示 (opacity=0.25)
-      // 4枚: 警告気味に表示 (opacity=0.55)
-      // 5枚(上限): 完全に置けない箇所を斜線にする (opacity=0.88)
-      let opacityX = 0;
-      if (currentWidth === 3) opacityX = 0.25;
-      else if (currentWidth === 4) opacityX = 0.55;
-      else if (currentWidth >= 5) opacityX = 0.88;
-
-      let opacityY = 0;
-      if (currentHeight === 3) opacityY = 0.25;
-      else if (currentHeight === 4) opacityY = 0.55;
-      else if (currentHeight >= 5) opacityY = 0.88;
-
-      // 限界境界の座標（ここを越えたセルは配置不可）
-      const leftLimitC = bounds.maxC - 4;
-      const rightLimitC = bounds.minC + 4;
-      const topLimitR = bounds.maxR - 4;
-      const bottomLimitR = bounds.minR + 4;
-
-      // 描画を十分にカバーする外枠（boundsの周囲5マス程度）
-      const drawMinR = bounds.minR - 5;
-      const drawMaxR = bounds.maxR + 5;
-      const drawMinC = bounds.minC - 5;
-      const drawMaxC = bounds.maxC + 5;
-
-      // 1. 左側オーバーレイ
-      if (opacityX > 0 && leftLimitC > drawMinC) {
-        const leftOverlay = document.createElement("div");
-        leftOverlay.className = "bl-limit-shading bl-limit-shading-left";
-        leftOverlay.style.left = (drawMinC * BL_CELL) + "px";
-        leftOverlay.style.width = ((leftLimitC - drawMinC) * BL_CELL) + "px";
-        leftOverlay.style.top = (drawMinR * BL_CELL) + "px";
-        leftOverlay.style.height = ((drawMaxR - drawMinR + 1) * BL_CELL) + "px";
-        leftOverlay.style.opacity = opacityX;
-        world.appendChild(leftOverlay);
-      }
-
-      // 2. 右側オーバーレイ
-      if (opacityX > 0 && drawMaxC > rightLimitC) {
-        const rightOverlay = document.createElement("div");
-        rightOverlay.className = "bl-limit-shading bl-limit-shading-right";
-        rightOverlay.style.left = ((rightLimitC + 1) * BL_CELL) + "px";
-        rightOverlay.style.width = ((drawMaxC - rightLimitC) * BL_CELL) + "px";
-        rightOverlay.style.top = (drawMinR * BL_CELL) + "px";
-        rightOverlay.style.height = ((drawMaxR - drawMinR + 1) * BL_CELL) + "px";
-        rightOverlay.style.opacity = opacityX;
-        world.appendChild(rightOverlay);
-      }
-
-      // 3. 上側オーバーレイ
-      if (opacityY > 0 && topLimitR > drawMinR) {
-        const topOverlay = document.createElement("div");
-        topOverlay.className = "bl-limit-shading bl-limit-shading-top";
-        topOverlay.style.left = (drawMinC * BL_CELL) + "px";
-        topOverlay.style.width = ((drawMaxC - drawMinC + 1) * BL_CELL) + "px";
-        topOverlay.style.top = (drawMinR * BL_CELL) + "px";
-        topOverlay.style.height = ((topLimitR - drawMinR) * BL_CELL) + "px";
-        topOverlay.style.opacity = opacityY;
-        world.appendChild(topOverlay);
-      }
-
-      // 4. 下側オーバーレイ
-      if (opacityY > 0 && drawMaxR > bottomLimitR) {
-        const bottomOverlay = document.createElement("div");
-        bottomOverlay.className = "bl-limit-shading bl-limit-shading-bottom";
-        bottomOverlay.style.left = (drawMinC * BL_CELL) + "px";
-        bottomOverlay.style.width = ((drawMaxC - drawMinC + 1) * BL_CELL) + "px";
-        bottomOverlay.style.top = ((bottomLimitR + 1) * BL_CELL) + "px";
-        bottomOverlay.style.height = ((drawMaxR - bottomLimitR) * BL_CELL) + "px";
-        bottomOverlay.style.opacity = opacityY;
-        world.appendChild(bottomOverlay);
-      }
     }
 
     function appendHarvestSeasonFixedCells(world) {
@@ -24644,24 +22976,6 @@
         }
       }
       return recovered.length;
-    }
-
-    function discardLifePatternTilesFromBoard(pattern) {
-      const used = {};
-      let removed = 0;
-      (pattern.cells || []).forEach(function (cell) {
-        const key = blCellKey(cell.r, cell.c);
-        if (used[key]) { return; }
-        used[key] = true;
-        const slot = state.blBoard[key];
-        if (!slot || !slot.tile || slot.tile.start) { return; }
-        delete state.blBoard[key];
-        removed++;
-      });
-      if (removed > 0) {
-        forgetBrokenCompletedPatterns();
-      }
-      return removed;
     }
 
     function unlockedLifeHandIndexes(player) {
@@ -25513,10 +23827,6 @@
       render();
     }
 
-    function endBorderless() {
-      finishDynamicByScore("山札を引き切りました。");
-    }
-
     function buildBlResultText() {
       if (isLifeMode()) {
         const winners = state.players.filter(function (player) {
@@ -26267,12 +24577,6 @@
             div.classList.add("just-revealed");
           }
         }
-        if (state.pendingAction && state.pendingAction.type === "delete" && cell.tile && !cell.tile.start) {
-          div.classList.add("action-selectable");
-          div.addEventListener("click", function () {
-            selectDeleteBoardTile(r, c);
-          });
-        }
         const img = document.createElement("img");
         img.src = tilePath + displayTileSrc(cell.tile);
         img.alt = cell.tile.name || "";
@@ -26309,10 +24613,9 @@
       // 置ける=緑/置けない=赤で示す。ホバー中マスにタイルのプレビューを表示し、
       // 「置けない所」でも消えず、回転で再描画されても hoverCell から復元して消えない。
       if (!state.over && currentPlayer() && !isCpuTurn()
-        && (!hasPendingAction() || (state.pendingAction && (state.pendingAction.type === "salvage-place" || state.pendingAction.type === "life-damage")))) {
-        const isSalvage = Boolean(state.pendingAction && state.pendingAction.type === "salvage-place");
-        const tile = isSalvage ? state.pendingAction.tile : selectedPlacementTile();
-        const rotation = isSalvage ? (state.pendingAction.rotation || 0) : state.selectedRotation;
+        && (!hasPendingAction() || (state.pendingAction && state.pendingAction.type === "life-damage"))) {
+        const tile = selectedPlacementTile();
+        const rotation = state.selectedRotation;
         if (tile) {
           const placementAssist = currentPlacementAssistMode();
           const previewSpots = isHarvestMode() && Object.keys(state.blBoard || {}).length === 0
@@ -26398,11 +24701,7 @@
               if (!confirmOrArmMobilePlacement(spot.r, spot.c, true)) {
                 return;
               }
-              if (isSalvage) {
-                placePendingSalvageTileDynamic(spot.r, spot.c);
-              } else {
-                blPlace(spot.r, spot.c);
-              }
+              blPlace(spot.r, spot.c);
             });
             ghost.addEventListener("contextmenu", function (event) {
               event.preventDefault();

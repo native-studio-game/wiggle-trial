@@ -10742,6 +10742,7 @@
   .inline-confirm-actions button.inline-confirm-yes { min-width: 64px; }
   /* 選べる対象の共通の枠（スワップの二枚選びと同じオレンジ） */
   body .pick-target img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; }
+  body .small-tile.pick-target { outline: none !important; }
   .external-question.swap-picked img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.35) !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
@@ -20817,7 +20818,7 @@
           wounded.forEach(function (tile, index) {
             const button = document.createElement("button");
             button.type = "button";
-            button.className = "small-tile selectable";
+            button.className = "small-tile selectable pick-target";
             button.title = tile.name + "（回復値1）";
             button.innerHTML = "<img src=\"" + tilePath + displayTileSrc(tile, { forceFace: true }) + "\" alt=\"\">";
             button.addEventListener("click", function () {
@@ -20838,7 +20839,7 @@
           choices.board.forEach(function (choice) {
             const button = document.createElement("button");
             button.type = "button";
-            button.className = "small-tile selectable";
+            button.className = "small-tile selectable pick-target";
             button.title = choice.tile.name + "（回復値2）";
             button.innerHTML = "<img src=\"" + tilePath + displayTileSrc(choice.tile, { forceFace: true }) + "\" alt=\"\">";
             button.addEventListener("click", function () {
@@ -20995,7 +20996,7 @@
         source.river.forEach(function (tile, index) {
           const button = document.createElement("button");
           button.type = "button";
-          button.className = "small-tile selectable";
+          button.className = "small-tile selectable pick-target";
           button.innerHTML = "<img src=\"" + tilePath + tile.src + "\" alt=\"\">";
           button.title = tile.name;
           button.addEventListener("click", function () {
@@ -21734,7 +21735,7 @@
                 small.className = "pj-card";
                 small.innerHTML = "<img src=\"" + tilePath + tile.src + "\" alt=\"\">";
                 if (state.pendingAction && state.pendingAction.type === "salvage" && player.id !== currentPlayer().id) {
-                  small.classList.add("selectable");
+                  small.classList.add("selectable", "pick-target");
                   small.addEventListener("click", function () {
                     selectSalvageRiverTile(player.id, actualIndex);
                   });

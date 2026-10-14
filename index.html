@@ -9795,6 +9795,35 @@
       text-align: left;
     }
 
+    /* 盤面上の説明: 見出しも折り返し、2行以上でも省略しない */
+    body.view-mobile .board-wrap .board-instruction strong,
+    body.view-mobile .board-wrap .board-instruction .compact-line strong,
+    body.view-mobile .board-wrap .board-instruction .action-target-panel strong {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: keep-all;
+      line-height: 1.35;
+      text-align: left;
+    }
+
+    body.view-mobile .board-wrap .board-instruction {
+      height: auto;
+      min-height: 0;
+      width: calc(100% - 16px);
+      max-width: calc(100% - 16px);
+      box-sizing: border-box;
+      white-space: normal;
+    }
+
+    body.view-mobile .board-wrap .board-instruction .action-target-panel {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      white-space: normal;
+    }
+
     /* 手札が空の間は手札の枠に行を取らせない（共有札の位置が動かないように） */
     body.view-mobile .hand-panel > .hand:empty {
       display: none;

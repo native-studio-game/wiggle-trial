@@ -10791,6 +10791,8 @@
   body.view-mobile.mode-popjam-score .layout { padding-top: 6px !important; }
   /* 選んだ（確定候補の）タイルは、選べる対象のオレンジから濃い枠に変える。手札の選択と同じ濃い色 */
   .external-question.swap-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
+  .question-head { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .question-skip-button { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 700; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -14002,6 +14004,9 @@
 
       slot.effectUsed = true;
       questionEffectFocus = { slotId: slot.id, actionType: undefined, name: ({ swap: "スワップ", collect: "キープ", replace: "ムーブ", salvage: "コレクト", delete: "デリート", present: "プレゼント" })[tile.effect] || tile.name };
+      if (["color", "super-color", "all-colors", "spotlight", "lock"].indexOf(tile.effect) !== -1) {
+        flashQuestionGuide(tile.effect);
+      }
       if (slot.inner && slot.tile) {
         slot.tile.revealed = true;
         slot.tile.effectUsed = true;
@@ -20659,10 +20664,10 @@
         note.textContent = "山札があれば下へ、なければ自分の追加手札になります。";
         panel.appendChild(note);
       } else if (action.type === "swap") {
-        title.textContent = "入れ替える2つのハテナを選ぶ";
+        title.textContent = "スワップ発動";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "選んだ2つの位置が入れ替わります。";
+        appendBodyLines(note, questionEffectGuide.swap.body);
         panel.appendChild(note);
       } else if (action.type === "salvage") {
         title.textContent = "他プレイヤーの捨て札から1枚選んでください";
@@ -20671,13 +20676,13 @@
         title.textContent = "キープ発動";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "共有札から1枚選び手札とする。手札は次の自分の番から追加で置ける（上限1枚まで）。";
+        appendBodyLines(note, questionEffectGuide.collect.body);
         panel.appendChild(note);
       } else if (action.type === "replace") {
-        title.textContent = "ムーブするタイルを選ぶ";
+        title.textContent = "ムーブ発動";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "別の場所へ置きなおします。";
+        appendBodyLines(note, questionEffectGuide.replace.body);
         panel.appendChild(note);
       } else if (action.type === "replace-place") {
         title.textContent = "ムーブ先を選ぶ";
@@ -20848,24 +20853,33 @@
         panel.appendChild(row);
       }
 
-      // 説明文は句点で区切って行を分ける（長い文は読みやすい切れ目で改行）
+      // 説明文は改行と句点で行を分ける
       panel.querySelectorAll(".label, .note").forEach(function (el) {
-        const pieces = el.textContent.split("。");
-        const parts = pieces.map(function (piece, i) {
-          return i < pieces.length - 1 ? piece + "。" : piece;
-        }).filter(Boolean);
-        if (parts.length < 2) {
+        if (el.querySelector("br")) {
+          return;
+        }
+        const text = el.textContent;
+        if (text.indexOf("。") === -1) {
           return;
         }
         el.textContent = "";
-        parts.forEach(function (part, i) {
-          if (i > 0) {
-            el.appendChild(document.createElement("br"));
-          }
-          el.appendChild(document.createTextNode(part));
-        });
+        appendBodyLines(el, text.split("。").map(function (piece, i, all) {
+          return i < all.length - 1 ? piece + "。" : piece;
+        }).filter(Boolean).join("\n"));
       });
       // 発動したハテナ名を見出しの前に付けて、なぜこの操作が出ているかを示す。
+      if (["swap", "collect", "replace"].indexOf(action.type) !== -1) {
+        const head = document.createElement("div");
+        head.className = "question-head";
+        panel.insertBefore(head, title);
+        head.appendChild(title);
+        const skip = document.createElement("button");
+        skip.type = "button";
+        skip.className = "question-skip-button";
+        skip.textContent = "使わず進める";
+        skip.addEventListener("click", skipPendingQuestionAction);
+        head.appendChild(skip);
+      }
       if (questionEffectFocus && questionEffectFocus.name && title.textContent.indexOf("発動") === -1
         && (questionEffectFocus.actionType === undefined || questionEffectFocus.actionType === action.type)) {
         questionEffectFocus.actionType = action.type;
@@ -20913,6 +20927,59 @@
     // 発動したハテナを囲んで「なぜ今この操作が出ているか」を示すための状態。
     let questionEffectFocus = null;
 
+    // 効果ごとの見出しと説明（下部の操作欄に出す）。
+    const questionEffectGuide = {
+      "color": { title: "カラーズ発動", body: "模様の一部となります。" },
+      "super-color": { title: "スーパーカラーズ発動", body: "模様の一部となり、模様の得点が2倍になります。" },
+      "all-colors": { title: "オールカラーズ発動", body: "どの色にもつながり、模様の一部となります。" },
+      "spotlight": { title: "スポットライト発動", body: "この先1列の模様の得点が+1となります。" },
+      "lock": { title: "ロック発動", body: "この先1列のタイルが固定されます。" },
+      "swap": { title: "スワップ発動", body: "２つのハテナタイルを選び、位置を入れ替えることができます。" },
+      "collect": { title: "キープ発動", body: "共有札から1枚選び手札とすることができます。(上限1枚)\n手札は自分の番に追加で置けます。" },
+      "replace": { title: "ムーブ発動", body: "タイルを1枚選び、置き直すことができます。" }
+    };
+
+    // 説明文を、改行(\n)と句点(。)の切れ目で行に分けて入れる。
+    function appendBodyLines(el, text) {
+      String(text).split("\n").forEach(function (line, i) {
+        if (i > 0) {
+          el.appendChild(document.createElement("br"));
+        }
+        el.appendChild(document.createTextNode(line));
+      });
+    }
+
+    // 選択を伴わない効果は、発動時に見出しと説明を下部へ一定時間出す。
+    function flashQuestionGuide(effect) {
+      const guide = questionEffectGuide[effect];
+      if (!guide) {
+        return;
+      }
+      instructionFlash = { message: guide.title, body: guide.body };
+      setTimeout(function () {
+        if (instructionFlash && instructionFlash.message === guide.title) {
+          instructionFlash = null;
+          render();
+        }
+      }, 4000);
+    }
+
+    // 使わずに手番を進める（スワップ・キープ・ムーブ）。
+    function skipPendingQuestionAction() {
+      const action = state.pendingAction;
+      if (!action || ["swap", "collect", "replace"].indexOf(action.type) === -1) {
+        return;
+      }
+      const player = currentPlayer();
+      if (player && !player.isCpu) {
+        addLog(player.name + " は効果を使わずに進めました。");
+      }
+      inlineConfirm = null;
+      state.pendingAction = null;
+      finishPendingQuestionAction();
+      render();
+    }
+
     function isQuestionEffectFocusActive(slotId) {
       if (!questionEffectFocus || !slotId || questionEffectFocus.slotId !== slotId) {
         return false;
@@ -20954,6 +21021,12 @@
         const flashTitle = document.createElement("strong");
         flashTitle.textContent = instructionFlash.message;
         flashPanel.appendChild(flashTitle);
+        if (instructionFlash.body) {
+          const flashBody = document.createElement("span");
+          flashBody.className = "label";
+          appendBodyLines(flashBody, instructionFlash.body);
+          flashPanel.appendChild(flashBody);
+        }
         elements.instructionBody.appendChild(flashPanel);
         elements.instructionPanel.classList.remove("is-empty");
         elements.instructionPanel.hidden = false;

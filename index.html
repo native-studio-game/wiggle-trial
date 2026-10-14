@@ -10336,6 +10336,8 @@
   body.view-mobile .question-skip-button { font-size: 10.5px !important; font-weight: 500 !important; padding: 2px 4px !important; line-height: 1.2 !important; background: transparent !important; border: 0 !important; box-shadow: none !important; color: #64748b !important; text-decoration: underline; text-underline-offset: 2px; }
   .question-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .question-text { flex: 1 1 auto; min-width: 0; text-align: left; }
+  .question-thumbs { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+  .question-thumbs img { width: 26px; height: 26px; object-fit: contain; border-radius: 4px; background: #ffffff; border: 1px solid #cbd5e1; }
   .question-head-actions { display: flex; flex-direction: row; align-items: center; gap: 10px; flex: 0 0 auto; }
   .question-text > strong { display: block; margin: 0; line-height: 1.3; }
   .question-text .label, .question-text .note { display: block; margin: 0; font-size: 11px; line-height: 1.3; }
@@ -19421,6 +19423,28 @@
         // 左に見出しと説明、右に「使わず進める」を置く
         const head = document.createElement("div");
         head.className = "question-head";
+        // 発動したハテナ（ムーブ先の選択中は動かすタイル）を小さく見せて、なぜ今この操作かを示す
+        const thumbs = document.createElement("div");
+        thumbs.className = "question-thumbs";
+        const focusSlot = questionEffectFocus && questionEffectFocus.slotId
+          ? (state.questionBoard || []).find(function (slotItem) { return slotItem && slotItem.id === questionEffectFocus.slotId; })
+          : null;
+        if (action.type !== "replace-place" && focusSlot && focusSlot.tile && focusSlot.tile.src) {
+          const focusImg = document.createElement("img");
+          focusImg.src = tilePath + focusSlot.tile.src;
+          focusImg.alt = "";
+          thumbs.appendChild(focusImg);
+        }
+        if (action.type === "replace-place" && action.tile && action.tile.src) {
+          const movingImg = document.createElement("img");
+          movingImg.src = tilePath + action.tile.src;
+          movingImg.alt = "";
+          movingImg.style.transform = "rotate(" + (action.rotation || 0) + "deg)";
+          thumbs.appendChild(movingImg);
+        }
+        if (thumbs.children.length > 0) {
+          head.appendChild(thumbs);
+        }
         const textBox = document.createElement("div");
         textBox.className = "question-text";
         Array.from(panel.children).forEach(function (child) {

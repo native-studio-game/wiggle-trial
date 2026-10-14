@@ -10729,7 +10729,7 @@
   .settings-actions + .button-row { margin-top: 14px; }
   .settings-actions button { padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 700; }
   body.view-mobile.mode-popjam-score .board { width: 100%; min-width: 0; }
-  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 358px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
+  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 332px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
   .corner-controls { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
   body #cornerControls .corner-button { position: absolute; pointer-events: auto; width: 30px; height: 30px; top: calc(8px + (100% - 16px) / 14 - 15px); }
   body #cornerControls #guideCornerButton { left: calc(8px + (100% - 16px) / 14 - 15px); right: auto; }
@@ -10751,9 +10751,9 @@
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto !important; }
   body.view-mobile.mode-popjam-score .layout { align-content: start !important; height: auto !important; }
   body.view-mobile.mode-popjam-score .play-area { align-content: start !important; }
-  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 358px)) auto !important; }
-  body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 358px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 358px)) !important; aspect-ratio: auto !important; }
-  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 358px)) 48px auto !important; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 332px)) auto !important; }
+  body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 332px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 332px)) !important; aspect-ratio: auto !important; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 332px)) 48px auto !important; }
   body.view-mobile.mode-popjam-score .board-instruction { margin: 2px 0 2px !important; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel { display: flex !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel > strong { font-size: 14px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
@@ -10761,6 +10761,17 @@
   body.view-mobile.mode-popjam-score .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img { outline: none !important; }
   .external-question.effect-source img, .cell.inner-question.effect-source img { outline: 3px solid #7c3aed !important; outline-offset: 2px !important; box-shadow: 0 0 0 5px rgba(124,58,237,0.25) !important; }
+  /* 盤面を大きくするため、得点欄と手札・共有札を詰める（ポップジャム・スマホ） */
+  body.view-mobile.mode-popjam-score .bl-scores { gap: 3px !important; }
+  body.view-mobile.mode-popjam-score .bl-score-row { padding-top: 4px !important; padding-bottom: 4px !important; }
+  body.view-mobile.mode-popjam-score .player-grid { gap: 4px !important; }
+  body.view-mobile.mode-popjam-score .hand-row .deck { height: 64px !important; min-height: 0 !important; overflow: visible !important; }
+  body.view-mobile.mode-popjam-score .hand-panel { padding-top: 0 !important; padding-bottom: 0 !important; row-gap: 0 !important; gap: 0 !important; min-height: 0 !important; height: auto !important; grid-template-rows: auto !important; align-content: center !important; }
+  body.view-mobile.mode-popjam-score .hand-row { padding-top: 2px !important; padding-bottom: 2px !important; min-height: 68px !important; height: auto !important; overflow: visible !important; }
+  body.view-mobile.mode-popjam-score .play-area { overflow: visible !important; }
+  body.view-mobile.mode-popjam-score .hand-row .deck img { height: 100% !important; width: auto !important; max-height: 52px !important; }
+  body.view-mobile.mode-popjam-score .hand-row .hand-tile,
+  body.view-mobile.mode-popjam-score .shared-market .hand-tile { width: 50px !important; height: 50px !important; min-width: 50px !important; min-height: 50px !important; max-width: 50px !important; max-height: 50px !important; }
   .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
   body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }
   body.view-mobile.mode-popjam-score .hand-tile.selected { border-radius: 4px !important; }

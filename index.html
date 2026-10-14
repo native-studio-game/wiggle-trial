@@ -14643,6 +14643,11 @@
         return;
       }
 
+      // 置いた直後は手番が終わるので、配置候補・予備配置を出さず、手札の自動選択もしない
+      state.popjamTurnEnding = true;
+      state.selectedHandIndex = null;
+      state.selectedRotation = 0;
+      clearAllPlacementPreviews();
       render();
       schedulePopjamEndTurn(player.id);
     }
@@ -14677,6 +14682,7 @@
 
     function schedulePopjamEndTurn(playerId) {
       setTimeout(function () {
+        state.popjamTurnEnding = false;
         const player = currentPlayer();
         if (!state.started || state.over || !player || player.id !== playerId
           || state.discardPending > 0 || hasPopjamWinDiscardShowcase()
@@ -15519,7 +15525,7 @@
     }
 
     function selectedPlacementTile() {
-      if (state.selectedHandIndex === null) {
+      if (state.selectedHandIndex === null || state.popjamTurnEnding) {
         return null;
       }
       return currentPlacementTiles()[state.selectedHandIndex] || null;
@@ -16165,6 +16171,13 @@
     function ensureDefaultHandSelection() {
       const player = currentPlayer();
       if (!state.started || state.over || !player || player.isCpu) {
+        return;
+      }
+
+      // 置いた直後の手番終了待ちの間は、手札を自動選択しない（配置候補を出さない）
+      if (state.popjamTurnEnding) {
+        state.selectedHandIndex = null;
+        state.selectedRotation = 0;
         return;
       }
 

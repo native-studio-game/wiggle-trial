@@ -11088,8 +11088,6 @@
       { id: 88, name: "ハテナ ムーブ", src: "tile-088-question-move.png", effect: "replace", count: 3 }
     ];
 
-    const lockAllColorsQuestionTileDefinition = null;
-
     const innerQuestionTileDefinitions = [];
 
     const allTileDefinitions = tileDefinitions.concat(questionTileDefinitions, [startTile, questionBackTile]);
@@ -13522,30 +13520,10 @@
       return Boolean(cell && cell.tile);
     }
 
-    function isLockAllColorsSlot(slot) {
-      return Boolean(slot && slot.revealed && slot.tile && slot.tile.effect === "lock-all-colors" && isQuestionEffectActive(slot));
-    }
-
-    function lockAllColorsCompletedPatternCellSet() {
-      const set = new Set();
-      detectCompletedPatterns().forEach(function (pattern) {
-        const caps = Array.isArray(pattern.caps) ? pattern.caps : [];
-        if (!caps.some(isLockAllColorsSlot)) {
-          return;
-        }
-        (pattern.cells || []).forEach(function (cell) {
-          if (boardCellAt(cell.r, cell.c)) {
-            set.add(cell.r + "," + cell.c);
-          }
-        });
-      });
-      return set;
-    }
-
     // ロック: 有効なロック対象セルを集める。ここに在るタイルはムーブで動かせない。
     function lockedCellSet() {
       if (isPopjamScoreAltMode()) {
-        return lockAllColorsCompletedPatternCellSet();
+        return new Set();
       }
 
       const set = new Set();

@@ -10740,6 +10740,7 @@
   .inline-confirm .inline-confirm-panel { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .inline-confirm .inline-confirm-panel > strong { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 1.4; color: #1f2937; white-space: normal; }
   .inline-confirm-actions button.inline-confirm-yes { min-width: 64px; }
+  body.view-mobile.mode-popjam-score .hand-tile.collect-target { outline: 3px solid #f59e0b !important; outline-offset: 0 !important; border-radius: 4px; }
   .external-question.swap-picked img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.35) !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
@@ -12663,6 +12664,9 @@
     }
 
     function advanceTurn() {
+      if (isPopjamScoreMode()) {
+        refillSharedMarket({ animate: true });
+      }
       if (isDealSurvivalMode()) {
         if (finishDealSurvivalIfReady()) {
           return;
@@ -14446,7 +14450,10 @@
       state.sharedMarket.splice(index, 1);
       clearMarketTileRotation(index);
       player.hand.push(tile);
-      refillSharedMarket({ animate: true });
+      // 共有札の補充は手番の終わりに行う（キープした手番の中では補充しない）
+      if (!isPopjamScoreMode()) {
+        refillSharedMarket({ animate: true });
+      }
       return tile;
     }
 
@@ -21350,7 +21357,7 @@
       const player = currentPlayer();
       const hasExtraHand = Boolean(player && Array.isArray(player.hand) && player.hand.length > 0 && isPopjamScoreMode());
       const isCollecting = Boolean(state.pendingAction && state.pendingAction.type === "collect");
-      elements.sharedMarketLabel.hidden = !(active && isCollecting);
+      elements.sharedMarketLabel.hidden = true;
       elements.sharedMarketLabel.textContent = isCollecting ? "共有札（手札に加える対象）" : "共有札";
       elements.sharedMarket.innerHTML = "";
 
@@ -21362,6 +21369,9 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "hand-tile";
+        if (state.pendingAction && state.pendingAction.type === "collect" && index < state.sharedMarket.length) {
+          button.classList.add("collect-target");
+        }
         if (options && options.handGroupStart) {
           button.classList.add("hand-group-start");
         }

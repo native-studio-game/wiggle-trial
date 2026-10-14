@@ -10722,17 +10722,18 @@
   #titleScreen #modeSelect { width: 100%; font-size: 16px; padding: 10px 12px; border-radius: 12px; }
   body #titleScreen .title-card #newGameButton { display: flex; justify-content: center; position: static; width: 100%; min-width: 0; max-width: none; height: auto; min-height: 0; padding: 14px; margin: 0; border: 0; border-radius: 999px; background: #1f2937; color: #ffffff; font-size: 18px; font-weight: 800; line-height: 1.2; overflow: visible; text-indent: 0; }
   body #titleScreen .title-card #newGameButton::before, body #titleScreen .title-card #newGameButton::after { content: none !important; display: none !important; }
-  .corner-controls { position: absolute; top: 6px; right: 6px; display: flex; gap: 8px; z-index: 6; }
   body #cornerControls .corner-button { width: 34px; height: 34px; min-height: 0; padding: 0; margin: 0; border-radius: 50%; border: 1px solid #d1d5db; background: #ffffff; color: #374151; box-shadow: 0 2px 6px rgba(15,23,42,0.12); font-size: 16px; font-weight: 800; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; cursor: pointer; }
   body #cornerControls .corner-button::before, body #cornerControls .corner-button::after { content: none !important; display: none !important; }
   body #cornerControls #settingsButton span { display: block; width: 14px; height: 2px; background: #374151; border-radius: 2px; }
   .settings-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
   .settings-actions + .button-row { margin-top: 14px; }
   .settings-actions button { padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 700; }
-  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 275px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
   body.view-mobile.mode-popjam-score .board { width: 100%; min-width: 0; }
-  body.view-mobile main.app { padding-top: 44px; }
-  body #cornerControls { top: 4px; right: 8px; }
+  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 320px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
+  .corner-controls { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
+  body #cornerControls .corner-button { position: absolute; pointer-events: auto; width: 30px; height: 30px; top: calc(8px + (100% - 16px) / 14 - 15px); }
+  body #cornerControls #guideCornerButton { left: calc(8px + (100% - 16px) / 14 - 15px); right: auto; }
+  body #cornerControls #settingsButton { right: calc(8px + (100% - 16px) / 14 - 15px); left: auto; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -10760,10 +10761,6 @@
     </div>
   </section>
   <main class="app">
-    <div class="corner-controls" id="cornerControls">
-      <button type="button" id="guideCornerButton" class="corner-button" title="ガイドを見る" aria-label="ガイドを見る">?</button>
-      <button type="button" id="settingsButton" class="corner-button" title="設定" aria-label="設定" aria-haspopup="dialog" aria-expanded="false"><span></span><span></span><span></span></button>
-    </div>
     <header class="topbar">
       <div class="title">
         <h1>Wiggle</h1>
@@ -10805,6 +10802,10 @@
         </div>
 
         <div class="board-wrap" id="boardWrap">
+      <div class="corner-controls" id="cornerControls">
+        <button type="button" id="guideCornerButton" class="corner-button" title="ガイドを見る" aria-label="ガイドを見る">?</button>
+        <button type="button" id="settingsButton" class="corner-button" title="設定" aria-label="設定" aria-haspopup="dialog" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
           <div class="notification-lane" id="notificationLane" aria-live="polite">
             <div class="score-toast" id="scoreToast" hidden></div>
           </div>

@@ -10734,6 +10734,13 @@
   body #cornerControls .corner-button { position: absolute; pointer-events: auto; width: 30px; height: 30px; top: calc(8px + (100% - 16px) / 14 - 15px); }
   body #cornerControls #guideCornerButton { left: calc(8px + (100% - 16px) / 14 - 15px); right: auto; }
   body #cornerControls #settingsButton { right: calc(8px + (100% - 16px) / 14 - 15px); left: auto; }
+  .play-area { position: relative; }
+  .inline-confirm { position: absolute; left: 8px; right: 8px; bottom: 6px; z-index: 7; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; box-shadow: 0 8px 20px rgba(15,23,42,0.16); padding: 8px 10px; }
+  .inline-confirm[hidden] { display: none; }
+  .inline-confirm .inline-confirm-panel { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .inline-confirm .inline-confirm-panel > strong { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 1.4; color: #1f2937; white-space: normal; }
+  .inline-confirm-actions button.inline-confirm-yes { min-width: 64px; }
+  .swap-picked { outline: 3px solid #f59e0b !important; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(245,158,11,0.35); }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -10782,6 +10789,7 @@
     </header>
     <div class="layout">
       <section class="play-area">
+        <div class="inline-confirm" id="inlineConfirm" hidden></div>
         <div class="debug-status" data-debug-status>
           <div class="stat">
             <span class="label">手番</span>
@@ -18307,7 +18315,7 @@
 
     function renderInlineConfirmPanel(confirmState) {
       const panel = document.createElement("div");
-      panel.className = "action-target-panel inline-confirm-panel";
+      panel.className = "inline-confirm-panel";
       const title = document.createElement("strong");
       title.textContent = confirmState.message;
       panel.appendChild(title);
@@ -18326,8 +18334,8 @@
       yes.addEventListener("click", function () {
         resolveInlineConfirm(true);
       });
-      actions.appendChild(no);
       actions.appendChild(yes);
+      actions.appendChild(no);
       panel.appendChild(actions);
       return panel;
     }
@@ -20350,6 +20358,7 @@
         button.classList.add("swap-target");
         if (state.pendingAction.selectedSlotIds.indexOf(slot.id) !== -1) {
           button.classList.add("pending-effect");
+          button.classList.add("swap-picked");
         }
       }
       button.style.setProperty("--slot-index", String(slot.index));
@@ -20834,11 +20843,19 @@
 
       elements.instructionBody.innerHTML = "";
       cleanupInlineConfirm();
+      const inlineConfirmEl = document.getElementById("inlineConfirm");
       if (inlineConfirm) {
-        elements.instructionBody.appendChild(renderInlineConfirmPanel(inlineConfirm));
-        elements.instructionPanel.classList.remove("is-empty");
-        elements.instructionPanel.hidden = false;
+        if (inlineConfirmEl) {
+          inlineConfirmEl.innerHTML = "";
+          inlineConfirmEl.appendChild(renderInlineConfirmPanel(inlineConfirm));
+          inlineConfirmEl.hidden = false;
+        }
+        elements.instructionPanel.hidden = true;
         return;
+      }
+      if (inlineConfirmEl) {
+        inlineConfirmEl.hidden = true;
+        inlineConfirmEl.innerHTML = "";
       }
       const player = hasPopjamWinDiscardShowcase()
         ? popjamWinDiscardPlayer()

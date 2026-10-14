@@ -13992,7 +13992,7 @@
       }
 
       slot.effectUsed = true;
-      questionEffectFocus = { slotId: slot.id, actionType: undefined };
+      questionEffectFocus = { slotId: slot.id, actionType: undefined, name: tile.name };
       if (slot.inner && slot.tile) {
         slot.tile.revealed = true;
         slot.tile.effectUsed = true;
@@ -20666,7 +20666,7 @@
         note.textContent = "山札があれば下へ、なければ自分の追加手札になります。";
         panel.appendChild(note);
       } else if (action.type === "swap") {
-        title.textContent = "入れ替える2つを選ぶ";
+        title.textContent = "入れ替える2つのハテナを選ぶ";
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "選んだ2つの位置が入れ替わります。";
@@ -20855,6 +20855,12 @@
         panel.appendChild(row);
       }
 
+      // 発動したハテナ名を見出しの前に付けて、なぜこの操作が出ているかを示す。
+      if (questionEffectFocus && questionEffectFocus.name
+        && (questionEffectFocus.actionType === undefined || questionEffectFocus.actionType === action.type)) {
+        questionEffectFocus.actionType = action.type;
+        title.textContent = questionEffectFocus.name + "発動：" + title.textContent;
+      }
       return panel;
     }
 

@@ -14317,7 +14317,7 @@
     }
 
     function hasCollectableMarketTile(playerId) {
-      if (isPopjamScoreAltMode() && Number.isInteger(playerId) && playerHasKeptTile(playerId)) {
+      if ((isPopjamScoreAltMode() || isPopjamScoreOpenMode()) && Number.isInteger(playerId) && playerHasKeptTile(playerId)) {
         return false;
       }
       return Array.isArray(state.sharedMarket) && state.sharedMarket.some(Boolean);
@@ -14330,7 +14330,7 @@
       if (!player || !Array.isArray(state.sharedMarket) || index < 0 || index >= state.sharedMarket.length) {
         return null;
       }
-      if (isPopjamScoreAltMode() && playerHasKeptTile(playerId)) {
+      if ((isPopjamScoreAltMode() || isPopjamScoreOpenMode()) && playerHasKeptTile(playerId)) {
         return null;
       }
 

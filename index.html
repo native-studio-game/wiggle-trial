@@ -15027,7 +15027,7 @@
       const dirIndex = DIR_OPP[destSlot.inwardDir];
       if (dirIndex === undefined) { return false; }
       const cell = boardCellAt(destSlot.boardRow, destSlot.boardCol);
-      if (!cell || !cell.tile) { return false; }
+      if (!cell || !cell.tile) { return true; }
       const edge = ["top", "right", "bottom", "left"][dirIndex];
       for (let i = 0; i < edgeSampleCount; i++) {
         if (sampleTileEdgeColor(cell.tile.id, cell.rotation || 0, edge, i) !== movedTile.color) { return false; }

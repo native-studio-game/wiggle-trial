@@ -18787,7 +18787,10 @@
 
     function createFixedBoardCell(row, col, renderContext) {
       const cell = document.createElement("button");
-      const boardTile = state.board[row] ? state.board[row][col] : null;
+      // ムーブで動かすタイルは、置き先を選ぶ間だけ盤面に表示しない（データは元の場所に残したまま）
+      const moveSource = state.pendingAction && state.pendingAction.type === "replace-place"
+        && state.pendingAction.source && state.pendingAction.source.row === row && state.pendingAction.source.col === col;
+      const boardTile = !moveSource && state.board[row] ? state.board[row][col] : null;
       const glowMap = renderContext.glowMap || {};
       const showPlacementCandidates = Boolean(renderContext.showPlacementCandidates);
       cell.type = "button";

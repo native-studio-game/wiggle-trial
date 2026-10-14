@@ -9020,6 +9020,44 @@
       font-size: 28px;
     }
 
+    /* 勝敗リボン: 角丸の白いカード。色だけ勝敗で変える */
+    .deal-result-ribbon {
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+      backdrop-filter: none;
+      padding: 16px 22px;
+      min-height: 0;
+    }
+    .deal-result-ribbon::before {
+      display: none;
+    }
+    .deal-result-ribbon strong {
+      background: none;
+      -webkit-background-clip: border-box;
+      background-clip: border-box;
+      -webkit-text-fill-color: currentColor;
+      color: #d6453d;
+      animation: none;
+      font-size: clamp(34px, 9vw, 60px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+    }
+    .deal-result-ribbon.lose {
+      background: rgba(255, 255, 255, 0.94);
+    }
+    .deal-result-ribbon.win strong {
+      color: #0b7d52;
+    }
+    .deal-result-ribbon.draw strong,
+    .deal-result-ribbon.score-result-ribbon.draw strong {
+      color: #3b4a5f;
+    }
+    .deal-result-ribbon.tiebreak-result-ribbon strong {
+      font-size: clamp(28px, 7vw, 44px);
+    }
+
     .board-result-overlay {
       inset: 0;
       padding: clamp(12px, 2.2vw, 22px);

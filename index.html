@@ -9762,6 +9762,28 @@
       justify-self: center;
     }
 
+    /* 共有札ラベルは行を増やさず、札の上端に小さく重ねる（手札パネルが崩れないように） */
+    body.view-mobile .hand-panel:has(> .shared-market-label:not([hidden])) {
+      position: relative;
+    }
+
+    body.view-mobile .shared-market-label:not([hidden]) {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      margin: 0;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+      font-size: 10px;
+      line-height: 13px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
     body.view-mobile.mode-shared-market:not(.mode-popjam-hand):not(.mode-popjam-score):not(.mode-tactics) .hand-panel {
       display: grid;
       grid-template-rows: minmax(0, 1fr);

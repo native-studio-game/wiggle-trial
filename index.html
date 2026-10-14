@@ -10740,7 +10740,7 @@
   .inline-confirm .inline-confirm-panel { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .inline-confirm .inline-confirm-panel > strong { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 1.4; color: #1f2937; white-space: normal; }
   .inline-confirm-actions button.inline-confirm-yes { min-width: 64px; }
-  .swap-picked { outline: 3px solid #f59e0b !important; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(245,158,11,0.35); }
+  .external-question.swap-picked img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.35) !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
   body.view-mobile.mode-popjam-score .board-instruction { position: relative !important; left: auto !important; right: auto !important; bottom: auto !important; top: auto !important; transform: none !important; width: 100% !important; height: auto !important; height: 56px; min-height: 56px; max-height: 56px; overflow: hidden; margin: 4px 0 0; padding: 6px 12px; line-height: 1.3; border-radius: 14px; display: flex; flex-direction: column; justify-content: center; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15,23,42,0.08); text-align: center; overflow: visible; }
@@ -10753,6 +10753,11 @@
   body.view-mobile.mode-popjam-score .play-area { align-content: start !important; }
   body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 330px)) auto !important; }
   body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 330px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 330px)) !important; aspect-ratio: auto !important; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 330px)) 60px auto !important; }
+  body.view-mobile.mode-popjam-score .board-instruction { margin: 2px 0 2px !important; }
+  body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel { display: flex !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
+  body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel > strong { font-size: 14px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
+  body.view-mobile.mode-popjam-score .board-instruction #instructionBody { width: 100%; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -10873,6 +10878,9 @@
             <div class="log" id="log"></div>
           </section>
         </div>
+        <section class="instruction-panel board-instruction is-empty" id="instructionPanel" aria-live="polite">
+            <div id="instructionBody"></div>
+          </section>
         <div class="hand-row" id="handRow">
           <section class="tactics-goal-panel" id="tacticsGoalPanel" aria-label="目標カード">
             <div class="tactics-goals" id="tacticsGoals"></div>
@@ -10933,9 +10941,6 @@
 
       <aside class="side">
         <div class="declare-slot side-declare-slot" id="sideDeclareSlot"></div>
-      <section class="instruction-panel board-instruction is-empty" id="instructionPanel" aria-live="polite">
-          <div id="instructionBody"></div>
-        </section>
       <section class="players">
           <div class="section-head">
             <h3 id="playersTitle">順位 / 得点</h3>
@@ -20859,10 +20864,10 @@
       if (inlineConfirm) {
         if (inlineConfirmEl) {
           inlineConfirmEl.innerHTML = "";
-          inlineConfirmEl.appendChild(renderInlineConfirmPanel(inlineConfirm));
-          inlineConfirmEl.hidden = false;
+          inlineConfirmEl.hidden = true;
         }
-        elements.instructionPanel.classList.add("is-empty");
+        elements.instructionBody.appendChild(renderInlineConfirmPanel(inlineConfirm));
+        elements.instructionPanel.classList.remove("is-empty");
         elements.instructionPanel.hidden = false;
         return;
       }

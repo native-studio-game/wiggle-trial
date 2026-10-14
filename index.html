@@ -13582,9 +13582,6 @@
       if (gained > 0 && !isPopjamScoreMode()) {
         messages.push("模様得点 +" + gained);
       }
-      if (lost > 0) {
-        messages.push("模様消滅 -" + lost);
-      }
       if (messages.length > 0) {
         state.scoreText = state.scoreText ? state.scoreText + " / " + messages.join(" / ") : messages.join(" / ");
         scheduleToastHide();

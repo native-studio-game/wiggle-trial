@@ -11080,7 +11080,7 @@
       { id: 78, name: "ハテナ スーパー赤", src: "tile-078-question-super-red.png", effect: "super-color", color: "red", count: 1 },
       { id: 79, name: "ハテナ スーパー黄", src: "tile-079-question-super-yellow.png", effect: "super-color", color: "yellow", count: 1 },
       { id: 80, name: "ハテナ スーパー青", src: "tile-080-question-super-blue.png", effect: "super-color", color: "blue", count: 1 },
-      { id: 82, name: "ハテナ オールカラー", src: "tile-082-question-all-colors.png", effect: "all-colors", count: 2 },
+      { id: 82, name: "ハテナ オールカラーズ", src: "tile-082-question-all-colors.png", effect: "all-colors", count: 2 },
       { id: 83, name: "ハテナ スワップ", src: "tile-083-question-swap.png", effect: "swap", count: 3 },
       { id: 84, name: "ハテナ ロック", src: "tile-084-question-lock.png", effect: "lock", count: 2 },
       { id: 85, name: "ハテナ スポットライト", src: "tile-085-question-spotlight.png", effect: "spotlight", count: 2 },
@@ -13923,14 +13923,14 @@
       }
 
       if (tile.effect === "super-color") {
-        context.messages.push("スーパー" + colorNames[tile.color]);
+        context.messages.push("スーパー" + colorNames[tile.color] + "カラーズ");
         addLog(player.name + " が " + tile.name + " を発動しました。このハテナを使って完成した"
           + colorNames[tile.color] + "の得点が2倍になります。");
         return;
       }
 
       if (tile.effect === "all-colors") {
-        context.messages.push("オールカラー");
+        context.messages.push("オールカラーズ");
         addLog(player.name + " が " + tile.name + " を発動しました。どの色の模様にもつながります。");
         return;
       }

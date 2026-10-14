@@ -10729,7 +10729,7 @@
   .settings-actions + .button-row { margin-top: 14px; }
   .settings-actions button { padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 700; }
   body.view-mobile.mode-popjam-score .board { width: 100%; min-width: 0; }
-  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 320px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
+  body.view-mobile .board-wrap { width: min(100%, calc(100dvh - 330px)); height: auto; aspect-ratio: 1 / 1; margin-inline: auto; align-self: start; }
   .corner-controls { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
   body #cornerControls .corner-button { position: absolute; pointer-events: auto; width: 30px; height: 30px; top: calc(8px + (100% - 16px) / 14 - 15px); }
   body #cornerControls #guideCornerButton { left: calc(8px + (100% - 16px) / 14 - 15px); right: auto; }
@@ -10741,6 +10741,18 @@
   .inline-confirm .inline-confirm-panel > strong { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 1.4; color: #1f2937; white-space: normal; }
   .inline-confirm-actions button.inline-confirm-yes { min-width: 64px; }
   .swap-picked { outline: 3px solid #f59e0b !important; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(245,158,11,0.35); }
+  body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; background: transparent !important; box-shadow: none !important; }
+  body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
+  body.view-mobile.mode-popjam-score .board-instruction { position: relative !important; left: auto !important; right: auto !important; bottom: auto !important; top: auto !important; transform: none !important; width: 100% !important; height: auto !important; height: 56px; min-height: 56px; max-height: 56px; overflow: hidden; margin: 4px 0 0; padding: 6px 12px; line-height: 1.3; border-radius: 14px; display: flex; flex-direction: column; justify-content: center; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15,23,42,0.08); text-align: center; overflow: visible; }
+  body.view-mobile.mode-popjam-score .board-instruction.is-empty { visibility: hidden; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: auto auto !important; }
+  body.view-mobile.mode-popjam-score .layout { padding-top: 6px; }
+  body.view-mobile.mode-popjam-score .side { height: auto !important; min-height: 0 !important; align-self: start; }
+  body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto !important; }
+  body.view-mobile.mode-popjam-score .layout { align-content: start !important; height: auto !important; }
+  body.view-mobile.mode-popjam-score .play-area { align-content: start !important; }
+  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 330px)) auto !important; }
+  body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 330px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 330px)) !important; aspect-ratio: auto !important; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -10840,9 +10852,6 @@
               </div>
             </section>
           </div>
-          <section class="instruction-panel board-instruction is-empty" id="instructionPanel" aria-live="polite">
-            <div id="instructionBody"></div>
-          </section>
           <div class="board" id="board"></div>
           <div class="open-perimeter" id="openPerimeter" hidden aria-label="外周タイル"></div>
           <div class="bl-viewport" id="blViewport">
@@ -10924,7 +10933,10 @@
 
       <aside class="side">
         <div class="declare-slot side-declare-slot" id="sideDeclareSlot"></div>
-        <section class="players">
+      <section class="instruction-panel board-instruction is-empty" id="instructionPanel" aria-live="polite">
+          <div id="instructionBody"></div>
+        </section>
+      <section class="players">
           <div class="section-head">
             <h3 id="playersTitle">順位 / 得点</h3>
           </div>
@@ -20850,7 +20862,8 @@
           inlineConfirmEl.appendChild(renderInlineConfirmPanel(inlineConfirm));
           inlineConfirmEl.hidden = false;
         }
-        elements.instructionPanel.hidden = true;
+        elements.instructionPanel.classList.add("is-empty");
+        elements.instructionPanel.hidden = false;
         return;
       }
       if (inlineConfirmEl) {

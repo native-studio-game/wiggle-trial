@@ -13892,7 +13892,8 @@
         return context;
       }
 
-      const needsOrderChoice = slots.length > 1 && (isPopjamInnerQuestionMode() || slots.some(function (slot) {
+      // 発動順が結果に関係するときだけ選ばせる（カラーズ・オールカラーズ・スーパーカラーズ・スポットライトなどは順番を選ばない）
+      const needsOrderChoice = slots.length > 1 && (slots.some(function (slot) {
         return slot.tile && ["swap", "delete", "salvage", "collect", "present", "replace"].indexOf(slot.tile.effect) !== -1;
       }));
 

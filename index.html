@@ -10793,6 +10793,7 @@
   .external-question.swap-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
   .question-head { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
   .question-skip-button { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 700; }
+  .hand-tile.collect-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -13897,7 +13898,7 @@
 
       // 発動順が結果に関係するときだけ選ばせる（カラーズ・オールカラーズ・スーパーカラーズ・スポットライトなどは順番を選ばない）
       const needsOrderChoice = slots.length > 1 && (slots.some(function (slot) {
-        return slot.tile && ["swap", "delete", "salvage", "collect", "present", "replace"].indexOf(slot.tile.effect) !== -1;
+        return slot.tile && ["swap", "collect", "replace"].indexOf(slot.tile.effect) !== -1;
       }));
 
       if (player && !player.isCpu && needsOrderChoice) {
@@ -14060,26 +14061,6 @@
         return;
       }
 
-      if (tile.effect === "delete") {
-        if (!player.isCpu) {
-          if (!hasDeletableBoardTile()) {
-            context.messages.push("デリート不発");
-            return;
-          }
-          beginQuestionAction("delete", slot, context);
-          return true;
-        }
-        const removed = deleteBoardTileForQuestion(player.id);
-        if (removed) {
-          context.messages.push("デリート");
-          addLog(player.name + " が盤面の " + removed.tile.name + " をデリートして"
-            + removed.destinationLabel + "へ戻しました。");
-        } else {
-          context.messages.push("デリート不発");
-        }
-        return;
-      }
-
       if (tile.effect === "collect") {
         if (!player.isCpu) {
           if (!hasCollectableMarketTile(player.id)) {
@@ -14091,29 +14072,6 @@
         const collected = collectMarketTileForQuestion(player.id);
         if (collected) {
           addLog(player.name + " が共有札から " + collected.name + " をキープしました。");
-        }
-        return;
-      }
-
-      if (tile.effect === "salvage") {
-        if (!player.isCpu) {
-          if (!hasOpponentRiverTile(player.id)) {
-            context.messages.push("コレクト不発");
-            addLog(player.name + " はコレクトできる捨て札がありません。");
-            return;
-          }
-          beginQuestionAction("salvage", slot, context);
-          return true;
-        }
-        const salvaged = salvageRiverTileForQuestion(player.id);
-        if (salvaged && placeSalvagedTileAutomatically(salvaged.tile, salvaged.sourcePlayerId, salvaged.sourceRiverIndex, context)) {
-          context.messages.push("コレクト");
-          addLog(player.name + " が捨て札から " + salvaged.tile.name + " を盤面に配置しました。");
-          if (state.discardPending > 0) {
-            return true;
-          }
-        } else {
-          context.messages.push("コレクト不発");
         }
         return;
       }
@@ -14133,28 +14091,6 @@
           context.messages.push("ムーブ不発");
         }
         return;
-      }
-
-      if (tile.effect === "present") {
-        if (!player.isCpu) {
-          if (player.hand.length === 0 || state.players.length <= 1) {
-            context.messages.push("プレゼント不発");
-            return;
-          }
-          beginQuestionAction("present", slot, context);
-          return true;
-        }
-        if (player.hand.length > 0 && nextPlayer) {
-          const gifts = [];
-          for (let i = 0; i < 2 && player.hand.length > 0; i++) {
-            gifts.push(player.hand.shift());
-          }
-          nextPlayer.hand = nextPlayer.hand.concat(gifts);
-          context.messages.push("プレゼント");
-          addLog(player.name + " が " + nextPlayer.name + " に手持ち" + gifts.length + "枚を渡しました。");
-        } else {
-          context.messages.push("プレゼント不発");
-        }
       }
 
       if (tile.effect === "draw-question-two") {
@@ -17013,7 +16949,17 @@
           render();
           return;
         }
-        collectSelectedMarketTile(index);
+        // 共有札をキープする前に「このタイルでいいですか？」を確認する
+        state.pendingAction.pickedIndex = index;
+        render();
+        confirmThen("このタイルでいいですか？", function () {
+          collectSelectedMarketTile(index);
+        }, function () {
+          if (state.pendingAction) {
+            state.pendingAction.pickedIndex = null;
+          }
+          render();
+        });
         return;
       }
 
@@ -21450,6 +21396,9 @@
         button.className = "hand-tile";
         if (state.pendingAction && state.pendingAction.type === "collect" && index < state.sharedMarket.length) {
           button.classList.add("collect-target", "pick-target");
+          if (state.pendingAction.pickedIndex === index) {
+            button.classList.add("collect-picked");
+          }
         }
         if (options && options.handGroupStart) {
           button.classList.add("hand-group-start");

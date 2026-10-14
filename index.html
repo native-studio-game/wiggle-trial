@@ -10743,6 +10743,7 @@
   /* 選べる対象の共通の枠（スワップの二枚選びと同じオレンジ） */
   body .pick-target img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; }
   body .small-tile.pick-target { outline: none !important; }
+
   .external-question.swap-picked img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.35) !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
@@ -10788,6 +10789,8 @@
   body.view-mobile.mode-popjam-score .corner-controls { display: flex; justify-content: flex-end; align-items: flex-start; gap: 8px; }
   body.view-mobile.mode-popjam-score .corner-controls .corner-button { position: static !important; top: auto !important; left: auto !important; right: auto !important; pointer-events: auto; }
   body.view-mobile.mode-popjam-score .layout { padding-top: 6px !important; }
+  /* 選んだ（確定候補の）タイルは、選べる対象のオレンジから濃い枠に変える。手札の選択と同じ濃い色 */
+  .external-question.swap-picked img { outline: 3px solid #1f2937 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(31,41,55,0.35) !important; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>

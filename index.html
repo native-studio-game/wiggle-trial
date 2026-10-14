@@ -330,6 +330,13 @@
       padding-inline: 8px;
     }
 
+    /* トーストが隠れている間は通知レーンの予約高さを消す（盤面と手札の隙間の原因） */
+    .notification-lane:has(.score-toast[hidden]) {
+      min-height: 0;
+      margin-block: 0;
+      padding: 0;
+    }
+
     body.mode-popjam-score .notification-lane:has(.score-toast[hidden]) {
       min-height: 0;
       margin-block: 0;
@@ -10633,9 +10640,7 @@
         <select id="modeSelect" title="モード">
           <option value="classic">クラシック</option>
           <option value="popjamScoreOpen">ポップジャム</option>
-          <!-- 内部保持（メニュー非表示・?mode= で到達可）: フリーダム / クラシックBT -->
-          <option value="borderless" hidden>フリーダム（内部）</option>
-          <option value="classicBonus" hidden>クラシックBT（内部）</option>
+          <!-- 内部モード（フリーダム / クラシックBT）はメニューに出さず、?mode= 指定時のみ init で追加 -->?
         </select>
         <select id="playerCountSelect" title="人数" hidden aria-hidden="true">
           <option value="cpu2">1人 + CPU</option>
@@ -26121,6 +26126,13 @@
 
     const initialParams = new URLSearchParams(window.location.search);
     const initialMode = initialParams.get("mode");
+    const internalModeLabels = { borderless: "フリーダム（内部）", classicBonus: "クラシックBT（内部）" };
+    if (internalModeLabels[initialMode] && elements.modeSelect && !elements.modeSelect.querySelector("option[value=\"" + initialMode + "\"]")) {
+      const internalOption = document.createElement("option");
+      internalOption.value = initialMode;
+      internalOption.textContent = internalModeLabels[initialMode];
+      elements.modeSelect.appendChild(internalOption);
+    }
     if (["classic", "popjamScoreOpen", "borderless", "classicBonus"].indexOf(initialMode) >= 0) {
       elements.modeSelect.value = initialMode;
     }

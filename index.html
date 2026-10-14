@@ -10790,7 +10790,7 @@
   body.view-mobile.mode-popjam-score .corner-controls .corner-button { position: static !important; top: auto !important; left: auto !important; right: auto !important; pointer-events: auto; }
   body.view-mobile.mode-popjam-score .layout { padding-top: 6px !important; }
   /* 選んだ（確定候補の）タイルは、選べる対象のオレンジから濃い枠に変える。手札の選択と同じ濃い色 */
-  .external-question.swap-picked img { outline: 3px solid #1f2937 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(31,41,55,0.35) !important; }
+  .external-question.swap-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -13842,9 +13842,7 @@
         return;
       }
 
-      const message = "ハテナ: " + context.messages.join(" / ");
-      state.scoreText = state.scoreText ? state.scoreText + " / " + message : message;
-      scheduleToastHide();
+      // 効果名の文字は盤面に出さない（ログには残る）
     }
 
     function revealQuestionSlot(slot) {
@@ -14003,7 +14001,7 @@
       }
 
       slot.effectUsed = true;
-      questionEffectFocus = { slotId: slot.id, actionType: undefined, name: tile.name };
+      questionEffectFocus = { slotId: slot.id, actionType: undefined, name: ({ swap: "スワップ", collect: "キープ", replace: "ムーブ", salvage: "コレクト", delete: "デリート", present: "プレゼント" })[tile.effect] || tile.name };
       if (slot.inner && slot.tile) {
         slot.tile.revealed = true;
         slot.tile.effectUsed = true;
@@ -14233,17 +14231,6 @@
         context: context
       };
 
-      if (type === "delete") {
-        state.scoreText = "デリート";
-      } else if (type === "swap") {
-        state.scoreText = "スワップ";
-      } else if (type === "salvage") {
-        state.scoreText = "コレクト";
-      } else if (type === "replace") {
-        state.scoreText = "ムーブ";
-      } else if (type === "present") {
-        state.scoreText = "プレゼント";
-      }
       scheduleToastHide();
     }
 
@@ -20861,6 +20848,23 @@
         panel.appendChild(row);
       }
 
+      // 説明文は句点で区切って行を分ける（長い文は読みやすい切れ目で改行）
+      panel.querySelectorAll(".label, .note").forEach(function (el) {
+        const pieces = el.textContent.split("。");
+        const parts = pieces.map(function (piece, i) {
+          return i < pieces.length - 1 ? piece + "。" : piece;
+        }).filter(Boolean);
+        if (parts.length < 2) {
+          return;
+        }
+        el.textContent = "";
+        parts.forEach(function (part, i) {
+          if (i > 0) {
+            el.appendChild(document.createElement("br"));
+          }
+          el.appendChild(document.createTextNode(part));
+        });
+      });
       // 発動したハテナ名を見出しの前に付けて、なぜこの操作が出ているかを示す。
       if (questionEffectFocus && questionEffectFocus.name && title.textContent.indexOf("発動") === -1
         && (questionEffectFocus.actionType === undefined || questionEffectFocus.actionType === action.type)) {

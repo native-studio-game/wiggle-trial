@@ -10336,6 +10336,7 @@
   body.view-mobile .question-skip-button { font-size: 10.5px !important; font-weight: 500 !important; padding: 2px 4px !important; line-height: 1.2 !important; background: transparent !important; border: 0 !important; box-shadow: none !important; color: #64748b !important; text-decoration: underline; text-underline-offset: 2px; }
   .question-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .question-text { flex: 1 1 auto; min-width: 0; text-align: left; }
+  .question-head-actions { display: flex; flex-direction: row; align-items: center; gap: 10px; flex: 0 0 auto; }
   .question-text > strong { display: block; margin: 0; line-height: 1.3; }
   .question-text .label, .question-text .note { display: block; margin: 0; font-size: 11px; line-height: 1.3; }
   .question-skip-button { flex: 0 0 auto; white-space: nowrap; font-size: 11px; padding: 3px 7px; line-height: 1.2; border-radius: 999px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 700; }
@@ -19196,7 +19197,7 @@
         return "ムーブするタイルを選ぶ";
       }
       if (state.pendingAction.type === "replace-place") {
-        return "ムーブ先を選ぶ";
+        return "移動先を選ぶ";
       }
       if (state.pendingAction.type === "survival-gift") {
         return "渡すタイルを選ぶ";
@@ -19276,10 +19277,10 @@
         appendBodyLines(note, questionEffectGuide.replace.body);
         panel.appendChild(note);
       } else if (action.type === "replace-place") {
-        title.textContent = "ムーブ先を選ぶ";
+        title.textContent = "移動先を選ぶ";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "回転してから、置ける空きマスへ移せます。";
+        note.textContent = "置ける空きマスへ移せます。回転もできます。";
         panel.appendChild(note);
       } else if (action.type === "survival-gift") {
         const giver = state.players.find(function (candidate) {
@@ -19415,7 +19416,7 @@
         }).filter(Boolean).join("\n"));
       });
       // 発動したハテナ名を見出しの前に付けて、なぜこの操作が出ているかを示す。
-      if (["swap", "collect", "replace"].indexOf(action.type) !== -1) {
+      if (["swap", "collect", "replace", "replace-place"].indexOf(action.type) !== -1) {
         // 左に見出しと説明、右に「使わず進める」を置く
         const head = document.createElement("div");
         head.className = "question-head";
@@ -19428,12 +19429,23 @@
         });
         textBox.insertBefore(title, textBox.firstChild);
         head.appendChild(textBox);
+        const actions = document.createElement("div");
+        actions.className = "question-head-actions";
+        if (action.type === "replace-place") {
+          const reselect = document.createElement("button");
+          reselect.type = "button";
+          reselect.className = "question-skip-button";
+          reselect.textContent = "選び直す";
+          reselect.addEventListener("click", backToReplaceSelection);
+          actions.appendChild(reselect);
+        }
         const skip = document.createElement("button");
         skip.type = "button";
         skip.className = "question-skip-button";
         skip.textContent = "使わず進める";
         skip.addEventListener("click", skipPendingQuestionAction);
-        head.appendChild(skip);
+        actions.appendChild(skip);
+        head.appendChild(actions);
         panel.insertBefore(head, panel.firstChild);
       }
       if (questionEffectFocus && questionEffectFocus.name && title.textContent.indexOf("発動") === -1
@@ -19521,9 +19533,27 @@
     }
 
     // 使わずに手番を進める（スワップ・キープ・ムーブ）。
+    // ムーブ先を選ぶ段階から、動かすタイルの選択に戻す（盤面のタイルは動いていない）
+    function backToReplaceSelection() {
+      const action = state.pendingAction;
+      if (!action || action.type !== "replace-place") {
+        return;
+      }
+      const base = Object.assign({}, action);
+      delete base.tile;
+      delete base.rotation;
+      delete base.source;
+      base.type = "replace";
+      inlineConfirm = null;
+      clearMobilePlacementConfirm();
+      state.pendingAction = base;
+      state.scoreText = "";
+      render();
+    }
+
     function skipPendingQuestionAction() {
       const action = state.pendingAction;
-      if (!action || ["swap", "collect", "replace"].indexOf(action.type) === -1) {
+      if (!action || ["swap", "collect", "replace", "replace-place"].indexOf(action.type) === -1) {
         return;
       }
       const player = currentPlayer();

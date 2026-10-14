@@ -11559,6 +11559,7 @@
     let placementFeedback = null;
     let mobilePlacementConfirm = null;
     let inlineConfirm = null;
+    let instructionFlash = null;
     let fixedBoardSwipeRotate = null;
     let pendingConfirmAction = "complete";
 
@@ -15114,8 +15115,7 @@
 
       if (!questionSwapDestinationOk(first.tile, second) || !questionSwapDestinationOk(second.tile, first)) {
         action.selectedSlotIds.pop();
-        state.scoreText = "その入れ替えは色がつながらないため選べません。";
-        render();
+        flashInstructionNote("色がつながらないため選べません");
         return;
       }
 
@@ -18311,6 +18311,17 @@
       render();
     }
 
+    function flashInstructionNote(message, ms) {
+      instructionFlash = { message: message };
+      render();
+      setTimeout(function () {
+        if (instructionFlash && instructionFlash.message === message) {
+          instructionFlash = null;
+          render();
+        }
+      }, ms || 1600);
+    }
+
     function cleanupInlineConfirm() {
       if (inlineConfirm && (state.over || !state.started || isCpuTurn())) {
         inlineConfirm = null;
@@ -20874,6 +20885,17 @@
       if (inlineConfirmEl) {
         inlineConfirmEl.hidden = true;
         inlineConfirmEl.innerHTML = "";
+      }
+      if (instructionFlash) {
+        const flashPanel = document.createElement("div");
+        flashPanel.className = "action-target-panel";
+        const flashTitle = document.createElement("strong");
+        flashTitle.textContent = instructionFlash.message;
+        flashPanel.appendChild(flashTitle);
+        elements.instructionBody.appendChild(flashPanel);
+        elements.instructionPanel.classList.remove("is-empty");
+        elements.instructionPanel.hidden = false;
+        return;
       }
       const player = hasPopjamWinDiscardShowcase()
         ? popjamWinDiscardPlayer()

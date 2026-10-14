@@ -13935,12 +13935,6 @@
         return;
       }
 
-      if (tile.effect === "lock-all-colors") {
-        context.messages.push("ロックオールカラー");
-        addLog(player.name + " が " + tile.name + " を発動しました。どの色にもつながり、このハテナを含む完成模様はムーブで移動できなくなります。");
-        return;
-      }
-
       if (tile.effect === "spotlight") {
         context.messages.push("スポットライト");
         addLog(player.name + " が " + tile.name + " を発動しました。この外周ハテナの行または列にある完成模様に+1点します。");
@@ -16368,7 +16362,7 @@
         return false;
       }
 
-      if (slot.tile.effect === "all-colors" || slot.tile.effect === "lock-all-colors") {
+      if (slot.tile.effect === "all-colors") {
         return true;
       }
 
@@ -16379,8 +16373,7 @@
       return Boolean(slot && slot.revealed && slot.tile
         && (slot.tile.effect === "color"
           || slot.tile.effect === "super-color"
-          || slot.tile.effect === "all-colors"
-          || slot.tile.effect === "lock-all-colors"));
+          || slot.tile.effect === "all-colors"));
     }
 
     function tileEdgeMatchesQuestionSlot(tile, rotation, edge, slot) {

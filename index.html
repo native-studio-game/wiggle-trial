@@ -10864,7 +10864,7 @@
     const analyticsParams = new URLSearchParams(window.location.search);
     const wiggleAnalyticsConfig = Object.assign({
       enabled: analyticsParams.get("analytics") !== "0",
-      apiEnabled: analyticsParams.get("event_api") !== "0",
+      apiEnabled: analyticsParams.get("event_api") === "1",
       debug: analyticsParams.get("debug_analytics") === "1"
     }, window.WIGGLE_ANALYTICS_CONFIG || {});
 

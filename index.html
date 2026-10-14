@@ -8817,6 +8817,34 @@
       gap: 10px;
     }
 
+    /* 勝敗リボン: 盤面の中央に大きく表示（元の見た目を復元） */
+    .deal-result-ribbon:not([hidden]) {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      width: min(86%, 520px);
+      box-sizing: border-box;
+      padding: 18px 22px;
+      border-radius: 22px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22);
+      pointer-events: none;
+    }
+    .deal-result-ribbon:not([hidden]) strong {
+      display: block;
+      font-size: clamp(34px, 9vw, 60px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+      color: #d6453d;
+    }
+    .deal-result-ribbon.win:not([hidden]) strong { color: #0b7d52; }
+    .deal-result-ribbon.draw:not([hidden]) strong { color: #3b4a5f; }
+    .deal-result-ribbon.tiebreak-result-ribbon:not([hidden]) strong { font-size: clamp(28px, 7vw, 44px); }
+
     .board-result-overlay {
       inset: 0;
       padding: clamp(12px, 2.2vw, 22px);

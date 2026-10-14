@@ -9772,6 +9772,11 @@
       justify-self: center;
     }
 
+    /* 手札が空の間は手札の枠に行を取らせない（共有札の位置が動かないように） */
+    body.view-mobile .hand-panel > .hand:empty {
+      display: none;
+    }
+
     /* 共有札ラベルは行を増やさず、札の上端に小さく重ねる（手札パネルが崩れないように） */
     body.view-mobile .hand-panel:has(> .shared-market-label:not([hidden])) {
       position: relative;

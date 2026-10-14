@@ -10770,8 +10770,9 @@
   body.view-mobile.mode-popjam-score .hand-row { padding-top: 2px !important; padding-bottom: 2px !important; min-height: 80px !important; height: auto !important; overflow: visible !important; }
   body.view-mobile.mode-popjam-score .play-area { overflow: visible !important; }
   body.view-mobile.mode-popjam-score .hand-row .deck img { height: 100% !important; width: auto !important; max-height: 52px !important; }
-  body.view-mobile.mode-popjam-score .hand-row .hand-tile,
-  body.view-mobile.mode-popjam-score .shared-market .hand-tile { width: 58px !important; height: 58px !important; min-width: 58px !important; min-height: 58px !important; max-width: 58px !important; max-height: 58px !important; }
+  body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 48px) / 5)); }
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(50px, calc((100vw - 76px) / 6)); }
+  body.view-mobile.mode-popjam-score .shared-market-label:not([hidden]) { position: static !important; transform: none !important; display: block; width: max-content; margin: 0 auto 2px !important; padding: 0 8px; }
   .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
   body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }
   body.view-mobile.mode-popjam-score .hand-tile.selected { border-radius: 4px !important; }
@@ -14077,7 +14078,6 @@
         }
         const collected = collectMarketTileForQuestion(player.id);
         if (collected) {
-          context.messages.push("キープ");
           addLog(player.name + " が共有札から " + collected.name + " をキープしました。");
         } else {
           context.messages.push("キープ不発");
@@ -14232,8 +14232,6 @@
         state.scoreText = "スワップ";
       } else if (type === "salvage") {
         state.scoreText = "コレクト";
-      } else if (type === "collect") {
-        state.scoreText = "キープ";
       } else if (type === "replace") {
         state.scoreText = "ムーブ";
       } else if (type === "present") {
@@ -14499,7 +14497,6 @@
       const context = action.context || createQuestionContext();
       const collected = collectMarketTileAt(index, action.playerId);
       if (collected) {
-        context.messages.push("キープ");
         addLog(currentPlayer().name + " が共有札から " + collected.name + " をキープしました。");
       } else {
         context.messages.push("キープ不発");
@@ -20675,10 +20672,10 @@
         title.textContent = "他プレイヤーの捨て札から1枚選んでください";
         renderSalvageChoices(panel);
       } else if (action.type === "collect") {
-        title.textContent = "共有札から1枚キープ";
+        title.textContent = "キープ発動";
         const note = document.createElement("span");
         note.className = "label";
-        note.textContent = "次の自分の手番で追加手札として使えます。";
+        note.textContent = "共有札から1枚選び手札とする。手札は次の自分の番から追加で置ける（上限1枚まで）。";
         panel.appendChild(note);
       } else if (action.type === "replace") {
         title.textContent = "ムーブするタイルを選ぶ";
@@ -20856,7 +20853,7 @@
       }
 
       // 発動したハテナ名を見出しの前に付けて、なぜこの操作が出ているかを示す。
-      if (questionEffectFocus && questionEffectFocus.name
+      if (questionEffectFocus && questionEffectFocus.name && title.textContent.indexOf("発動") === -1
         && (questionEffectFocus.actionType === undefined || questionEffectFocus.actionType === action.type)) {
         questionEffectFocus.actionType = action.type;
         title.textContent = questionEffectFocus.name + "発動：" + title.textContent;

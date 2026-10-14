@@ -14937,6 +14937,22 @@
       finishPendingQuestionAction();
     }
 
+    // カラーズ/スーパーカラーズは、入れ替え先の盤面の色とつながる場所にだけ動ける（オールカラーズは例外）
+    function questionSwapDestinationOk(movedTile, destSlot) {
+      if (!movedTile || !destSlot) { return false; }
+      if (movedTile.effect === "all-colors") { return true; }
+      if (movedTile.effect !== "color" && movedTile.effect !== "super-color") { return true; }
+      const dirIndex = DIR_OPP[destSlot.inwardDir];
+      if (dirIndex === undefined) { return false; }
+      const cell = boardCellAt(destSlot.boardRow, destSlot.boardCol);
+      if (!cell || !cell.tile) { return false; }
+      const edge = ["top", "right", "bottom", "left"][dirIndex];
+      for (let i = 0; i < edgeSampleCount; i++) {
+        if (sampleTileEdgeColor(cell.tile.id, cell.rotation || 0, edge, i) !== movedTile.color) { return false; }
+      }
+      return true;
+    }
+
     function applyQuestionSwap(slot, context) {
       const player = currentPlayer();
       if (context.swapDepth > 0) {
@@ -14946,7 +14962,9 @@
       context.swapDepth++;
 
       const candidates = state.questionBoard.filter(function (candidate) {
-        return candidate.id !== slot.id;
+        return candidate.id !== slot.id
+          && questionSwapDestinationOk(slot.tile, candidate)
+          && questionSwapDestinationOk(candidate.tile, slot);
       });
       const target = candidates.find(function (candidate) {
         return !candidate.revealed;
@@ -15008,6 +15026,13 @@
 
       if (!first || !second || first.id === second.id) {
         action.selectedSlotIds = [];
+        render();
+        return;
+      }
+
+      if (!questionSwapDestinationOk(first.tile, second) || !questionSwapDestinationOk(second.tile, first)) {
+        action.selectedSlotIds.pop();
+        state.scoreText = "その入れ替えは色がつながらないため選べません。";
         render();
         return;
       }

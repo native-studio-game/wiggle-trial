@@ -20394,13 +20394,13 @@
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "山札があれば山札の下へ、山札がなければ自分の追加手札になります。";
-        if (hintOnceAllowed("note:delete")) { panel.appendChild(note); }
+        panel.appendChild(note);
       } else if (action.type === "swap") {
         title.textContent = "外周ハテナを2枚選んでください";
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "選んだ2か所のハテナの場所を入れ替えます。";
-        if (hintOnceAllowed("note:swap")) { panel.appendChild(note); }
+        panel.appendChild(note);
       } else if (action.type === "salvage") {
         title.textContent = "他プレイヤーの捨て札から1枚選んでください";
         renderSalvageChoices(panel);
@@ -20409,25 +20409,25 @@
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "回収したタイルは、自分の手番で追加手札として使えます。";
-        if (hintOnceAllowed("note:collect")) { panel.appendChild(note); }
+        panel.appendChild(note);
       } else if (action.type === "replace") {
         title.textContent = "ムーブする盤面タイルを選んでください";
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "選んだタイルを別の場所へ置きなおします。";
-        if (hintOnceAllowed("note:replace")) { panel.appendChild(note); }
+        panel.appendChild(note);
       } else if (action.type === "replace-place") {
         title.textContent = "ムーブ先を選んでください";
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "回転してから、通常ルールで置ける空きマスへ移動できます。";
-        if (hintOnceAllowed("note:replace-place")) { panel.appendChild(note); }
+        panel.appendChild(note);
       } else if (action.type === "salvage-place") {
         title.textContent = "選んだタイルを盤面に置いてください";
         const note = document.createElement("span");
         note.className = "label";
         note.textContent = "置けない、または置かない場合は「パス」で自分の捨て札へ移します。";
-        if (hintOnceAllowed("note:salvage-place")) { panel.appendChild(note); }
+        panel.appendChild(note);
         const tileBox = document.createElement("div");
         tileBox.className = "question-choice-list";
         const tileView = document.createElement("button");
@@ -21703,24 +21703,8 @@
       return "<span class=\"toast-score-content\">" + html + "</span>";
     }
 
-    const onceHintTexts = ["ハテナの発動順を選んでください。", "キープ: 共有札から1枚選んで、追加手札に回収します。"];
-    const onceHintMemory = {};
-    function hintOnceAllowed(key) {
-      if (onceHintMemory[key]) { return true; }
-      var seen = {};
-      try { seen = JSON.parse(window.localStorage.getItem("wiggle_hints_seen") || "{}") || {}; } catch (e) { seen = {}; }
-      if (seen[key]) { return false; }
-      seen[key] = 1;
-      try { window.localStorage.setItem("wiggle_hints_seen", JSON.stringify(seen)); } catch (e) {}
-      onceHintMemory[key] = true;
-      return true;
-    }
-    function isOnceHintSpent(text) {
-      return onceHintTexts.indexOf(text) >= 0 && !hintOnceAllowed("score:" + text);
-    }
-
     function renderScore() {
-      if (state.over || !state.scoreText || isOnceHintSpent(state.scoreText)) {
+      if (state.over || !state.scoreText) {
         elements.scoreToast.hidden = true;
         delete elements.scoreToast.dataset.scoreColor;
         elements.scoreToast.classList.remove("deal-delivery-score-toast");

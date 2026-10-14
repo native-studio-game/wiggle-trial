@@ -9772,6 +9772,29 @@
       justify-self: center;
     }
 
+    /* 操作の説明文は途切れさせず、全文を盤面上のオーバーレイで折り返して読めるようにする */
+    body.view-mobile .board-wrap .board-instruction .action-target-panel,
+    body.view-mobile .board-wrap .board-instruction .action-target-panel * {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: keep-all;
+    }
+
+    body.view-mobile .notification-lane .score-toast,
+    body.view-mobile .notification-lane .score-toast * {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: keep-all;
+    }
+    body.view-mobile .notification-lane .score-toast {
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: left;
+    }
+
     /* 手札が空の間は手札の枠に行を取らせない（共有札の位置が動かないように） */
     body.view-mobile .hand-panel > .hand:empty {
       display: none;

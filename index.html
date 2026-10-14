@@ -10707,6 +10707,11 @@
       grid-column: 3;
       grid-row: 1;
     }
+  body .action-target-panel.inline-confirm-panel { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  body .action-target-panel.inline-confirm-panel > strong { flex: 1 1 auto; min-width: 0; white-space: normal; overflow: visible; text-overflow: clip; }
+  .inline-confirm-actions { display: flex; flex: 0 0 auto; gap: 6px; }
+  .inline-confirm-actions button { min-height: 30px; padding: 4px 12px; border-radius: 999px; border: 1px solid #94a3b8; background: #ffffff; color: #1f2937; font-size: 13px; font-weight: 700; line-height: 1; cursor: pointer; }
+  .inline-confirm-actions button.inline-confirm-yes { background: #1f2937; border-color: #1f2937; color: #ffffff; }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -11479,6 +11484,7 @@
     let hoverCell = null;
     let placementFeedback = null;
     let mobilePlacementConfirm = null;
+    let inlineConfirm = null;
     let fixedBoardSwipeRotate = null;
     let pendingConfirmAction = "complete";
 
@@ -15037,6 +15043,13 @@
         return;
       }
 
+      requestSwapConfirm(action, first, second);
+    }
+
+    function performQuestionSwap(action, first, second) {
+      if (state.pendingAction !== action) {
+        return;
+      }
       pushHistory();
       const context = action.context || createQuestionContext();
       const firstWasRevealed = first.revealed;
@@ -18217,6 +18230,91 @@
       }).length;
     }
 
+    function confirmThen(message, onYes, onNo) {
+      inlineConfirm = { message: message, onYes: onYes, onNo: onNo || null };
+      render();
+    }
+
+    function cleanupInlineConfirm() {
+      if (inlineConfirm && (state.over || !state.started || isCpuTurn())) {
+        inlineConfirm = null;
+      }
+    }
+
+    function resolveInlineConfirm(accepted) {
+      const pending = inlineConfirm;
+      inlineConfirm = null;
+      if (pending) {
+        if (accepted) {
+          pending.onYes();
+        } else if (pending.onNo) {
+          pending.onNo();
+        }
+      }
+      render();
+    }
+
+    function renderInlineConfirmPanel(confirmState) {
+      const panel = document.createElement("div");
+      panel.className = "action-target-panel inline-confirm-panel";
+      const title = document.createElement("strong");
+      title.textContent = confirmState.message;
+      panel.appendChild(title);
+      const actions = document.createElement("div");
+      actions.className = "inline-confirm-actions";
+      const no = document.createElement("button");
+      no.type = "button";
+      no.textContent = "いいえ";
+      no.addEventListener("click", function () {
+        resolveInlineConfirm(false);
+      });
+      const yes = document.createElement("button");
+      yes.type = "button";
+      yes.className = "inline-confirm-yes";
+      yes.textContent = "はい";
+      yes.addEventListener("click", function () {
+        resolveInlineConfirm(true);
+      });
+      actions.appendChild(no);
+      actions.appendChild(yes);
+      panel.appendChild(actions);
+      return panel;
+    }
+
+    function requestPlacementConfirm(row, col, dynamicBoard, commit) {
+      clearAllPlacementPreviews();
+      const selectionKey = mobilePlacementSelectionKey();
+      mobilePlacementConfirm = {
+        row: row,
+        col: col,
+        dynamic: Boolean(dynamicBoard),
+        selectionKey: selectionKey
+      };
+      hoverCell = null;
+      confirmThen("ここに置きますか？", function () {
+        clearMobilePlacementConfirm();
+        if (mobilePlacementSelectionKey() !== selectionKey) {
+          render();
+          return;
+        }
+        commit();
+      }, function () {
+        clearMobilePlacementConfirm();
+        clearAllPlacementPreviews();
+      });
+    }
+
+    function requestSwapConfirm(action, first, second) {
+      clearMobilePlacementConfirm();
+      confirmThen("この2枚を入れ替えますか？", function () {
+        performQuestionSwap(action, first, second);
+      }, function () {
+        if (state.pendingAction === action) {
+          action.selectedSlotIds = [];
+        }
+      });
+    }
+
     function closeCompletionConfirm() {
       if (elements.completionConfirmDialog) {
         elements.completionConfirmDialog.hidden = true;
@@ -20050,11 +20148,15 @@
           return;
         }
         if (state.pendingAction && state.pendingAction.type === "replace-place") {
-          placePendingReplaceTile(row, col);
+          requestPlacementConfirm(row, col, false, function () {
+            placePendingReplaceTile(row, col);
+          });
           return;
         }
         if (state.pendingAction && state.pendingAction.type === "salvage-place") {
-          placePendingSalvageTile(row, col);
+          requestPlacementConfirm(row, col, false, function () {
+            placePendingSalvageTile(row, col);
+          });
           return;
         }
         if (hasPendingQuestionEffects()) {
@@ -20680,6 +20782,13 @@
       }
 
       elements.instructionBody.innerHTML = "";
+      cleanupInlineConfirm();
+      if (inlineConfirm) {
+        elements.instructionBody.appendChild(renderInlineConfirmPanel(inlineConfirm));
+        elements.instructionPanel.classList.remove("is-empty");
+        elements.instructionPanel.hidden = false;
+        return;
+      }
       const player = hasPopjamWinDiscardShowcase()
         ? popjamWinDiscardPlayer()
         : isPopjamMode() && state.discardPending > 0

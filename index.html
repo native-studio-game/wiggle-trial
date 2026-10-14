@@ -2355,12 +2355,8 @@
       animation: pj-spotlit-pulse 1.8s ease-in-out infinite;
     }
     @keyframes pj-spotlit-pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
-    .cell.pj-locked::after {
-      content: ""; position: absolute; inset: 0; border-radius: inherit;
-      background: repeating-linear-gradient(45deg, rgba(52,84,140,0.26) 0 6px, rgba(52,84,140,0.06) 6px 12px);
-      box-shadow: inset 0 0 0 3px rgba(58,90,150,0.65);
-      pointer-events: none; z-index: 5;
-    }
+    /* ロックは斜線の演出ではなく、タイルを少し暗くするだけ */
+    .cell.pj-locked img { filter: brightness(0.72) saturate(0.8); }
 
     .external-question.swap-target img,
     .small-tile.selectable {
@@ -10345,7 +10341,6 @@
   body .external-question.pick-target,
   body .cell.inner-question.effect-source { z-index: 8 !important; }
   body .cell.pj-spotlit::before,
-  body .cell.pj-locked::after { z-index: 2 !important; }
   body .score-marker,
   body .bl-score-marker { z-index: 12 !important; }
 </style>
@@ -18795,7 +18790,9 @@
       if (isPopjamMode() && state.pendingAction
         && (state.pendingAction.type === "replace" || state.pendingAction.type === "replace-place")) {
         if (isCellLocked(row, col)) { cell.classList.add("pj-locked"); }
-        if (isCellSpotlit(row, col)) { cell.classList.add("pj-spotlit"); }
+        // ムーブの選択中はスポットライトの演出を出さず、置き先の判断を見やすくする
+        const movePicking = state.pendingAction && (state.pendingAction.type === "replace" || state.pendingAction.type === "replace-place");
+        if (isCellSpotlit(row, col) && !movePicking) { cell.classList.add("pj-spotlit"); }
       }
       if (boardTile) {
         cell.classList.add("has-tile");

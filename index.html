@@ -10332,7 +10332,8 @@
   .external-question.swap-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
   body.view-mobile.mode-popjam-score .board-instruction { padding: 3px 12px !important; }
   body.view-mobile.mode-popjam-score .board-instruction .action-target-panel { padding: 1px 0 !important; }
-  body.view-mobile .question-skip-button { font-size: 11px !important; padding: 4px 8px !important; line-height: 1.2 !important; }
+  /* 「使わず進める」は選択肢ではなく省略の操作なので、枠や塗りを持たない控えめな文字リンクにする */
+  body.view-mobile .question-skip-button { font-size: 10.5px !important; font-weight: 500 !important; padding: 2px 4px !important; line-height: 1.2 !important; background: transparent !important; border: 0 !important; box-shadow: none !important; color: #64748b !important; text-decoration: underline; text-underline-offset: 2px; }
   .question-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .question-text { flex: 1 1 auto; min-width: 0; text-align: left; }
   .question-text > strong { display: block; margin: 0; line-height: 1.3; }

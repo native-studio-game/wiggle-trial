@@ -13824,10 +13824,9 @@
       if (!action || action.type !== "replace-place" || !action.tile || !action.source) {
         return false;
       }
-      if (row === action.source.row && col === action.source.col) {
-        return false;
-      }
-      if (boardCellAt(row, col)) {
+      // 元の場所（同じ向き以外の向きも含む）へ戻すのは有効。ほかの場所は空きマスのみ
+      const isSource = row === action.source.row && col === action.source.col;
+      if (!isSource && boardCellAt(row, col)) {
         return false;
       }
 
@@ -13848,14 +13847,16 @@
       state.board[row][col] = null;
       for (let targetRow = 0; targetRow < size; targetRow++) {
         for (let targetCol = 0; targetCol < size; targetCol++) {
-          if (targetRow === row && targetCol === col) {
-            continue;
-          }
-          if (state.board[targetRow][targetCol]) {
+          const isSource = targetRow === row && targetCol === col;
+          if (!isSource && state.board[targetRow][targetCol]) {
             continue;
           }
           for (let rotationIndex = 0; rotationIndex < 4; rotationIndex++) {
             const targetRotation = Number.isFinite(rotation) ? rotation : rotationIndex * 90;
+            // 元の場所は向きを変えた時だけ候補にする（そのままは動かしたことにならない）
+            if (isSource && targetRotation === (sourceCell.rotation || 0)) {
+              continue;
+            }
             if (canPlaceTileAt(targetRow, targetCol, tile, targetRotation)) {
               state.board[row][col] = sourceCell;
               return { row: targetRow, col: targetCol, rotation: targetRotation };

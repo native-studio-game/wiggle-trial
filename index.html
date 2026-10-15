@@ -13565,6 +13565,7 @@
 
       state.pendingQuestionEffects = Array.isArray(remainingSlotIds) ? remainingSlotIds : [];
       state.pendingQuestionContext = context;
+      settleNonChoicePendingEffects(context);
       return true;
     }
 

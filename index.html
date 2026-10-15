@@ -2401,16 +2401,8 @@
       outline-offset: -5px;
     }
 
-    /* POP JAM: ロック/スポットライトの効果範囲を可視化(2026-09-23)。スポットライト=温色グロー(::before)、ロック=寒色斜線(::after)。両立可・発動中のみ。 */
-    .cell.pj-spotlit, .cell.pj-locked { position: relative; }
-    .cell.pj-spotlit::before {
-      content: ""; position: absolute; inset: 0; border-radius: inherit;
-      background: radial-gradient(circle at 50% 42%, rgba(255,214,90,0.45), rgba(255,206,70,0.16));
-      box-shadow: inset 0 0 14px rgba(255,190,40,0.6);
-      pointer-events: none; z-index: 5;
-      animation: pj-spotlit-pulse 1.8s ease-in-out infinite;
-    }
-    @keyframes pj-spotlit-pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+    /* POP JAM: ロックの効果範囲（ムーブ選択中のみ暗くする）。スポットライトは発動時の演出だけ */
+    .cell.pj-locked { position: relative; }
     /* 発動演出: ハテナ側から列（行）の先へ光が1マスずつ通る（一度だけ） */
     .cell.pj-sweep-spot, .cell.pj-sweep-lock { position: relative; }
     .cell.pj-sweep-spot::after, .cell.pj-sweep-lock::after {
@@ -10506,7 +10498,6 @@
   /* 終了後の得点の数字は消さない（.score-marker の時間で消えるアニメを外す） */
   body .score-marker.final-pattern-score,
   body .bl-score-marker.final-pattern-score { animation: none !important; opacity: 1 !important; }
-  body .cell.pj-spotlit::before,
   body .score-marker,
   body .bl-score-marker { z-index: 12 !important; }
   /* 右上の「？」「≡」は、強調されたハテナ枠より前面に置く */
@@ -13399,33 +13390,6 @@
       return lockedCellSet().has(row + "," + col);
     }
 
-    // スポットライト: 有効なスポットライトの行/列(盤端まで)のセル。視覚ハイライト用。
-    function spotlitCellSet() {
-      const set = new Set();
-      if (!Array.isArray(state.questionBoard)) {
-        return set;
-      }
-      const size = state.board.length || fixedBoardSize();
-      state.questionBoard.forEach(function (slot) {
-        if (!slot || !slot.revealed || !slot.tile || slot.tile.effect !== "spotlight" || !isQuestionEffectActive(slot)) {
-          return;
-        }
-        if (slot.side === "top" || slot.side === "bottom") {
-          for (let r = 0; r < size; r++) {
-            set.add(r + "," + slot.boardCol);
-          }
-        } else if (slot.side === "left" || slot.side === "right") {
-          for (let c = 0; c < size; c++) {
-            set.add(slot.boardRow + "," + c);
-          }
-        }
-      });
-      return set;
-    }
-
-    function isCellSpotlit(row, col) {
-      return spotlitCellSet().has(row + "," + col);
-    }
 
     // 発動演出: ロック/スポットライトが発動した瞬間に、ハテナの側から列(行)の先へ向かって1マスずつ光を通す。
     // 発動時刻は効果のスロットに記録し、再描画しても途中から続きを再生する（一度だけ流れる）。
@@ -19212,9 +19176,6 @@
       if (isPopjamMode() && state.pendingAction
         && (state.pendingAction.type === "replace" || state.pendingAction.type === "replace-place")) {
         if (isCellLocked(row, col)) { cell.classList.add("pj-locked"); }
-        // ムーブの選択中はスポットライトの演出を出さず、置き先の判断を見やすくする
-        const movePicking = state.pendingAction && (state.pendingAction.type === "replace" || state.pendingAction.type === "replace-place");
-        if (isCellSpotlit(row, col) && !movePicking) { cell.classList.add("pj-spotlit"); }
       }
       const sweep = questionSweepForCell(row, col);
       if (sweep) {

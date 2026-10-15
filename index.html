@@ -26083,10 +26083,6 @@
       input.value = slot.name;
       input.setAttribute("aria-label", "プレイヤー" + (i + 1) + "の名前");
       input.addEventListener("input", function () { slot.name = input.value; });
-      // キーボードが閉じた後に画面がずれたままになるのを戻す
-      input.addEventListener("blur", function () {
-        setTimeout(function () { window.scrollTo(0, 0); }, 300);
-      });
       row.appendChild(input);
       box.appendChild(row);
     });

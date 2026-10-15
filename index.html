@@ -13160,6 +13160,11 @@
           gained += points;
           state.stats.completions++;
           queueCompletionVisual(pattern, { color: pattern.color, points: points, marker: true });
+        } else if (old.playerId === owner.id && points > (old.points || 0)) {
+          // 同じ人の模様が伸びた場合は、マイナスを出さず増えた分だけをプラスで出す（マイナスとプラスが重なって減ったように見えないように）
+          const increase = points - (old.points || 0);
+          gained += increase;
+          queueCompletionVisual(pattern, { color: pattern.color, points: increase, marker: true });
         } else if (old.playerId !== owner.id || old.points !== points) {
           lost += old.points || 0;
           gained += points;

@@ -16572,7 +16572,8 @@
     }
 
     function beginFixedBoardSwipeRotate(event) {
-      if (!isMobileInteractionMode() || isDynamicBoardMode()) {
+      // 盤面の形式（固定・クラシック）にかかわらず、同じタイル操作（スワイプ回転）を使う
+      if (!isMobileInteractionMode()) {
         return;
       }
       if (typeof event.button === "number" && event.button !== 0) {
@@ -16581,7 +16582,8 @@
       if (event.pointerType === "mouse" && event.target.closest(".cell")) {
         return;
       }
-      if (event.target.closest("button:not(.cell), select, input, textarea, a")) {
+      // ハテナ（盤面の外周のボタン）の上から始めたスワイプは回転にする。操作ボタン・入力欄の上は除く
+      if (event.target.closest("button:not(.cell):not(.external-question), select, input, textarea, a")) {
         return;
       }
       // 山札・共有札・手札の上では回転のスワイプをしない（手札の選択・横スクロールに任せる）
@@ -24990,45 +24992,6 @@
         event.preventDefault();
         rotateSelected(90);
       });
-      els.viewport.addEventListener("pointerdown", function (event) {
-        if (!isMobileInteractionMode()) { return; }
-        if (typeof event.button === "number" && event.button !== 0) { return; }
-        if (event.pointerType === "mouse" && event.target.closest(".bl-ghost")) { return; }
-        if (event.target.closest("button:not(.cell), select, input, textarea, a")) { return; }
-        blSwipeRotate = {
-          pointerId: event.pointerId,
-          x: event.clientX,
-          y: event.clientY,
-          lastX: event.clientX,
-          lastY: event.clientY
-        };
-        if (event.currentTarget && typeof event.currentTarget.setPointerCapture === "function") {
-          try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {}
-        }
-      });
-      els.viewport.addEventListener("pointermove", function (event) {
-        if (!blSwipeRotate || blSwipeRotate.pointerId !== event.pointerId) { return; }
-        blSwipeRotate.lastX = event.clientX;
-        blSwipeRotate.lastY = event.clientY;
-        if (completeSwipeRotate(blSwipeRotate, event)) {
-          releaseSwipePointer(event);
-          blSwipeRotate = null;
-        }
-      });
-      els.viewport.addEventListener("pointercancel", function (event) {
-        if (blSwipeRotate && blSwipeRotate.pointerId === event.pointerId) {
-          releaseSwipePointer(event);
-          blSwipeRotate = null;
-        }
-      });
-      els.viewport.addEventListener("pointerup", function (event) {
-        if (!blSwipeRotate || blSwipeRotate.pointerId !== event.pointerId) { return; }
-        const gesture = blSwipeRotate;
-        releaseSwipePointer(event);
-        blSwipeRotate = null;
-        completeSwipeRotate(gesture, event);
-      });
-
       const zin = document.getElementById("blZoomIn");
       const zout = document.getElementById("blZoomOut");
       const rec = document.getElementById("blRecenter");

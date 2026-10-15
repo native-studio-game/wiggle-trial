@@ -10403,6 +10403,10 @@
   body.mode-popjam-score[data-turn-color="yellow"] { background-color: #fdf3c4 !important; }
   body.mode-popjam-score[data-turn-color="blue"] { background-color: #dcecfb !important; }
   body.mode-popjam-score[data-turn-color="green"] { background-color: #dff3e0 !important; }
+  /* 5x5 の盤面（中央の枠内）は白にする。合法手・予備配置・仮置きのマスは、その色を優先する */
+  body.mode-popjam-score .board .cell.pjs-board-cell:not(.ghost-legal):not(.ghost-illegal):not(.placeable):not(:has(.ghost-preview)) { background-color: #ffffff; }
+  /* 白いマスを薄くしない（置けないマスも白のまま。置けるマスは緑で示す） */
+  body.mode-popjam-score .board .cell.pjs-board-cell.blocked { opacity: 1; }
   body.view-mobile.mode-popjam-score .board-instruction #instructionBody { width: 100%; }
   body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img, body.view-mobile.mode-classic .hand-tile.selected img { outline: none !important; }

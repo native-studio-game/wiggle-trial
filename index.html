@@ -10309,7 +10309,12 @@
   body.mode-popjam-score .board .cell.placeable,
   body.mode-popjam-score .board .cell.ghost-legal { outline: 0 !important; border: 0 !important; background: #d3eedd !important; border-radius: 2px; }
   /* 置けない場所は赤い点線の枠を残す（上の枠線を消す指定より優先） */
-  body.mode-popjam-score .board .cell.ghost-illegal { outline: 1.5px dashed #c84242 !important; outline-offset: -3px; border: 0 !important; border-radius: 4px; }
+  body.mode-popjam-score .board .cell.ghost-illegal { outline: 0 !important; border: 0 !important; border-radius: 4px; }
+  /* 置けない枠: ブラウザ標準の点線は間隔を調整できないので、細かい点線をSVGで描く */
+  body.mode-popjam-score .board .cell.ghost-illegal::after { content: ""; position: absolute; inset: 3px; border-radius: 4px; pointer-events: none; z-index: 3; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Crect x='1.2' y='1.2' width='97.6' height='97.6' rx='6' fill='none' stroke='%23c84242' stroke-width='2.4' stroke-dasharray='5 3'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+  /* 置ける位置にタイル（予備配置・ゴースト）がある時は緑を重ねない（タイルの色がくすむため） */
+  body.mode-popjam-score .board .cell.placeable:has(.ghost-preview),
+  body.mode-popjam-score .board .cell.ghost-legal:has(.ghost-preview) { background: transparent !important; }
   /* ムーブ中に選べない札は、ロック中の札と同じ暗さにそろえる */
   body.mode-popjam-score .board .cell.pick-muted img { filter: brightness(0.72) saturate(0.8); }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }

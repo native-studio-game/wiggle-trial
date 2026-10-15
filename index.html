@@ -13690,7 +13690,18 @@
       }
 
       if (player && !player.isCpu && needsOrderChoice) {
-        state.pendingQuestionEffects = slots.map(function (slot) {
+        // 順番が関係する札（入れ替え・キープ・ムーブ・ロック）だけ選ばせる。色系などはその場で置いた順に発動する
+        const choiceSlots = slots.filter(function (slot) {
+          return orderSensitive.indexOf(slot.tile.effect) !== -1 || slot.tile.effect === "lock";
+        });
+        const otherSlots = slots.filter(function (slot) {
+          return choiceSlots.indexOf(slot) === -1;
+        });
+        if (otherSlots.length > 0) {
+          state.pendingQuestionPlacement = { row: row, col: col, playerId: player.id };
+          resolveQuestionEffectsInOrder(otherSlots, context);
+        }
+        state.pendingQuestionEffects = choiceSlots.map(function (slot) {
           return slot.id;
         });
         state.pendingQuestionContext = context;

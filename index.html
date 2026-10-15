@@ -10554,7 +10554,7 @@
   #titleScreen .title-game-tag { font-size: 14px; min-height: 0; }
   #titleScreen .title-carousel { gap: 12px; }
   /* プレイヤー設定（色と名前）。枠が増えても画面内でスクロールできるようにする */
-  #titleScreen { overflow-y: auto; align-items: flex-start; }
+  #titleScreen { overflow-x: hidden; overflow-y: auto; align-items: flex-start; }
   #titleScreen .title-card { margin: auto; }
   .title-players { display: flex; flex-direction: column; gap: 8px; text-align: left; }
   .title-players[hidden] { display: none; }
@@ -26097,6 +26097,27 @@
   }
   render(select ? select.value : "");
   window.addEventListener("load", function () { render(select ? select.value : ""); });
+
+  // 名前入力中に開始を押したら、先にキーボードを閉じてから開始する（ずれたまま固定されるのを防ぐ）
+  var startBtn = document.getElementById("newGameButton");
+  if (startBtn) {
+    // 押した瞬間に名前を入力中だったかを記録する（押すとフォーカスが移るため、click時には判定できない）
+    var typingAtPress = false;
+    var isNameFocused = function () {
+      var active = document.activeElement;
+      return Boolean(active && active.classList && active.classList.contains("title-player-name"));
+    };
+    startBtn.addEventListener("pointerdown", function () { typingAtPress = isNameFocused(); }, true);
+    document.addEventListener("click", function (event) {
+      if (event.target !== startBtn && !startBtn.contains(event.target)) { return; }
+      if (!typingAtPress) { return; }
+      typingAtPress = false;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (isNameFocused()) { document.activeElement.blur(); }
+      setTimeout(function () { startBtn.click(); }, 400);
+    }, true);
+  }
 })();
 </script>
 </body>

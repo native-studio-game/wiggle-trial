@@ -10364,10 +10364,9 @@
   body[data-pick-kind="swap"] .pick-target img, body[data-pick-kind="swap"] .swap-target img, body[data-pick-kind="swap"] .swap-picked img { outline-color: #ff9ce9 !important; box-shadow: none !important; }
   body[data-pick-kind="move"] .cell.action-target { outline-color: #c4a5ff !important; }
   /* 選んだタイルは、候補より太い枠と色の地（キープ=緑、スワップ=マゼンタ）で変わって見せる */
-  body[data-pick-kind="keep"] .hand-tile.collect-picked { background-color: rgba(143, 240, 184, 0.35) !important; border-radius: 10px; }
-  body[data-pick-kind="keep"] .hand-tile.collect-picked img { outline: 4px solid #8ff0b8 !important; outline-offset: -4px !important; box-shadow: none !important; }
-  body[data-pick-kind="swap"] .external-question.swap-picked { background-color: rgba(47, 128, 237, 0.35) !important; border-radius: 10px; }
-  body[data-pick-kind="swap"] .external-question.swap-picked img { outline: 4px solid #2f80ed !important; outline-offset: -4px !important; box-shadow: none !important; }
+  /* 選んだタイル（キープ・スワップ）は、どの効果でも共通の紺の枠と薄い地で示す */
+  body[data-pick-kind] .hand-tile.collect-picked, body[data-pick-kind] .external-question.swap-picked { background-color: rgba(31, 41, 55, 0.12) !important; border-radius: 10px; }
+  body[data-pick-kind] .hand-tile.collect-picked img, body[data-pick-kind] .external-question.swap-picked img { outline: 4px solid #1f2937 !important; outline-offset: -4px !important; box-shadow: none !important; }
   body[data-pick-kind="keep"] .cell.action-target { outline-color: #8ff0b8 !important; }
   body[data-pick-kind="swap"] .cell.action-target { outline-color: #ff9ce9 !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; box-shadow: var(--board-emboss) !important; border-radius: 18px !important; }

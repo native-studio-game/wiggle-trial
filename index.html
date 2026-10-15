@@ -12115,9 +12115,10 @@
       if (!player) {
         return "-";
       }
-      const label = state.cpuEnabled
-        ? (player.isCpu ? "CPU" : "YOU")
-        : player.name;
+      // タイトルで名前を決めた場合はその名前を出す（無入力ならYOU/CPU）
+      const label = state.titlePlayerSetup
+        ? player.name
+        : (state.cpuEnabled ? (player.isCpu ? "CPU" : "YOU") : player.name);
       return "<span class=\"player-role-chip " + player.color + "\">" + escapeHtml(label) + "</span>";
     }
 
@@ -23885,7 +23886,7 @@
       const playerName = function (playerId, fallbackName) {
         const player = state.players.find(function (p) { return p.id === playerId; });
         const name = player
-          ? (state.cpuEnabled ? (player.isCpu ? "CPU" : "YOU") : player.name)
+          ? (state.titlePlayerSetup || !state.cpuEnabled ? player.name : (player.isCpu ? "CPU" : "YOU"))
           : (fallbackName || "-");
         const colorClass = player && player.color ? player.color : "";
         return "<span class=\"tb-player-name " + colorClass + "\">" + escapeHtml(name) + "</span>";

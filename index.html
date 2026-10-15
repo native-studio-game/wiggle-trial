@@ -21701,9 +21701,6 @@
     function touchInsideScrollable(target) {
       let el = target;
       while (el && el !== document.body && el !== document.documentElement) {
-        if (el.classList && el.classList.contains("layout")) {
-          return false;
-        }
         const style = getComputedStyle(el);
         const scrollable = /(auto|scroll)/.test(style.overflowX + " " + style.overflowY);
         if (scrollable && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)) {
@@ -21715,7 +21712,8 @@
     }
     document.addEventListener("touchstart", function (event) {
       const target = event.target;
-      playTouchBlock = Boolean(target && target.closest && target.closest(".layout") && !touchInsideScrollable(target));
+      // 画面全体でページのスクロールを止める。ダイアログの中と、中身が動かせる場所（横スクロールなど）は除く
+      playTouchBlock = Boolean(target && target.closest && !target.closest(".dialog-backdrop") && !touchInsideScrollable(target));
     }, { passive: true });
     document.addEventListener("touchmove", function (event) {
       if (playTouchBlock && event.cancelable) {

@@ -3777,8 +3777,8 @@
 
     body.view-mobile.mode-popjam-score .hand-row {
       gap: 0;
-      /* 山札は左に絶対配置なので、その右側（仕切りの外）から手札・共有札を並べる */
-      padding-left: 80px;
+      /* 山札は左に絶対配置。その列の幅を仕切り線（約80px）の外まで広げ、手札・共有札はその右側から並べる */
+      grid-template-columns: 96px minmax(0, 1fr);
     }
 
     body.view-mobile.mode-popjam-score .hand-panel {
@@ -9168,7 +9168,7 @@
     }
 
     body.view-mobile.mode-popjam-score .hand-row {
-      grid-template-columns: 60px minmax(0, 1fr);
+      grid-template-columns: 96px minmax(0, 1fr);
       gap: 5px;
       overflow: visible;
     }
@@ -10356,6 +10356,8 @@
   body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active, body.view-mobile.mode-classic .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(50px, calc((100vw - 76px) / 6)); }
   /* クラシック・ポップジャム: 手札列の左にデッキ分の幅があるため、共有札5枚＋隙間が枠（約290px）に収まるよう縮める */
   body.view-mobile.mode-classic #sharedMarket.shared-market.active, body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 106px - 4 * var(--pjs-market-gap)) / 5)); }
+  /* ポップジャム: 山札の仕切りの右側に収まるよう、共有札＋手札の6列を幅に合わせる（中央寄せで左の山札に食い込まないように左寄せ） */
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(47px, calc((100vw - 110px - 5 * var(--pjs-market-gap)) / 6)); justify-self: start; justify-content: start; }
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }

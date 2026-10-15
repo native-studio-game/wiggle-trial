@@ -10361,6 +10361,7 @@
   /* ポップジャム(スマホ・手札なし): 共有札も山札の右側の列幅に収める。列数は共有札の5列のまま */
   body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { display: grid; box-sizing: border-box; width: calc(100% - 20px); max-width: calc(100% - 20px); grid-template-columns: repeat(var(--pjs-market-columns, 5), minmax(0, 1fr)); justify-content: stretch; justify-items: stretch; justify-self: stretch; transform: none; }
   body.view-mobile.mode-popjam-score #sharedMarket .hand-tile { width: 100%; min-width: 0; max-width: 100%; height: auto; min-height: 0; max-height: none; aspect-ratio: 1 / 1; flex: none; }
+  body .hand-tile.keep-used img { opacity: 0.35; filter: grayscale(1); }
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }
@@ -10882,6 +10883,7 @@
       winnerId: null,
       popjamWinners: null,
       popjamExtraPlacements: 0,
+      keepBonus: null,
       popjamPostDiscardPlacement: null,
       popjamWinDiscardShowcase: null,
       harvestLine: 3,
@@ -13901,6 +13903,10 @@
       const collected = collectMarketTileAt(index, action.playerId);
       if (collected) {
         addLog(currentPlayer().name + " が共有札から " + collected.name + " をキープしました。");
+        const collector = state.players.find(function (candidate) { return candidate.id === action.playerId; });
+        if (collector && !collector.isCpu && isPopjamMode()) {
+          state.keepBonus = { playerId: action.playerId, sharedUsed: false, handUsed: false };
+        }
       }
       finishPendingQuestionAction();
     }
@@ -14770,6 +14776,53 @@
       render();
     }
 
+    function keepBonusState(player) {
+      const k = state.keepBonus;
+      return k && player && !player.isCpu && k.playerId === player.id && !state.over ? k : null;
+    }
+
+    function keepBlocksMarketIndex(index) {
+      const k = keepBonusState(currentPlayer());
+      return Boolean(k && k.sharedUsed && index >= 0 && index < state.sharedMarket.length);
+    }
+
+    function keepBonusHasOption(player) {
+      const k = keepBonusState(player);
+      if (!k) {
+        return false;
+      }
+      return (!k.sharedUsed && state.sharedMarket.some(Boolean)) || (!k.handUsed && player.hand.length > 0);
+    }
+
+    function keepBonusSelectDefault(player) {
+      const k = keepBonusState(player);
+      state.popjamTurnEnding = false;
+      state.selectedRotation = 0;
+      state.selectedHandIndex = null;
+      if (!k) {
+        return;
+      }
+      clearAllPlacementPreviews();
+      clearMobilePlacementConfirm();
+      const sharedIndex = state.sharedMarket.findIndex(Boolean);
+      if (!k.sharedUsed && sharedIndex >= 0) {
+        state.selectedHandIndex = sharedIndex;
+        state.selectedRotation = marketTileRotation(sharedIndex);
+      } else if (!k.handUsed && player.hand.length > 0) {
+        state.selectedHandIndex = state.sharedMarket.length;
+      }
+    }
+
+    function endKeepBonus() {
+      const player = currentPlayer();
+      if (!keepBonusState(player)) {
+        return;
+      }
+      state.keepBonus = null;
+      clearAllPlacementPreviews();
+      endTurn();
+    }
+
     function schedulePopjamEndTurn(playerId) {
       setTimeout(function () {
         state.popjamTurnEnding = false;
@@ -14778,6 +14831,14 @@
           || state.discardPending > 0 || hasPopjamWinDiscardShowcase()
           || hasPendingQuestionEffects() || hasPendingAction()) {
           return;
+        }
+        if (keepBonusState(player)) {
+          if (keepBonusHasOption(player)) {
+            keepBonusSelectDefault(player);
+            render();
+            return;
+          }
+          state.keepBonus = null;
         }
         if (continuePopjamExtraPlacement(player)) {
           render();
@@ -15711,6 +15772,7 @@
       const player = currentPlayer();
       const placedHandIndex = state.selectedHandIndex;
       const tile = selectedPlacementTile();
+      const keepSource = isPopjamMode() && keepBonusState(player) ? (placedHandIndex >= state.sharedMarket.length ? "hand" : "shared") : null;
       if (player && !player.isCpu) {
         trackFirstAction("place_fixed", {
           row: row,
@@ -15721,6 +15783,14 @@
       clearMobilePlacementConfirm();
       pushHistory();
 
+      if (keepSource) {
+        const keepUsed = keepBonusState(player);
+        if (keepSource === "hand") {
+          keepUsed.handUsed = true;
+        } else {
+          keepUsed.sharedUsed = true;
+        }
+      }
       if (isInnerQuestionTile(tile)) {
         tile.ownerId = player.id;
       }
@@ -15864,6 +15934,9 @@
     }
 
     function selectHandTile(index) {
+      if (keepBlocksMarketIndex(index)) {
+        return;
+      }
       if (hasPopjamWinDiscardShowcase()) {
         return;
       }
@@ -16867,6 +16940,7 @@
       if (state.over || !state.started) {
         return;
       }
+      state.keepBonus = null;
 
       if (hasPendingQuestionEffects() || hasPendingAction()) {
         const pendingLabel = state.pendingAction && state.pendingAction.type === "survival-gift"
@@ -19855,6 +19929,26 @@
         inlineConfirmEl.hidden = true;
         inlineConfirmEl.innerHTML = "";
       }
+      const keepPlayer = currentPlayer();
+      if (keepBonusState(keepPlayer) && !hasPendingAction() && !hasPendingQuestionEffects() && keepBonusHasOption(keepPlayer)) {
+        const keepPanel = document.createElement("div");
+        keepPanel.className = "action-target-panel";
+        const keepTitle = document.createElement("strong");
+        keepTitle.textContent = "キープの効果";
+        const keepBody = document.createElement("div");
+        keepBody.textContent = "タイルを追加で置けます。";
+        const keepBtn = document.createElement("button");
+        keepBtn.type = "button";
+        keepBtn.textContent = "置かずに終わる";
+        keepBtn.addEventListener("click", endKeepBonus);
+        keepPanel.appendChild(keepTitle);
+        keepPanel.appendChild(keepBody);
+        keepPanel.appendChild(keepBtn);
+        elements.instructionBody.appendChild(keepPanel);
+        elements.instructionPanel.classList.remove("is-empty");
+        elements.instructionPanel.hidden = false;
+        return;
+      }
       if (instructionFlash) {
         // 効果の説明は、発動したハテナの画像を左に出し、右に見出しと説明を置く（ムーブ等と同じ形）
         const flashPanel = document.createElement("div");
@@ -20276,7 +20370,10 @@
         if (state.selectedHandIndex === index) {
           button.classList.add("selected");
         }
-        button.disabled = state.over || isCpuTurn();
+        button.disabled = state.over || isCpuTurn() || keepBlocksMarketIndex(index);
+        if (keepBlocksMarketIndex(index)) {
+          button.classList.add("keep-used");
+        }
         button.addEventListener("click", function () {
           selectHandTile(index);
         });

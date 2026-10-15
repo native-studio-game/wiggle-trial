@@ -10315,6 +10315,11 @@
   /* 置ける位置にタイル（予備配置・ゴースト）がある時は緑を重ねない（タイルの色がくすむため） */
   body.mode-popjam-score .board .cell.placeable:has(.ghost-preview),
   body.mode-popjam-score .board .cell.ghost-legal:has(.ghost-preview) { background: transparent !important; }
+  /* 得点マーカーを含むマスは盤の前面に出す。マーカーが隣のマスにはみ出しても、隣のタイル・模様の線・アニメ中の画像に覆われないように */
+  body .cell:has(> .score-marker),
+  body .cell:has(> .bl-score-marker),
+  body .bl-tile:has(> .score-marker),
+  body .bl-tile:has(> .bl-score-marker) { z-index: 10; }
   /* ムーブ中に選べない札は、ロック中の札と同じ暗さにそろえる */
   body.mode-popjam-score .board .cell.pick-muted img { filter: brightness(0.72) saturate(0.8); }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }

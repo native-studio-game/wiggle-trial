@@ -13604,7 +13604,7 @@
       slot.effectUsed = true;
       questionEffectFocus = { slotId: slot.id, actionType: undefined, name: ({ swap: "スワップ", collect: "キープ", replace: "ムーブ" })[tile.effect] || tile.name };
       if (["color", "super-color", "all-colors", "spotlight", "lock"].indexOf(tile.effect) !== -1) {
-        flashQuestionGuide(tile.effect);
+        flashQuestionGuide(tile.effect, tile.src);
       }
       if (slot.inner && slot.tile) {
         slot.tile.revealed = true;
@@ -19673,12 +19673,12 @@
     }
 
     // 選択を伴わない効果は、発動時に見出しと説明を下部へ一定時間出す。
-    function flashQuestionGuide(effect) {
+    function flashQuestionGuide(effect, src) {
       const guide = questionEffectGuide[effect];
       if (!guide) {
         return;
       }
-      instructionFlash = { message: guide.title, body: guide.body };
+      instructionFlash = { message: guide.title, body: guide.body, src: src || null };
       setTimeout(function () {
         if (instructionFlash && instructionFlash.message === guide.title) {
           instructionFlash = null;
@@ -19757,17 +19757,33 @@
         inlineConfirmEl.innerHTML = "";
       }
       if (instructionFlash) {
+        // 効果の説明は、発動したハテナの画像を左に出し、右に見出しと説明を置く（ムーブ等と同じ形）
         const flashPanel = document.createElement("div");
         flashPanel.className = "action-target-panel";
+        const flashHead = document.createElement("div");
+        flashHead.className = "question-head";
+        if (instructionFlash.src) {
+          const thumbs = document.createElement("div");
+          thumbs.className = "question-thumbs";
+          const flashImg = document.createElement("img");
+          flashImg.src = tilePath + instructionFlash.src;
+          flashImg.alt = "";
+          thumbs.appendChild(flashImg);
+          flashHead.appendChild(thumbs);
+        }
+        const flashText = document.createElement("div");
+        flashText.className = "question-text";
         const flashTitle = document.createElement("strong");
         flashTitle.textContent = instructionFlash.message;
-        flashPanel.appendChild(flashTitle);
+        flashText.appendChild(flashTitle);
         if (instructionFlash.body) {
           const flashBody = document.createElement("span");
           flashBody.className = "label";
           appendBodyLines(flashBody, instructionFlash.body);
-          flashPanel.appendChild(flashBody);
+          flashText.appendChild(flashBody);
         }
+        flashHead.appendChild(flashText);
+        flashPanel.appendChild(flashHead);
         elements.instructionBody.appendChild(flashPanel);
         elements.instructionPanel.classList.remove("is-empty");
         elements.instructionPanel.hidden = false;

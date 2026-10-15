@@ -12594,8 +12594,9 @@
       if (isPopjamScoreMode()) {
         refillSharedMarket();
         const firstMarketIndex = findFirstClassicMarketIndex();
-        if (state.sharedMarket.length === 0 || firstMarketIndex < 0) {
-          if (state.passStreak >= state.players.length - 1 || state.deck.length === 0) {
+        // 共有札が空でも、手札に置けるタイルがあれば終わらない（置ける手がない時だけパス・終了）
+        if (firstMarketIndex < 0) {
+          if (state.passStreak >= state.players.length - 1) {
             finishPopjamScoreAfterShake("置ける公開札がありません。");
             return;
           }

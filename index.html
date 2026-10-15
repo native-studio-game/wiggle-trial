@@ -3842,7 +3842,7 @@
       box-shadow: none;
     }
 
-    body.mode-popjam-score .shared-market.active {
+    body.mode-popjam-score .shared-market.active, body.view-mobile.mode-classic .shared-market.active {
       display: flex;
       flex-wrap: nowrap;
       gap: clamp(10px, 2vw, 14px);
@@ -3944,7 +3944,7 @@
       box-shadow: none;
     }
 
-    body.view-mobile.mode-popjam-score .shared-market .hand-tile {
+    body.view-mobile.mode-popjam-score .shared-market .hand-tile, body.view-mobile.mode-classic .shared-market .hand-tile {
       width: var(--pjs-market-tile-size);
       min-width: var(--pjs-market-tile-size);
       max-width: var(--pjs-market-tile-size);
@@ -10316,8 +10316,8 @@
   body.view-mobile.mode-popjam-score .hand-row { padding-top: 2px !important; padding-bottom: 2px !important; min-height: 80px !important; height: auto !important; overflow: visible !important; }
   body.view-mobile.mode-popjam-score .play-area { overflow: visible !important; }
   body.view-mobile.mode-popjam-score .hand-row .deck img { height: 100% !important; width: auto !important; max-height: 52px !important; }
-  body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 48px) / 5)); }
-  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(50px, calc((100vw - 76px) / 6)); }
+  body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active, body.view-mobile.mode-classic #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 48px) / 5)); }
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active, body.view-mobile.mode-classic .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(50px, calc((100vw - 76px) / 6)); }
   body.view-mobile.mode-popjam-score .shared-market-label:not([hidden]) { position: static !important; transform: none !important; display: block; width: max-content; margin: 0 auto 2px !important; padding: 0 8px; }
   .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
   body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }
@@ -24317,6 +24317,8 @@
 
     function renderBorderless() {
       ensureBlListeners();
+      // 固定盤面（ポップジャムの5×5など）の残りを消す。動的盤面は blViewport 側に描く
+      elements.board.innerHTML = "";
       prepareScoreFlights(true); // 得点欄描画より前に飛行を仕込む
       document.body.classList.toggle("mode-shared-market", hasSharedMarket());
       if (elements.handRow) {

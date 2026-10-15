@@ -10420,6 +10420,9 @@
   body .external-question.swap-picked,
   body .external-question.pick-target,
   body .cell.inner-question.effect-source { z-index: 8 !important; }
+  /* 終了後の得点の数字は消さない（.score-marker の時間で消えるアニメを外す） */
+  body .score-marker.final-pattern-score,
+  body .bl-score-marker.final-pattern-score { animation: none !important; opacity: 1 !important; }
   body .cell.pj-spotlit::before,
   body .score-marker,
   body .bl-score-marker { z-index: 12 !important; }

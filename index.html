@@ -10887,6 +10887,7 @@
       popjamExtraPlacements: 0,
       keepBonus: null,
       keepBonusNext: null,
+      manualMarketPick: null,
       popjamPostDiscardPlacement: null,
       popjamWinDiscardShowcase: null,
       harvestLine: 3,
@@ -16018,6 +16019,7 @@
       if (usesSharedMarket()) {
         rememberMarketTileRotation();
         state.selectedHandIndex = index;
+        state.manualMarketPick = index;
         if (previousIndex !== index) {
           clearAllPlacementPreviews();
           clearMobilePlacementConfirm();
@@ -16419,7 +16421,7 @@
           if (state.selectedHandIndex !== null
             && state.selectedHandIndex < currentTiles.length
             && currentTiles[state.selectedHandIndex]
-            && hasAnyLegalMoveForTile(currentTiles[state.selectedHandIndex])) {
+            && (state.manualMarketPick === state.selectedHandIndex || hasAnyLegalMoveForTile(currentTiles[state.selectedHandIndex]))) {
             return;
           }
         }
@@ -16958,6 +16960,7 @@
         return;
       }
       state.keepBonus = null;
+      state.manualMarketPick = null;
 
       if (hasPendingQuestionEffects() || hasPendingAction()) {
         const pendingLabel = state.pendingAction && state.pendingAction.type === "survival-gift"

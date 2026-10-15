@@ -19220,9 +19220,10 @@
       coord.textContent = (row + 1) + "," + (col + 1);
       cell.appendChild(coord);
 
+      const finalPopjamScores = Boolean(state.over && isPopjamScoreMode());
       state.scoreEffects
         .filter(function (effect) {
-          return effect.row === row && effect.col === col;
+          return !finalPopjamScores && effect.row === row && effect.col === col;
         })
         .forEach(function (effect) {
           const now = performance.now();
@@ -19250,7 +19251,7 @@
         });
 
       // 終了時の盤面表示（step 2）では、完成した各模様の確定点を「+」なしで出す（どの模様が大きかったか見るため）
-      if (resultViewMode() === "board" && state.popjamScorePatterns) {
+      if (state.over && state.popjamScorePatterns) {
         Object.keys(state.popjamScorePatterns).forEach(function (key) {
           const entry = state.popjamScorePatterns[key];
           if (!entry || entry.row !== row || entry.col !== col) {
@@ -19265,7 +19266,7 @@
         });
       }
 
-      if (resultViewMode() === "details") {
+      if (resultViewMode() === "details" && !isPopjamScoreMode()) {
         resultScoreHighlightItems(false)
           .filter(function (item) {
             return !item.borderless && item.row === row && item.col === col;

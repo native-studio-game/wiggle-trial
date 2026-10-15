@@ -13354,6 +13354,10 @@
       if (!slot) {
         return false;
       }
+      // 発動の順番をまだ選んでいる間は、そのハテナの効果（ロック・スポットライト）はまだ発動していない
+      if (Array.isArray(state.pendingQuestionEffects) && state.pendingQuestionEffects.indexOf(slot.id) !== -1) {
+        return false;
+      }
       const cell = boardCellAt(slot.boardRow, slot.boardCol);
       return Boolean(cell && cell.tile);
     }
@@ -13633,7 +13637,8 @@
       }
 
       // 発動順が結果に関係するときだけ選ばせる（カラーズ・オールカラーズ・スーパーカラーズ・スポットライトなどは順番を選ばない）
-      const needsOrderChoice = slots.length > 1 && (slots.some(function (slot) {
+      // ポップジャム（得点モード）は、隅などで同時に2つ以上ハテナが発動するときは必ず順番を選んでから発動する
+      const needsOrderChoice = slots.length > 1 && (isPopjamScoreMode() || slots.some(function (slot) {
         return slot.tile && ["swap", "collect", "replace"].indexOf(slot.tile.effect) !== -1;
       }));
 

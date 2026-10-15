@@ -15777,6 +15777,9 @@
       if (hasPopjamWinDiscardShowcase()) {
         return;
       }
+      if (inlineConfirm && inlineConfirm.blocksBoard) {
+        return;
+      }
       if (isPopjamMode() && state.discardPending > 0) {
         const target = discardPlayer();
         if (state.over || !state.started || !target || target.isCpu) {
@@ -15862,6 +15865,9 @@
       if (state.over || !state.started || isCpuTurn() || hasPopjamWinDiscardShowcase()) {
         return false;
       }
+      if (inlineConfirm && inlineConfirm.blocksBoard) {
+        return false;
+      }
 
       const actionPlacement = hasPendingAction()
         && state.pendingAction.type === "replace-place";
@@ -15901,6 +15907,9 @@
 
     function rotateSelectedByWheel(event, handIndex) {
       if (state.over || !state.started || isCpuTurn() || hasPopjamWinDiscardShowcase()) {
+        return false;
+      }
+      if (inlineConfirm && inlineConfirm.blocksBoard) {
         return false;
       }
 
@@ -17065,7 +17074,8 @@
     }
 
     function confirmThen(message, onYes, onNo) {
-      inlineConfirm = { message: message, onYes: onYes, onNo: onNo || null };
+      // 確定待ちの間は、盤面・手札のタップや回転で対象が変わらないようにする
+      inlineConfirm = { message: message, onYes: onYes, onNo: onNo || null, blocksBoard: true };
       render();
     }
 
@@ -18918,6 +18928,9 @@
 
       cell.addEventListener("click", function () {
         if (Date.now() < blSwipeSuppressClickUntil) {
+          return;
+        }
+        if (inlineConfirm && inlineConfirm.blocksBoard) {
           return;
         }
         if (state.pendingAction && state.pendingAction.type === "replace") {

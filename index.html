@@ -21742,6 +21742,12 @@
     const swipeArea = document.querySelector(".layout");
     if (swipeArea) {
       swipeArea.addEventListener("pointerdown", beginFixedBoardSwipeRotate);
+      // 手札・共有札・山札の画像をブラウザのドラッグ（画像の持ち上げ）にしない。ドラッグが始まるとスワイプが途中で取り消されるため
+      swipeArea.addEventListener("dragstart", function (event) {
+        if (event.target.closest && event.target.closest("#handRow, #handPanel, #deckPanel, #sharedMarket")) {
+          event.preventDefault();
+        }
+      });
       swipeArea.addEventListener("pointermove", moveFixedBoardSwipeRotate);
       swipeArea.addEventListener("pointercancel", cancelFixedBoardSwipeRotate);
       swipeArea.addEventListener("pointerup", endFixedBoardSwipeRotate);

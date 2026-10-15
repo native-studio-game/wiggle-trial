@@ -14823,7 +14823,7 @@
       const player = currentPlayer();
       state.keepBonus = null;
       if (player && !player.isCpu && state.keepBonusNext === player.id) {
-        state.keepBonus = { playerId: player.id, sharedUsed: false, handUsed: false };
+        state.keepBonus = { playerId: player.id, sharedUsed: false, handUsed: false, tile: player.hand[0] || null };
         state.keepBonusNext = null;
       }
     }
@@ -19960,7 +19960,7 @@
         const keepThumbs = document.createElement("div");
         keepThumbs.className = "question-thumbs";
         const keepImg = document.createElement("img");
-        const keptTile = currentPlayer().hand[0];
+        const keptTile = keepState.tile || currentPlayer().hand[0];
         keepImg.src = tilePath + displayTileSrc(keptTile);
         keepImg.alt = keptTile ? keptTile.name : "";
         keepThumbs.appendChild(keepImg);

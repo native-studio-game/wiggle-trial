@@ -10403,6 +10403,8 @@
   body.mode-popjam-score[data-turn-color="yellow"] { background-color: #fdf3c4 !important; }
   body.mode-popjam-score[data-turn-color="blue"] { background-color: #dcecfb !important; }
   body.mode-popjam-score[data-turn-color="green"] { background-color: #dff3e0 !important; }
+  /* ポップジャム: 発動するハテナの選択は盤面の上に大きく出して、見落とさないようにする */
+  body.view-mobile.mode-popjam-score .question-choice-panel { position: fixed; left: 12px; right: 12px; top: 50%; transform: translateY(-50%); z-index: 50; max-width: 420px; margin: 0 auto; box-shadow: 0 14px 34px rgba(15, 23, 42, 0.28); }
   /* 5x5 の盤面（中央の枠内）は白にする。合法手・予備配置・仮置きのマスは、その色を優先する */
   body.mode-popjam-score .board .cell.pjs-board-cell:not(.ghost-legal):not(.ghost-illegal):not(.placeable):not(:has(.ghost-preview)) { background-color: #ffffff; }
   /* 白いマスを薄くしない（置けないマスも白のまま。置けるマスは緑で示す） */
@@ -20284,7 +20286,7 @@
         return;
       }
 
-      if (!showcaseMode && !discardMode && hasPendingQuestionEffects() && !player.isCpu && !isPopjamScoreMode()) {
+      if (!showcaseMode && !discardMode && hasPendingQuestionEffects() && !player.isCpu) {
         const panel = document.createElement("div");
         panel.className = "question-choice-panel";
 

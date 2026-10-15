@@ -10519,6 +10519,9 @@
   body .bl-score-marker { z-index: 12 !important; }
   /* 右上の「？」「≡」は、強調されたハテナ枠より前面に置く */
   body.view-mobile.mode-popjam-score .corner-controls { z-index: 9 !important; }
+  /* 置ける手がなくなった終了の前に、共有札を左から順に揺らす */
+  .hand-tile.end-shake { animation: market-end-shake 420ms ease-in-out var(--shake-delay, 0ms) both; }
+  @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-14K2FCS1TB"></script>
@@ -12593,7 +12596,7 @@
         const firstMarketIndex = findFirstClassicMarketIndex();
         if (state.sharedMarket.length === 0 || firstMarketIndex < 0) {
           if (state.passStreak >= state.players.length - 1 || state.deck.length === 0) {
-            finishPopjamByScore("置ける公開札がありません。");
+            finishPopjamScoreAfterShake("置ける公開札がありません。");
             return;
           }
           state.passStreak = (state.passStreak || 0) + 1;
@@ -12641,7 +12644,7 @@
           addLog(player.name + " は置ける場所がなくパスしました。");
           if (state.passStreak >= state.players.length) {
             if (isPopjamScoreMode()) {
-              finishPopjamByScore("全員が置ける場所なしでパスしました。");
+              finishPopjamScoreAfterShake("全員が置ける場所なしでパスしました。");
             } else {
               finishPopjamByHandCount();
             }
@@ -14504,6 +14507,29 @@
       const ranking = updatePopjamWinnersByRank();
       const fewest = ranking.length > 0 ? ranking[0].handCount : 0;
       addLog("終了: 手札最少(" + fewest + "枚)のプレイヤーが勝ちです。");
+    }
+
+    // 置ける手がなくなって終わる時、共有札を左から順に揺らしてから結果へ移る（いきなりリザルトに行かないため）
+    function finishPopjamScoreAfterShake(reason) {
+      if (state.over || state.popjamEndingShake) {
+        return;
+      }
+      if (!isPopjamScoreMode() || !state.sharedMarket || state.sharedMarket.length === 0) {
+        finishPopjamByScore(reason);
+        return;
+      }
+      state.popjamEndingShake = true;
+      state.marketEndShake = true;
+      render();
+      const total = state.sharedMarket.length * 160 + 460;
+      setTimeout(function () {
+        state.popjamEndingShake = false;
+        state.marketEndShake = false;
+        if (!state.over) {
+          finishPopjamByScore(reason);
+        }
+        render();
+      }, total);
     }
 
     function finishPopjamByScore(reason) {
@@ -17307,6 +17333,9 @@
 
     function runCpuTurnStep() {
       state.cpuThinking = false;
+      if (state.popjamEndingShake) {
+        return;
+      }
       if (!isCpuTurn()) {
         return;
       }
@@ -17350,7 +17379,7 @@
           addLog(player.name + " は置ける場所がなくパスしました。");
           if (state.passStreak >= state.players.length) {
             if (isPopjamScoreMode()) {
-              finishPopjamByScore("全員が置ける場所なしでパスしました。");
+              finishPopjamScoreAfterShake("全員が置ける場所なしでパスしました。");
             } else {
               finishPopjamByHandCount();
             }
@@ -17664,7 +17693,7 @@
         addLog(currentPlayer().name + " がパスしました。");
         if (state.passStreak >= state.players.length) {
           if (isPopjamScoreMode()) {
-            finishPopjamByScore("全員がパスしました。");
+            finishPopjamScoreAfterShake("全員がパスしました。");
           } else {
             finishPopjamByHandCount();
           }
@@ -20727,6 +20756,10 @@
         }
         if (options && options.handGroupStart) {
           button.classList.add("hand-group-start");
+        }
+        if (state.marketEndShake && index < state.sharedMarket.length) {
+          button.classList.add("end-shake");
+          button.style.setProperty("--shake-delay", (index * 160) + "ms");
         }
         button.dataset.marketIndex = String(index);
         if (state.selectedHandIndex === index) {
@@ -24472,7 +24505,7 @@
           addLog(player.name + " は置ける手札がなくパスしました。");
           if (state.passStreak >= state.players.length) {
             if (isPopjamScoreMode()) {
-              finishPopjamByScore("全員が置ける手札なしでパスしました。");
+              finishPopjamScoreAfterShake("全員が置ける手札なしでパスしました。");
             } else {
               finishPopjamByHandCount();
             }
@@ -25174,7 +25207,7 @@
           addLog(currentPlayer().name + " は置ける手札がなくパスしました。");
           if (state.passStreak >= state.players.length) {
             if (isPopjamScoreMode()) {
-              finishPopjamByScore("全員が置ける手札なしでパスしました。");
+              finishPopjamScoreAfterShake("全員が置ける手札なしでパスしました。");
             } else {
               finishPopjamByHandCount();
             }

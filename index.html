@@ -11546,7 +11546,7 @@
       return tileDefinitions;
     }
     function usesSharedMarket() {
-      return isClassicSharedMode() || state.mode === "borderless" || isHarvestMode() || isPopjamScoreMode();
+      return isClassicOrBorderlessMode() || isHarvestMode() || isPopjamScoreMode();
     }
 
     function hasSharedMarket(mode = state.mode) {
@@ -11569,8 +11569,17 @@
       return mode === "classic" || isClassicBonusMode(mode);
     }
 
+    // 共有札の判定をここに集約（同じ組み合わせを各所に書かない）
+    function isClassicOrBorderlessMode() {
+      return isClassicSharedMode() || state.mode === "borderless";
+    }
+
+    function isSharedMarketScoreMode() {
+      return isClassicSharedMode() || isPopjamScoreMode();
+    }
+
     function isDynamicBoardMode() {
-      return isClassicSharedMode() || state.mode === "borderless" || isHarvestMode() || isHarvestSeasonMode() || isPopjamInnerQuestionMode() || isLifeMode();
+      return isClassicOrBorderlessMode() || isHarvestMode() || isHarvestSeasonMode() || isPopjamInnerQuestionMode() || isLifeMode();
     }
 
     function isDynamicPopjamMode() {
@@ -11578,7 +11587,7 @@
     }
 
     function isDynamicAutoCameraMode() {
-      return isClassicSharedMode() || state.mode === "borderless" || isHarvestMode() || isHarvestSeasonMode() || isDynamicPopjamMode() || isLifeMode();
+      return isClassicOrBorderlessMode() || isHarvestMode() || isHarvestSeasonMode() || isDynamicPopjamMode() || isLifeMode();
     }
 
     function shouldShowDeckArea() {
@@ -14178,7 +14187,7 @@
 
       const hasSharedMove = usesSharedMarket();
       const nextMarketIndex = hasSharedMove
-        ? (isClassicSharedMode() || isPopjamScoreMode() ? findFirstClassicMarketIndex() : findFirstBorderlessMarketIndex())
+        ? (isSharedMarketScoreMode() ? findFirstClassicMarketIndex() : findFirstBorderlessMarketIndex())
         : -1;
       const hasMove = hasSharedMove
         ? nextMarketIndex >= 0
@@ -16252,7 +16261,7 @@
             return;
           }
         }
-        const firstMarketIndex = (isClassicSharedMode() || isPopjamScoreMode())
+        const firstMarketIndex = (isSharedMarketScoreMode())
           ? findFirstClassicMarketIndex()
           : findFirstBorderlessMarketIndex();
         state.selectedHandIndex = firstMarketIndex >= 0 ? firstMarketIndex : null;
@@ -17505,7 +17514,7 @@
         return "";
       }
 
-      if (isClassicSharedMode() || state.mode === "borderless" || isOpen7Mode() || isTacticsMode() || isPopjamMode() || isLifeMode() || isHarvestMode() || isHarvestSeasonMode()) {
+      if (isClassicOrBorderlessMode() || isOpen7Mode() || isTacticsMode() || isPopjamMode() || isLifeMode() || isHarvestMode() || isHarvestSeasonMode()) {
         const player = state.players[index];
         if (!player) {
           return "";
@@ -17697,7 +17706,7 @@
 
     // 中央オーバーレイ用: 順位・得点を縦並びで表示（負けは「（置けない）」を行末に付記）
     function buildResultRowsHtml() {
-      if (isClassicSharedMode() || state.mode === "borderless" || isOpen7Mode()) {
+      if (isClassicOrBorderlessMode() || isOpen7Mode()) {
         return buildCompactScoreResultRowsHtml(computeScoreRanking());
       }
 
@@ -17804,7 +17813,7 @@
         return getPlayerOutcome(0) === "lose" ? "YOU LOSE" : "YOU WIN";
       }
 
-      if (isClassicSharedMode() || state.mode === "borderless" || isOpen7Mode()) {
+      if (isClassicOrBorderlessMode() || isOpen7Mode()) {
         return getPlayerOutcome(0) === "lose" ? "YOU LOSE" : "YOU WIN";
       }
 
@@ -17826,7 +17835,7 @@
       if (!elements.declarePanel || !elements.boardDeclareSlot || !elements.actionDeclareSlot || !elements.sideDeclareSlot) {
         return;
       }
-      const useActionDeclareSlot = isDealSurvivalMode() || isClassicSharedMode() || isPopjamScoreMode();
+      const useActionDeclareSlot = isDealSurvivalMode() || isSharedMarketScoreMode();
       const target = useActionDeclareSlot
         ? elements.actionDeclareSlot
         : document.body.classList.contains("view-mobile")
@@ -17932,7 +17941,7 @@
         return;
       }
       const showDealResult = isDealSurvivalMode();
-      const showScoreResult = isClassicSharedMode() || state.mode === "borderless" || isOpen7Mode();
+      const showScoreResult = isClassicOrBorderlessMode() || isOpen7Mode();
       const show = (showDealResult || showScoreResult)
         && currentMode() === state.mode
         && state.started
@@ -20751,7 +20760,7 @@
         delete elements.scoreToast.dataset.scoreColor;
       }
       const hasCustomToastHtml = Boolean(state.scoreToastHtml && state.scoreToastText === state.scoreText);
-      const suppressPlainScoreToast = (isClassicSharedMode() || state.mode === "borderless") && !hasCustomToastHtml;
+      const suppressPlainScoreToast = isClassicOrBorderlessMode() && !hasCustomToastHtml;
       if (suppressPlainScoreToast) {
         elements.scoreToast.hidden = true;
         delete elements.scoreToast.dataset.scoreColor;
@@ -24134,7 +24143,7 @@
       const minZoom = isDynamicPopjamMode() ? 0.42 : (isMobileCamera ? 0.48 : 0.72);
       const placedCount = Object.keys(state.blBoard || {}).length;
       const classicCameraExtent = Math.max(bounds.width, bounds.height);
-      const isCompactClassicCamera = (isClassicSharedMode() || state.mode === "borderless")
+      const isCompactClassicCamera = isClassicOrBorderlessMode()
         && placedCount <= 6
         && classicCameraExtent <= 5;
       const compactClassicMaxZoom = classicCameraExtent <= 3
@@ -24147,7 +24156,7 @@
         : isDynamicPopjamMode()
         ? (isMobileCamera ? 1.22 : 1.45)
         : (isMobileCamera ? 0.8 : 1.65);
-      const holdZoom = (!isMobileCamera && (isClassicSharedMode() || state.mode === "borderless"))
+      const holdZoom = (!isMobileCamera && isClassicOrBorderlessMode())
         ? 1.7
         : maxZoom;
       state.blZoom = Math.max(minZoom, Math.min(holdZoom, fitZoom));
@@ -24389,7 +24398,7 @@
       const els = blGetEls();
       if (els.overlay) {
         if (state.over && resultViewMode() === "details") {
-          const overlayBody = (isClassicSharedMode() || state.mode === "borderless")
+          const overlayBody = isClassicOrBorderlessMode()
             ? buildResultRowsHtml()
             : "<span>" + escapeHtml(resultText) + "</span>";
           els.overlay.hidden = false;

@@ -18861,21 +18861,20 @@
         }
         seen[pattern.key] = true;
         const since = patternGlowSince[pattern.key];
-        const tris = pattern.triangles || [];
+        // ハテナ枠（question）は盤の外側の区画で、盤上のマスの三角として描くと位置がずれて余計な線になる。
+        // そのため輪郭も光りも盤上の実タイルの三角だけで作る（ハテナ側の辺は描かない）。
+        const tris = (pattern.triangles || []).filter(function (tri) { return !tri.question; });
         // この模様に属する三角の集合（スタート含む。白線の内外判定に使う）
         const member = {};
         tris.forEach(function (tri) { member[tri.r + "," + tri.c + "," + tri.d] = true; });
         tris.forEach(function (tri) {
           // スタートタイルの白い分割線にも演出をつなげるため start も含める。
-          // ハテナ枠（question）は光らせないが、白線の輪郭には必ず含める（抜けると線が途切れるため）。
           const key = tri.r + "," + tri.c;
           if (!map[key]) {
             map[key] = { tris: [], lines: [] };
           }
           // 完成時に光らせる領域（三角）
-          if (!tri.question) {
-            map[key].tris.push({ d: tri.d, color: pattern.color, since: since });
-          }
+          map[key].tris.push({ d: tri.d, color: pattern.color, since: since });
           // 模様の外周（向こう側の三角が同じ模様に無い辺）＝囲う白線
           TRI_EDGE_DEFS[tri.d].forEach(function (e) {
             const nk = (tri.r + e.dr) + "," + (tri.c + e.dc) + "," + e.nd;
@@ -18889,7 +18888,7 @@
       if (resultHighlightItems.length > 0) {
         resultHighlightItems
           .forEach(function (pattern) {
-            const tris = Array.isArray(pattern.triangles) ? pattern.triangles : [];
+            const tris = (Array.isArray(pattern.triangles) ? pattern.triangles : []).filter(function (tri) { return !tri.question; });
             const member = {};
             tris.forEach(function (tri) { member[tri.r + "," + tri.c + "," + tri.d] = true; });
             tris.forEach(function (tri) {

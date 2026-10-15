@@ -16204,12 +16204,16 @@
       if (state.over || !state.started || isCpuTurn() || hasPopjamWinDiscardShowcase()) {
         return false;
       }
+      const actionPlacement = hasPendingAction()
+        && state.pendingAction.type === "replace-place";
+      // ムーブの置き先の確認中に回転したら、確認は取り消して回転後の置き先を選び直す
+      if (actionPlacement && inlineConfirm && inlineConfirm.blocksBoard) {
+        inlineConfirm = null;
+        clearMobilePlacementConfirm();
+      }
       if (inlineConfirm && inlineConfirm.blocksBoard) {
         return false;
       }
-
-      const actionPlacement = hasPendingAction()
-        && state.pendingAction.type === "replace-place";
       if ((hasPendingQuestionEffects() && !actionPlacement)
         || (hasPendingAction() && !actionPlacement && state.pendingAction.type !== "life-damage")) {
         return false;
@@ -19341,6 +19345,13 @@
           return;
         }
         if (state.pendingAction && state.pendingAction.type === "replace-place") {
+          // 置けない場所では「ここに置きますか？」を出さず、理由だけ知らせて選び直せるようにする
+          if (!canReplaceTileTo(row, col, state.pendingAction)) {
+            state.scoreText = "ムーブ: ここには置けません。";
+            scheduleToastHide();
+            render();
+            return;
+          }
           requestPlacementConfirm(row, col, false, function () {
             placePendingReplaceTile(row, col);
           });

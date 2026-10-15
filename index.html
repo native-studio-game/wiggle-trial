@@ -10358,8 +10358,10 @@
   body.view-mobile.mode-classic #sharedMarket.shared-market.active, body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 106px - 4 * var(--pjs-market-gap)) / 5)); }
   /* ポップジャム: 山札の仕切りの右側に収まるよう、共有札＋手札の6列を幅に合わせる（中央寄せで左の山札に食い込まないように左寄せ） */
   body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(47px, calc((100vw - 110px - 5 * var(--pjs-market-gap)) / 6)); justify-self: start; justify-content: start; }
-  /* ポップジャム: 共有札・手札の列は山札の仕切りの右側(約112px以降)に必ず収める。手札の有無に関係なく幅を上限で制限 */
-  body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { --pjs-market-tile-size: min(47px, calc((100vw - 112px - (var(--pjs-market-columns, 5) - 1) * var(--pjs-market-gap)) / var(--pjs-market-columns, 5))); max-width: calc(100vw - 112px); justify-self: start; justify-content: start; }
+  /* ポップジャム(スマホ): 共有札・手札は山札の右側の列幅いっぱいに自動で割り付け、札サイズは列幅から決まる(数値調整なし) */
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { display: grid; box-sizing: border-box; width: calc(100% - 12px); max-width: calc(100% - 12px); grid-template-columns: repeat(6, minmax(0, 1fr)); justify-content: stretch; justify-items: stretch; justify-self: stretch; transform: none; }
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active > * { width: 100%; min-width: 0; max-width: 100%; height: auto; aspect-ratio: 1 / 1; }
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket .hand-tile { width: 100%; min-width: 0; max-width: 100%; height: auto; aspect-ratio: 1 / 1; flex: none; }
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }

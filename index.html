@@ -14344,8 +14344,15 @@
       return true;
     }
 
+    // 終了時に、直前の得点の一時表示（時間で消える「+」）を消し、終了後の数字表示に切り替える
+    function clearTransientScoreEffectsAtEnd() {
+      state.scoreEffects = [];
+      render();
+    }
+
     function finishPopjamByHandCount() {
       state.over = true;
+      clearTransientScoreEffectsAtEnd();
       state.stats.endedAt = Date.now();
       const ranking = updatePopjamWinnersByRank();
       const fewest = ranking.length > 0 ? ranking[0].handCount : 0;
@@ -14354,6 +14361,7 @@
 
     function finishPopjamByScore(reason) {
       state.over = true;
+      clearTransientScoreEffectsAtEnd();
       state.stats.endedAt = Date.now();
       const ranking = updatePopjamWinnersByRank();
       const topScore = ranking.length > 0 ? ranking[0].score : 0;
@@ -14481,6 +14489,7 @@
       const winners = zeroPlayers;
 
       state.over = true;
+      clearTransientScoreEffectsAtEnd();
       state.stats.endedAt = Date.now();
       state.popjamWinners = winners.map(function (player) {
         return player.id;

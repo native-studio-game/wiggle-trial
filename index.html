@@ -11985,8 +11985,17 @@
       }
       config.cpuEnabled = slots.some(function (slot) { return slot.cpu; });
       config.playerCount = slots.length;
-      state.titlePlayerSetup = slots.map(function (slot) {
-        return { color: slot.color, name: (slot.name || "").trim() || colorNames[slot.color], cpu: Boolean(slot.cpu) };
+      // 名前: CPUは「CPU＋番号」、人間は入力があればその名前。無入力でCPU相手の人間が1人なら「YOU」
+      const anyCpu = slots.some(function (slot) { return slot.cpu; });
+      const humanCount = slots.filter(function (slot) { return !slot.cpu; }).length;
+      state.titlePlayerSetup = slots.map(function (slot, index) {
+        let name;
+        if (slot.cpu) {
+          name = "CPU" + (index + 1);
+        } else {
+          name = (slot.name || "").trim() || (anyCpu && humanCount === 1 ? "YOU" : colorNames[slot.color]);
+        }
+        return { color: slot.color, name: name, cpu: Boolean(slot.cpu) };
       });
       return config;
     }

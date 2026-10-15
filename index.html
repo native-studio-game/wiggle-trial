@@ -10358,6 +10358,13 @@
   body .small-tile.pick-target { outline: none !important; }
 
   .external-question.swap-picked img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.35) !important; }
+  /* 効果の対象の枠は、説明書の効果の色にする（ムーブ=紫、キープ=緑、スワップ=マゼンタ） */
+  body[data-pick-kind="move"] .pick-target img, body[data-pick-kind="move"] .swap-target img, body[data-pick-kind="move"] .swap-picked img { outline-color: #7c3aed !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.35) !important; }
+  body[data-pick-kind="keep"] .pick-target img, body[data-pick-kind="keep"] .swap-target img, body[data-pick-kind="keep"] .swap-picked img { outline-color: #237a57 !important; box-shadow: 0 0 0 3px rgba(35,122,87,0.35) !important; }
+  body[data-pick-kind="swap"] .pick-target img, body[data-pick-kind="swap"] .swap-target img, body[data-pick-kind="swap"] .swap-picked img { outline-color: #c026d3 !important; box-shadow: 0 0 0 3px rgba(192,38,211,0.35) !important; }
+  body[data-pick-kind="move"] .cell.action-target { outline-color: #7c3aed !important; }
+  body[data-pick-kind="keep"] .cell.action-target { outline-color: #237a57 !important; }
+  body[data-pick-kind="swap"] .cell.action-target { outline-color: #c026d3 !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; box-shadow: var(--board-emboss) !important; border-radius: 18px !important; }
   /* ポップジャムの固定盤面: 空きマスの点線は各マスの「上・左」だけに引き、隣のマスと線が二重にならないようにする（右端・下端は最後の列・行だけ） */
   body.mode-popjam-score .board .cell:not(.has-tile) { outline: 0 !important; border-style: none; border-top: 1px dashed rgba(196, 214, 232, 0.82); border-left: 1px dashed rgba(196, 214, 232, 0.82); }
@@ -18176,6 +18183,14 @@
     }
 
     function render() {
+      // 効果の対象を選ぶ間は、対象の枠の色を効果の色（説明書と同じ）にする
+      const pendingType = state.pendingAction ? state.pendingAction.type : "";
+      const pickKind = ({ replace: "move", "replace-place": "move", collect: "keep", swap: "swap" })[pendingType] || "";
+      if (pickKind) {
+        document.body.dataset.pickKind = pickKind;
+      } else {
+        delete document.body.dataset.pickKind;
+      }
       const viewMode = currentViewMode();
       const placementAssistMode = currentPlacementAssistMode();
       document.body.classList.toggle("view-mobile", viewMode === "mobile");

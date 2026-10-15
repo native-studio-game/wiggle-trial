@@ -10505,11 +10505,11 @@
   .hand-tile.collect-picked img { outline: 3px solid #5c86d6 !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(92,134,214,0.35) !important; }
   /* 描画の優先順（上ほど前面）:
      得点マーカー 12 > 選択・効果元のハテナ枠 8 > ハテナ枠 4 > 盤面の演出オーバーレイ 2 > 盤面タイル */
-  body .external-question.effect-source,
+  body .external-question.effect-source { z-index: 9 !important; }
   body .external-question.swap-target,
   body .external-question.swap-picked,
   body .external-question.pick-target,
-  body .cell.inner-question.effect-source { z-index: 8 !important; }
+  body .cell.inner-question.effect-source { z-index: 9 !important; }
   /* 終了後の得点の数字は消さない（.score-marker の時間で消えるアニメを外す） */
   body .score-marker.final-pattern-score,
   body .bl-score-marker.final-pattern-score { animation: none !important; opacity: 1 !important; }

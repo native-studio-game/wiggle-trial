@@ -10403,13 +10403,20 @@
   body.mode-popjam-score[data-turn-color="yellow"] { background-color: #fdf3c4 !important; }
   body.mode-popjam-score[data-turn-color="blue"] { background-color: #dcecfb !important; }
   body.mode-popjam-score[data-turn-color="green"] { background-color: #dff3e0 !important; }
-  /* ポップジャム: 発動するハテナの選択は盤面の上に大きく出して、見落とさないようにする */
-  body.view-mobile.mode-popjam-score .question-choice-panel { position: fixed; left: 12px; right: 12px; top: 50%; transform: translateY(-50%); z-index: 50; max-width: 420px; margin: 0 auto; box-shadow: 0 14px 34px rgba(15, 23, 42, 0.28); }
   /* 5x5 の盤面（中央の枠内）は白にする。合法手・予備配置・仮置きのマスは、その色を優先する */
   body.mode-popjam-score .board .cell.pjs-board-cell:not(.ghost-legal):not(.ghost-illegal):not(.placeable):not(:has(.ghost-preview)) { background-color: #ffffff; }
   /* 白いマスを薄くしない（置けないマスも白のまま。置けるマスは緑で示す） */
   body.mode-popjam-score .board .cell.pjs-board-cell.blocked { opacity: 1; }
   body.view-mobile.mode-popjam-score .board-instruction #instructionBody { width: 100%; }
+  /* ポップジャム: 発動するハテナの選択は、説明欄（盤面と共有札の間の1段）に1行で出す。説明欄の高さは変えない */
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice { flex-direction: row !important; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 10px !important; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice #instructionBody { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; max-width: 100%; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice .question-choice-panel { display: flex; flex-direction: row; align-items: center; gap: 6px; margin: 0; padding: 0; border: 0; background: transparent; width: 100%; min-width: 0; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice .question-choice-panel strong { font-size: 11px; line-height: 1.25; white-space: nowrap; flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice .question-choice-panel .label { display: none; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice .question-choice-list { flex-wrap: nowrap; justify-content: flex-end; gap: 6px; margin-left: auto; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice .question-choice-button { width: auto; min-width: 0; flex: 0 0 auto; white-space: nowrap; grid-template-columns: auto auto; align-items: center; gap: 4px; padding: 2px 5px; font-size: 11px; border-width: 2px; }
+  body.view-mobile.mode-popjam-score .board-instruction.has-choice .question-choice-button img { width: 26px; height: 26px; }
   body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img, body.view-mobile.mode-classic .hand-tile.selected img { outline: none !important; }
   .external-question.effect-source img, .cell.inner-question.effect-source img { outline: 3px solid #7c3aed !important; outline-offset: 2px !important; box-shadow: 0 0 0 5px rgba(124,58,237,0.25) !important; }
@@ -20067,6 +20074,7 @@
       }
 
       elements.instructionBody.innerHTML = "";
+      elements.instructionPanel.classList.remove("has-choice");
       cleanupInlineConfirm();
       const inlineConfirmEl = document.getElementById("inlineConfirm");
       if (inlineConfirm) {
@@ -20123,6 +20131,15 @@
         }
         keepPanel.appendChild(keepHead);
         elements.instructionBody.appendChild(keepPanel);
+        elements.instructionPanel.classList.remove("is-empty");
+        elements.instructionPanel.hidden = false;
+        return;
+      }
+      if (isPopjamScoreMode() && !hasPopjamWinDiscardShowcase() && state.discardPending <= 0
+        && !state.over && hasPendingQuestionEffects() && !currentPlayer().isCpu) {
+        // ポップジャム: 発動するハテナの選択は、今の効果を説明する欄に出す
+        elements.instructionBody.appendChild(buildQuestionChoicePanel());
+        elements.instructionPanel.classList.add("has-choice");
         elements.instructionPanel.classList.remove("is-empty");
         elements.instructionPanel.hidden = false;
         return;
@@ -20218,6 +20235,50 @@
       elements.hand.style.setProperty("--hand-fit-tile-size", tileSize + "px");
     }
 
+    // 発動するハテナを選ぶ案内（手札側・説明欄の両方で使う）
+    function buildQuestionChoicePanel() {
+      const panel = document.createElement("div");
+      panel.className = "question-choice-panel";
+
+      const title = document.createElement("strong");
+      title.textContent = "発動するハテナを選んでください";
+      panel.appendChild(title);
+
+      const note = document.createElement("span");
+      note.className = "label";
+      note.textContent = "選んだ順に効果が発動します。表になっているハテナも隣接すると発動します。";
+      panel.appendChild(note);
+
+      const list = document.createElement("div");
+      list.className = "question-choice-list";
+      state.pendingQuestionEffects.forEach(function (slotId) {
+        const slot = findQuestionSlotById(slotId);
+        if (!slot || !slot.tile) {
+          return;
+        }
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "question-choice-button";
+        button.addEventListener("click", function () {
+          selectPendingQuestionEffect(slot.id);
+        });
+
+        const img = document.createElement("img");
+        img.src = tilePath + displayTileSrc(slot.tile);
+        img.alt = slot.tile.name;
+        img.style.transform = "rotate(" + slot.rotation + "deg)";
+        button.appendChild(img);
+
+        const label = document.createElement("span");
+        label.textContent = slot.tile.name.replace("ハテナ ", "");
+        button.appendChild(label);
+        list.appendChild(button);
+      });
+      panel.appendChild(list);
+      return panel;
+    }
+
     function renderHand() {
       elements.hand.innerHTML = "";
       const player = hasPopjamWinDiscardShowcase()
@@ -20286,47 +20347,8 @@
         return;
       }
 
-      if (!showcaseMode && !discardMode && hasPendingQuestionEffects() && !player.isCpu) {
-        const panel = document.createElement("div");
-        panel.className = "question-choice-panel";
-
-        const title = document.createElement("strong");
-        title.textContent = "発動するハテナを選んでください";
-        panel.appendChild(title);
-
-        const note = document.createElement("span");
-        note.className = "label";
-        note.textContent = "選んだ順に効果が発動します。表になっているハテナも隣接すると発動します。";
-        panel.appendChild(note);
-
-        const list = document.createElement("div");
-        list.className = "question-choice-list";
-        state.pendingQuestionEffects.forEach(function (slotId) {
-          const slot = findQuestionSlotById(slotId);
-          if (!slot || !slot.tile) {
-            return;
-          }
-
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "question-choice-button";
-          button.addEventListener("click", function () {
-            selectPendingQuestionEffect(slot.id);
-          });
-
-          const img = document.createElement("img");
-          img.src = tilePath + displayTileSrc(slot.tile);
-          img.alt = slot.tile.name;
-          img.style.transform = "rotate(" + slot.rotation + "deg)";
-          button.appendChild(img);
-
-          const label = document.createElement("span");
-          label.textContent = slot.tile.name.replace("ハテナ ", "");
-          button.appendChild(label);
-          list.appendChild(button);
-        });
-        panel.appendChild(list);
-        elements.hand.appendChild(panel);
+      if (!isPopjamScoreMode() && !showcaseMode && !discardMode && hasPendingQuestionEffects() && !player.isCpu) {
+        elements.hand.appendChild(buildQuestionChoicePanel());
       }
 
       player.hand.forEach(function (tile, index) {

@@ -11991,7 +11991,9 @@
       state.titlePlayerSetup = slots.map(function (slot, index) {
         let name;
         if (slot.cpu) {
-          name = "CPU" + (index + 1);
+          // CPUに名前を入れたら「名前(CPU)」、無入力なら「CPU＋番号」
+          const cpuName = (slot.name || "").trim();
+          name = cpuName ? cpuName + "(CPU)" : "CPU" + (index + 1);
         } else {
           name = (slot.name || "").trim() || (anyCpu && humanCount === 1 ? "YOU" : colorNames[slot.color]);
         }

@@ -16398,7 +16398,10 @@
       }
 
       if (usesSharedMarket()) {
-        refillSharedMarket();
+        // キープの追加配置中は補充しない(補充は出番の終了時)
+        if (!keepBonusState(currentPlayer())) {
+          refillSharedMarket();
+        }
         if (isPopjamScoreMode()) {
           const currentTiles = currentPlacementTiles();
           if (state.selectedHandIndex !== null

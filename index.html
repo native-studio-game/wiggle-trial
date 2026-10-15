@@ -10525,7 +10525,7 @@
      手札・共有札・山札は、横スクロールやタップのためにブラウザの横方向の操作を残す */
   body.view-mobile { overscroll-behavior: none; }
   body.view-mobile .layout { touch-action: none; }
-  body.view-mobile #handRow, body.view-mobile #handPanel, body.view-mobile #deckPanel, body.view-mobile #sharedMarket { touch-action: pan-x; }
+  body.view-mobile #handRow, body.view-mobile #handPanel, body.view-mobile #deckPanel, body.view-mobile #sharedMarket { touch-action: none; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->

@@ -10336,6 +10336,9 @@
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }
+  /* クラシック: 盤面の枠・パネル背景・影を外し、画面の背景をそのまま使う（ポップジャムと同じ扱い） */
+  body.view-mobile.mode-classic .board-wrap { border: 0 !important; background: transparent !important; box-shadow: none !important; padding: 0 !important; }
+  body.view-mobile.mode-classic .board { background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .shared-market-label:not([hidden]) { position: static !important; transform: none !important; display: block; width: max-content; margin: 0 auto 2px !important; padding: 0 8px; }
   .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
   body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }

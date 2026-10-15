@@ -14807,9 +14807,6 @@
       clearAllPlacementPreviews();
       clearMobilePlacementConfirm();
       const sharedIndex = state.sharedMarket.findIndex(Boolean);
-      if (!k.sharedUsed && !k.handUsed) {
-        state.scoreText = "キープの効果: 共有札か手札から、タイルを1枚置いてください。";
-      }
       if (!k.sharedUsed && sharedIndex >= 0) {
         state.selectedHandIndex = sharedIndex;
         state.selectedRotation = marketTileRotation(sharedIndex);

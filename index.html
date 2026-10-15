@@ -10355,6 +10355,9 @@
   body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active, body.view-mobile.mode-classic .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(50px, calc((100vw - 76px) / 6)); }
   /* クラシック・ポップジャム: 手札列の左にデッキ分の幅があるため、共有札5枚＋隙間が枠（約290px）に収まるよう縮める */
   body.view-mobile.mode-classic #sharedMarket.shared-market.active, body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 106px - 4 * var(--pjs-market-gap)) / 5)); }
+  /* ポップジャム(スマホ・手札あり): 共有札と手札を山札の右側の列幅に収めて6列で割り付け、札サイズは列幅から決まる */
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { display: grid; box-sizing: border-box; width: calc(100% - 12px); max-width: calc(100% - 12px); grid-template-columns: repeat(6, minmax(0, 1fr)); justify-content: stretch; justify-items: stretch; justify-self: stretch; transform: none; }
+  body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket .hand-tile { width: 100%; min-width: 0; max-width: 100%; height: auto; aspect-ratio: 1 / 1; flex: none; }
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }

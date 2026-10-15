@@ -19931,19 +19931,38 @@
       }
       const keepPlayer = currentPlayer();
       if (keepBonusState(keepPlayer) && !hasPendingAction() && !hasPendingQuestionEffects() && keepBonusHasOption(keepPlayer)) {
+        // ハテナの効果説明と同じ形: 左に画像、右に見出し・説明、さらに右端に「使わず終わる」ボタン
         const keepPanel = document.createElement("div");
         keepPanel.className = "action-target-panel";
+        const keepHead = document.createElement("div");
+        keepHead.className = "question-head";
+        const keepThumbs = document.createElement("div");
+        keepThumbs.className = "question-thumbs";
+        const keepImg = document.createElement("img");
+        keepImg.src = tilePath + "tile-086-question-keep.png";
+        keepImg.alt = "";
+        keepThumbs.appendChild(keepImg);
+        keepHead.appendChild(keepThumbs);
+        const keepText = document.createElement("div");
+        keepText.className = "question-text";
         const keepTitle = document.createElement("strong");
         keepTitle.textContent = "キープの効果";
-        const keepBody = document.createElement("div");
-        keepBody.textContent = "タイルを追加で置けます。";
+        const keepNote = document.createElement("div");
+        keepNote.className = "note";
+        keepNote.textContent = "タイルを追加で置けます。";
+        keepText.appendChild(keepTitle);
+        keepText.appendChild(keepNote);
+        keepHead.appendChild(keepText);
+        const keepActions = document.createElement("div");
+        keepActions.className = "question-head-actions";
         const keepBtn = document.createElement("button");
         keepBtn.type = "button";
-        keepBtn.textContent = "置かずに終わる";
+        keepBtn.className = "question-skip-button";
+        keepBtn.textContent = "追加で置かずに終わる";
         keepBtn.addEventListener("click", endKeepBonus);
-        keepPanel.appendChild(keepTitle);
-        keepPanel.appendChild(keepBody);
-        keepPanel.appendChild(keepBtn);
+        keepActions.appendChild(keepBtn);
+        keepHead.appendChild(keepActions);
+        keepPanel.appendChild(keepHead);
         elements.instructionBody.appendChild(keepPanel);
         elements.instructionPanel.classList.remove("is-empty");
         elements.instructionPanel.hidden = false;

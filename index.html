@@ -1205,6 +1205,7 @@
       display: none;
     }
 
+    .instruction-panel { touch-action: none; }
     .instruction-panel .section-head {
       margin-bottom: 0;
     }
@@ -21176,6 +21177,14 @@
     elements.board.addEventListener("pointermove", moveFixedBoardSwipeRotate);
     elements.board.addEventListener("pointercancel", cancelFixedBoardSwipeRotate);
     elements.board.addEventListener("pointerup", endFixedBoardSwipeRotate);
+    /* 効果説明欄(共有札より上)でもボードと同じスワイプ回転を使えるようにする */
+    const instructionSwipeArea = document.getElementById("instructionPanel");
+    if (instructionSwipeArea) {
+      instructionSwipeArea.addEventListener("pointerdown", beginFixedBoardSwipeRotate);
+      instructionSwipeArea.addEventListener("pointermove", moveFixedBoardSwipeRotate);
+      instructionSwipeArea.addEventListener("pointercancel", cancelFixedBoardSwipeRotate);
+      instructionSwipeArea.addEventListener("pointerup", endFixedBoardSwipeRotate);
+    }
     elements.confirmCompletionYes.addEventListener("click", confirmTurnDeclaration);
     elements.confirmCompletionNo.addEventListener("click", closeCompletionConfirm);
     elements.completionConfirmDialog.addEventListener("click", function (event) {

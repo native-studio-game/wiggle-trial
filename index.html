@@ -23860,6 +23860,7 @@
         });
       }
       clearMobilePlacementConfirm();
+      hoverCell = null;
       pushHistory();
 
       const placedKey = blCellKey(r, c);
@@ -24317,6 +24318,9 @@
 
     function renderBorderless() {
       ensureBlListeners();
+      if (hoverCell && (state.blBoard[blCellKey(hoverCell.r, hoverCell.c)] || isCpuTurn())) {
+        hoverCell = null;
+      }
       // 固定盤面（ポップジャムの5×5など）の残りを消す。動的盤面は blViewport 側に描く
       elements.board.innerHTML = "";
       prepareScoreFlights(true); // 得点欄描画より前に飛行を仕込む

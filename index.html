@@ -10428,6 +10428,8 @@
   body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img, body.view-mobile.mode-classic .hand-tile.selected img { outline: none !important; }
   .external-question.effect-source img, .cell.inner-question.effect-source img { outline: 3px solid #7c3aed !important; outline-offset: 2px !important; box-shadow: 0 0 0 5px rgba(124,58,237,0.25) !important; }
+  .external-question.effect-source[data-source-kind="keep"] img, .cell.inner-question.effect-source[data-source-kind="keep"] img { outline-color: #237a57 !important; box-shadow: 0 0 0 5px rgba(35,122,87,0.25) !important; }
+  .external-question.effect-source[data-source-kind="swap"] img, .cell.inner-question.effect-source[data-source-kind="swap"] img { outline-color: #c026d3 !important; box-shadow: 0 0 0 5px rgba(192,38,211,0.25) !important; }
   /* 盤面を大きくするため、得点欄と手札・共有札を詰める（ポップジャム・スマホ） */
   body.view-mobile.mode-popjam-score .bl-scores { gap: 3px !important; }
   body.view-mobile.mode-popjam-score .bl-score-row { padding-top: 4px !important; padding-bottom: 4px !important; }
@@ -19260,6 +19262,7 @@
           const focusInnerSlot = innerQuestionSlotAt(row, col);
           if (focusInnerSlot && isQuestionEffectFocusActive(focusInnerSlot.id)) {
             cell.classList.add("effect-source");
+            cell.dataset.sourceKind = questionSourceKind(focusInnerSlot);
           }
           if (boardTile.tile.revealed) {
             cell.classList.add("revealed");
@@ -19496,6 +19499,7 @@
       }
       if (isQuestionEffectFocusActive(slot.id)) {
         button.classList.add("effect-source");
+        button.dataset.sourceKind = questionSourceKind(slot);
       }
       if (state.pendingAction && state.pendingAction.type === "swap") {
         button.classList.add("swap-target", "pick-target");
@@ -20128,6 +20132,15 @@
       state.pendingAction = null;
       finishPendingQuestionAction();
       render();
+    }
+
+    // 発動したハテナ自体を囲う色（説明書の効果の色）: ムーブ=紫、キープ=緑、スワップ=マゼンタ
+    function questionSourceKind(slot) {
+      const effect = slot && slot.tile ? slot.tile.effect : "";
+      if (effect === "replace") { return "move"; }
+      if (effect === "collect") { return "keep"; }
+      if (effect === "swap") { return "swap"; }
+      return "";
     }
 
     function isQuestionEffectFocusActive(slotId) {

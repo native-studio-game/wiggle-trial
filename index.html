@@ -10307,7 +10307,7 @@
   body.mode-popjam-score .board .cell:not(.has-tile):nth-child(n+21) { border-bottom: 1px dashed rgba(196, 214, 232, 0.82); }
   /* ポップジャム: 置ける場所は枠線を使わず、濃いめの緑の塗りで示す。境界線を外して隣の札とのすき間を無くす */
   body.mode-popjam-score .board .cell.placeable,
-  body.mode-popjam-score .board .cell.ghost-legal { outline: 0 !important; border: 0 !important; background: #d3eedd !important; border-radius: 8px; }
+  body.mode-popjam-score .board .cell.ghost-legal { outline: 0 !important; border: 0 !important; background: #d3eedd !important; border-radius: 2px; }
   /* 置けない場所は赤い点線の枠を残す（上の枠線を消す指定より優先） */
   body.mode-popjam-score .board .cell.ghost-illegal { outline: 3px dashed #c84242 !important; outline-offset: -4px; border: 0 !important; border-radius: 4px; }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }

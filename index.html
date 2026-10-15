@@ -14807,6 +14807,9 @@
       clearAllPlacementPreviews();
       clearMobilePlacementConfirm();
       const sharedIndex = state.sharedMarket.findIndex(Boolean);
+      if (!k.sharedUsed && !k.handUsed) {
+        state.scoreText = "キープの効果: 共有札か手札から、タイルを1枚置いてください。";
+      }
       if (!k.sharedUsed && sharedIndex >= 0) {
         state.selectedHandIndex = sharedIndex;
         state.selectedRotation = marketTileRotation(sharedIndex);
@@ -19932,7 +19935,8 @@
         inlineConfirmEl.innerHTML = "";
       }
       const keepPlayer = currentPlayer();
-      if (keepBonusState(keepPlayer) && !hasPendingAction() && !hasPendingQuestionEffects() && keepBonusHasOption(keepPlayer)) {
+      const keepState = keepBonusState(keepPlayer);
+      if (keepState && (keepState.sharedUsed || keepState.handUsed) && !hasPendingAction() && !hasPendingQuestionEffects() && keepBonusHasOption(keepPlayer)) {
         // ハテナの効果説明と同じ形: 左に画像、右に見出し・説明、さらに右端に「使わず終わる」ボタン
         const keepPanel = document.createElement("div");
         keepPanel.className = "action-target-panel";

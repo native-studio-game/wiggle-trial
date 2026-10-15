@@ -16208,14 +16208,62 @@
       render();
     }
 
+    // ムーブ中: 置き先（from）から近い順に、今の札を置ける空きマスを探す
+    function nearestReplaceTarget(fromRow, fromCol) {
+      const size = state.board.length || fixedBoardSize();
+      const source = state.pendingAction.source;
+      let best = null;
+      let bestDistance = Infinity;
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+          // 元の場所は最後の候補（ほかに置ける所がある時は、動かしたことにならない元の場所を避ける）
+          const isSource = row === source.row && col === source.col;
+          if (!canReplaceTileTo(row, col, state.pendingAction)) {
+            continue;
+          }
+          const distance = Math.abs(row - fromRow) + Math.abs(col - fromCol) + (isSource ? 0.5 : 0);
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = { row: row, col: col };
+          }
+        }
+      }
+      return best;
+    }
+
+    // ムーブ中に回転したら、置き先はできるだけ同じマスに残す。その向きで置けない時だけ近い別のマスへ移す
+    function retargetMoveAfterRotate(anchor, confirmWasUp) {
+      if (!anchor || !hasPendingAction() || state.pendingAction.type !== "replace-place") {
+        return;
+      }
+      const dest = canReplaceTileTo(anchor.r, anchor.c, state.pendingAction)
+        ? { row: anchor.r, col: anchor.c }
+        : nearestReplaceTarget(anchor.r, anchor.c);
+      if (!dest) {
+        hoverCell = null;
+        state.scoreText = "ムーブ: この向きで置ける場所がありません。";
+        scheduleToastHide();
+        return;
+      }
+      if (confirmWasUp) {
+        requestPlacementConfirm(dest.row, dest.col, false, function () {
+          placePendingReplaceTile(dest.row, dest.col);
+        });
+      } else {
+        hoverCell = { r: dest.row, c: dest.col };
+      }
+    }
+
     function rotateSelected(delta) {
       if (state.over || !state.started || isCpuTurn() || hasPopjamWinDiscardShowcase()) {
         return false;
       }
       const actionPlacement = hasPendingAction()
         && state.pendingAction.type === "replace-place";
-      // ムーブの置き先の確認中に回転したら、確認は取り消して回転後の置き先を選び直す
-      if (actionPlacement && inlineConfirm && inlineConfirm.blocksBoard) {
+      // ムーブ: 回転の前にいた置き先（確認中なら確認のマス）を覚えておき、回転後に同じマスへ置けるか見る
+      const moveAnchor = actionPlacement ? activePlacementPreviewCell(false) : null;
+      const moveConfirmWasUp = Boolean(actionPlacement && inlineConfirm && inlineConfirm.blocksBoard);
+      if (moveConfirmWasUp) {
         inlineConfirm = null;
         clearMobilePlacementConfirm();
       }
@@ -16239,6 +16287,7 @@
       const toRotation = fromRotation + delta;
       if (actionPlacement) {
         state.pendingAction.rotation = ((state.pendingAction.rotation || 0) + delta + 360) % 360;
+        retargetMoveAfterRotate(moveAnchor, moveConfirmWasUp);
       } else if (isInnerQuestionTile(selectedPlacementTile())) {
         state.selectedRotation = 0;
       } else {

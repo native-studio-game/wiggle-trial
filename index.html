@@ -19026,6 +19026,33 @@
       });
     }
 
+    // 模様の盤端の三角が、表示中の同じ色のハテナ枠に面していれば、その枠の外周（盤側の辺を含む白線）を囲う。
+    // 通常表示（光り）と結果表示（得点の模様）の両方で使う。
+    function addQuestionFrameOutlines(tris, color, map, member) {
+      const frameDone = {};
+      tris.forEach(function (tri) {
+        const pd = tri.d;
+        if (hasPlacedTile(tri.r + DIR_VEC[pd][0], tri.c + DIR_VEC[pd][1])) {
+          return;
+        }
+        const slot = questionSlotForBoardEdge(tri.r, tri.c, pd);
+        if (!slot || frameDone[slot.id] || !questionTileConnectsToColor(slot, color)) {
+          return;
+        }
+        frameDone[slot.id] = true;
+        const frameD = DIR_OPP[pd];
+        member[(tri.r + DIR_VEC[pd][0]) + "," + (tri.c + DIR_VEC[pd][1]) + "," + frameD] = true;
+        const slotKey = "slot:" + slot.id;
+        if (!map[slotKey]) {
+          map[slotKey] = { tris: [], lines: [] };
+        }
+        // 盤に面する辺も含めて囲う（ハテナタイルの白線まで囲う）
+        TRI_EDGE_DEFS[frameD].forEach(function (e) {
+          map[slotKey].lines.push({ x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, color: color });
+        });
+      });
+    }
+
     // テスト演出: 現在の盤面で「得点になっている模様」を、マスごとに
     //   { "r,c": { tris:[{d,color,since}], lines:[{x1,y1,x2,y2,color}] } } で返す。
     //   tris = 完成時に光らせる色の三角領域 / lines = 模様を囲う白線（継続グロー）。
@@ -19069,29 +19096,7 @@
         const member = {};
         tris.forEach(function (tri) { member[tri.r + "," + tri.c + "," + tri.d] = true; });
         // ハテナ枠（盤の外の三角）も模様の色の一部として外周に含める。
-        // 盤の端の三角が、表示されていて同じ色のハテナ枠に面していれば、その枠の三角も囲いに入れる（ハテナ側の辺は盤のタイルと共有するので描かない）。
-        const frameDone = {};
-        tris.forEach(function (tri) {
-          const pd = tri.d;
-          if (hasPlacedTile(tri.r + DIR_VEC[pd][0], tri.c + DIR_VEC[pd][1])) {
-            return;
-          }
-          const slot = questionSlotForBoardEdge(tri.r, tri.c, pd);
-          if (!slot || frameDone[slot.id] || !questionTileConnectsToColor(slot, pattern.color)) {
-            return;
-          }
-          frameDone[slot.id] = true;
-          const frameD = DIR_OPP[pd];
-          member[(tri.r + DIR_VEC[pd][0]) + "," + (tri.c + DIR_VEC[pd][1]) + "," + frameD] = true;
-          const slotKey = "slot:" + slot.id;
-          if (!map[slotKey]) {
-            map[slotKey] = { tris: [], lines: [] };
-          }
-          // 盤に面する辺も含めて囲う（ハテナタイルの白線まで囲う）
-          TRI_EDGE_DEFS[frameD].forEach(function (e) {
-            map[slotKey].lines.push({ x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, color: pattern.color });
-          });
-        });
+        addQuestionFrameOutlines(tris, pattern.color, map, member);
         tris.forEach(function (tri) {
           // スタートタイルの白い分割線にも演出をつなげるため start も含める。
           const key = tri.r + "," + tri.c;
@@ -19116,6 +19121,7 @@
             const tris = (Array.isArray(pattern.triangles) ? pattern.triangles : []).filter(function (tri) { return !tri.question; });
             const member = {};
             tris.forEach(function (tri) { member[tri.r + "," + tri.c + "," + tri.d] = true; });
+            addQuestionFrameOutlines(tris, pattern.color, map, member);
             tris.forEach(function (tri) {
               const key = tri.r + "," + tri.c;
               if (!map[key]) {

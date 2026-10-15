@@ -14521,7 +14521,8 @@
       state.popjamEndingShake = true;
       state.marketEndShake = true;
       render();
-      const total = state.sharedMarket.length * 160 + 460;
+      // 揺れが終わってから少し間を置いて結果を出す（揺れの直後だと結果を認識しにくいため）
+      const total = state.sharedMarket.length * 160 + 460 + 900;
       setTimeout(function () {
         state.popjamEndingShake = false;
         state.marketEndShake = false;

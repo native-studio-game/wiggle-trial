@@ -2468,6 +2468,9 @@
     }
     .bl-tile { position: absolute; width: 60px; height: 60px; }
     .bl-tile img { width: 100%; height: 100%; display: block; }
+    /* タイル同士の隙間（白い線）を消す: 右・下の隣にタイルがあれば1px重ねる（markTileSeams）。ハテナ同士は隙間を残す */
+    .bl-tile.seam-r img, .cell.seam-r > img { width: calc(100% + 1px); }
+    .bl-tile.seam-b img, .cell.seam-b > img { height: calc(100% + 1px); }
     .bl-tile.inner-question {
       box-shadow: inset 0 0 0 2px #4f5358, 0 5px 12px rgba(45, 36, 20, 0.16);
       background: #dde1e4;
@@ -19040,6 +19043,8 @@
 
     function createFixedBoardCell(row, col, renderContext) {
       const cell = document.createElement("button");
+      cell.dataset.seamRow = String(row);
+      cell.dataset.seamCol = String(col);
       // ムーブで動かすタイルは、置き先を選ぶ間だけ盤面に表示しない（データは元の場所に残したまま）
       const moveSource = state.pendingAction && state.pendingAction.type === "replace-place"
         && state.pendingAction.source && state.pendingAction.source.row === row && state.pendingAction.source.col === col;
@@ -19419,10 +19424,41 @@
         renderExternalQuestionTiles();
       }
 
+      markPopjamTileSeams();
       if (renderContext.usedStartAnimation) {
         state.startTileAnimating = false;
       }
       pendingDropCell = null;
+    }
+
+    // 隣り合うタイルの隙間を消すための印付け。右・下に隣のタイルがあれば1px重ねる。
+    // ハテナ同士の間だけは意図的に隙間を残す。
+    function markTileSeams(items) {
+      const byKey = {};
+      items.forEach(function (item) {
+        byKey[item.r + "," + item.c] = item;
+      });
+      items.forEach(function (item) {
+        item.el.classList.remove("seam-r", "seam-b");
+        const right = byKey[item.r + "," + (item.c + 1)];
+        const below = byKey[(item.r + 1) + "," + item.c];
+        if (right && !(item.hatena && right.hatena)) { item.el.classList.add("seam-r"); }
+        if (below && !(item.hatena && below.hatena)) { item.el.classList.add("seam-b"); }
+      });
+    }
+
+    function markPopjamTileSeams() {
+      const items = [];
+      elements.board.querySelectorAll(".cell[data-seam-row]").forEach(function (el) {
+        if (!el.querySelector(":scope > img")) { return; }
+        items.push({
+          el: el,
+          r: parseInt(el.dataset.seamRow, 10),
+          c: parseInt(el.dataset.seamCol, 10),
+          hatena: el.classList.contains("inner-question")
+        });
+      });
+      markTileSeams(items);
     }
 
     function renderExternalQuestionTiles() {
@@ -25251,6 +25287,18 @@
           });
         }
       }
+
+      markTileSeams(Array.prototype.map.call(els.world.querySelectorAll(".bl-tile[data-bl-cell]"), function (el) {
+        const rc = el.dataset.blCell.split(",");
+        return {
+          el: el,
+          r: parseInt(rc[0], 10),
+          c: parseInt(rc[1], 10),
+          hatena: el.classList.contains("inner-question")
+        };
+      }).filter(function (item) {
+        return item.el.querySelector(":scope > img");
+      }));
 
       // 得点した模様の中心にマーカー（担当プレイヤーがいない色は出さない）。
       // 得点表示は完成時に出して、少し経つと消える（盤面に残り続けない）。

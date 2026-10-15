@@ -12265,6 +12265,7 @@
       // 名前欄の入力中に開始すると、ページ全体がずれたまま固定されることがあるので先頭に戻す
       if (document.activeElement && typeof document.activeElement.blur === "function") { document.activeElement.blur(); }
       window.scrollTo(0, 0);
+      setTimeout(function () { window.scrollTo(0, 0); }, 350);
       const setupConfig = applyTitlePlayerSetup(getSetupConfig());
       state.mode = setupConfig.mode;
       state.cpuEnabled = setupConfig.cpuEnabled;
@@ -26082,6 +26083,10 @@
       input.value = slot.name;
       input.setAttribute("aria-label", "プレイヤー" + (i + 1) + "の名前");
       input.addEventListener("input", function () { slot.name = input.value; });
+      // キーボードが閉じた後に画面がずれたままになるのを戻す
+      input.addEventListener("blur", function () {
+        setTimeout(function () { window.scrollTo(0, 0); }, 300);
+      });
       row.appendChild(input);
       box.appendChild(row);
     });

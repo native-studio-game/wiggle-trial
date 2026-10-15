@@ -15855,6 +15855,10 @@
         placePendingReplaceTile(row, col);
         return;
       }
+      // ムーブでタイルを選んでいる間は、手札・共有札からは置けない（キープの手札も使えないようにする）
+      if (isPopjamMode() && hasPendingAction() && state.pendingAction.type === "replace") {
+        return;
+      }
 
       if (!canPlaceAt(row, col)) {
         trackWiggleEvent("invalid_action", {
@@ -16032,6 +16036,10 @@
 
     function selectHandTile(index) {
       if (keepBlocksMarketIndex(index)) {
+        return;
+      }
+      // ムーブでタイルを選んでいる間は、手札・共有札を選べないようにする
+      if (isPopjamMode() && hasPendingAction() && state.pendingAction.type === "replace") {
         return;
       }
       if (hasPopjamWinDiscardShowcase()) {

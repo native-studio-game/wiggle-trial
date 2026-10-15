@@ -10544,13 +10544,13 @@
   .title-arrow { width: 42px; height: 42px; border-radius: 50%; border: 0; background: #ffffff; box-shadow: 0 4px 12px rgba(15,23,42,0.12); font-size: 20px; line-height: 1; color: #1f2937; cursor: pointer; }
   .title-dots { display: flex; gap: 8px; align-items: center; }
   .title-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: width 200ms ease, background 200ms ease; }
-  .title-dot.on { width: 22px; border-radius: 6px; background: #c8102e; }
-  /* タイトル画面：上のロゴとタイルは出さず、ゲームのカードをできるだけ大きく出す */
-  #titleScreen .title-tiles, #titleScreen .title-logo { display: none; }
-  #titleScreen .title-card { width: min(94vw, 440px); padding: 14px; gap: 14px; }
-  #titleScreen .title-art { border-radius: 18px; }
-  #titleScreen .title-game-name { font-size: 26px; margin-top: 8px; }
-  #titleScreen .title-game-tag { font-size: 14px; min-height: 0; }
+  .title-dot.on { width: 22px; border-radius: 6px; background: #c8102e; }
+  /* タイトル画面：上のロゴとタイルは出さず、ゲームのカードをできるだけ大きく出す */
+  #titleScreen .title-tiles, #titleScreen .title-logo { display: none; }
+  #titleScreen .title-card { width: min(94vw, 440px); padding: 14px; gap: 14px; }
+  #titleScreen .title-art { border-radius: 18px; }
+  #titleScreen .title-game-name { font-size: 26px; margin-top: 8px; }
+  #titleScreen .title-game-tag { font-size: 14px; min-height: 0; }
   #titleScreen .title-carousel { gap: 12px; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
@@ -21583,13 +21583,13 @@
     var GUIDE_STEPS_POPJAM = [
       { text: "まずは画面の下から、置きたいタイルを1枚えらぼう。", target: function () { return document.getElementById("handRow"); } },
       { text: "色がつながる場所がうっすら光るよ。光ったマスにタイルを置こう。", target: function () { return guideBoardTarget(); } },
-      { text: "同じ色を線でぐるっと囲むと、その色があなたの得点になるよ！", target: function () { return guideBoardTarget(); } },
+      { text: "同じ色を線でぐるっと囲むと、その色のプレイヤーの得点になるよ！", target: function () { return guideBoardTarget(); } },
       { text: "あとは自由に！ ハテナタイルの隣に置くと、いろんな効果が発動するよ。さあ、遊んでみよう！", target: null }
     ];
     var GUIDE_STEPS_CLASSIC = [
       { text: "まずは画面の下から、置きたいタイルを1枚えらぼう。", target: function () { return document.getElementById("handRow"); } },
       { text: "色がつながる場所がうっすら光るよ。光ったマスにタイルを置こう。", target: function () { return guideBoardTarget(); } },
-      { text: "同じ色を線でぐるっと囲むと、その色があなたの得点になるよ！", target: function () { return guideBoardTarget(); } },
+      { text: "同じ色を線でぐるっと囲むと、その色のプレイヤーの得点になるよ！", target: function () { return guideBoardTarget(); } },
       { text: "あとは自由に！ 好きなところに置いて、遊んでみよう！", target: null }
     ];
     var guideSteps = GUIDE_STEPS_POPJAM;

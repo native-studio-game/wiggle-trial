@@ -10300,7 +10300,7 @@
   body .small-tile.pick-target { outline: none !important; }
 
   .external-question.swap-picked img { outline: 3px solid #f59e0b !important; outline-offset: -3px !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.35) !important; }
-  body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; box-shadow: none !important; }
+  body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; box-shadow: var(--board-emboss) !important; border-radius: 18px !important; }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
   body.view-mobile.mode-popjam-score .board-instruction { position: relative !important; left: auto !important; right: auto !important; bottom: auto !important; top: auto !important; transform: none !important; width: 100% !important; height: auto !important; height: 56px; min-height: 56px; max-height: 56px; overflow: hidden; margin: 4px 0 0; padding: 6px 12px; line-height: 1.3; border-radius: 14px; display: flex; flex-direction: column; justify-content: center; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15,23,42,0.08); text-align: center; overflow: visible; }
   body.view-mobile.mode-popjam-score .board-instruction.is-empty { visibility: hidden; }
@@ -10337,7 +10337,9 @@
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }
   /* クラシック: 盤面の枠線・影・余白を外す。背景の色味は手番の表示（data-turn-color）なので残す */
-  body.view-mobile.mode-classic .board-wrap { border: 0 !important; box-shadow: none !important; padding: 0 !important; }
+  /* 盤面の陰影（エンボス）: 場所を陰影で区切る試作。値はここ1か所で管理し、クラシック・ポップジャムで共有する */
+  :root { --board-emboss: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -2px 0 rgba(15, 23, 42, 0.06), 0 8px 16px -6px rgba(15, 23, 42, 0.24); }
+  body.view-mobile.mode-classic .board-wrap { border: 0 !important; box-shadow: var(--board-emboss) !important; padding: 0 !important; border-radius: 18px !important; }
   body.view-mobile.mode-classic .board { background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .board { background: transparent !important; box-shadow: none !important; }
   body.view-mobile.mode-popjam-score .shared-market-label:not([hidden]) { position: static !important; transform: none !important; display: block; width: max-content; margin: 0 auto 2px !important; padding: 0 8px; }

@@ -14522,7 +14522,7 @@
       state.marketEndShake = true;
       render();
       // 揺れが終わってから少し間を置いて結果を出す（揺れの直後だと結果を認識しにくいため）
-      const total = state.sharedMarket.length * 520 + 420 + 900;
+      const total = state.sharedMarket.length * 750 + 420 + 900;
       setTimeout(function () {
         state.popjamEndingShake = false;
         state.marketEndShake = false;
@@ -20760,7 +20760,7 @@
         }
         if (state.marketEndShake && index < state.sharedMarket.length) {
           button.classList.add("end-shake");
-          button.style.setProperty("--shake-delay", (index * 520) + "ms");
+          button.style.setProperty("--shake-delay", (index * 750) + "ms");
         }
         button.dataset.marketIndex = String(index);
         if (state.selectedHandIndex === index) {

@@ -13906,7 +13906,9 @@
         selectedSlotIds: [],
         selectedHandIndexes: [],
         targetPlayerId: null,
-        context: context
+        context: context,
+        // 置いた直後の連続タップで、ムーブの対象を誤って選ばないよう少し待つ
+        pickReadyAt: Date.now() + 600
       };
 
       scheduleToastHide();
@@ -14114,6 +14116,9 @@
     function selectReplaceBoardTile(row, col) {
       const action = state.pendingAction;
       if (!action || (action.type !== "replace" && action.type !== "replace-place")) {
+        return;
+      }
+      if (action.pickReadyAt && Date.now() < action.pickReadyAt) {
         return;
       }
 

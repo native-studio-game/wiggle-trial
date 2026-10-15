@@ -10358,6 +10358,9 @@
   /* ポップジャム(スマホ・手札あり): 共有札と手札を山札の右側の列幅に収めて6列で割り付け、札サイズは列幅から決まる */
   body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active { display: grid; box-sizing: border-box; width: calc(100% - 12px); max-width: calc(100% - 12px); grid-template-columns: repeat(6, minmax(0, 1fr)); justify-content: stretch; justify-items: stretch; justify-self: stretch; transform: none; }
   body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket .hand-tile { width: 100%; min-width: 0; max-width: 100%; height: auto; aspect-ratio: 1 / 1; flex: none; }
+  /* ポップジャム(スマホ・手札なし): 共有札も山札の右側の列幅に収める。列数は共有札の5列のまま */
+  body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { display: grid; box-sizing: border-box; width: calc(100% - 12px); max-width: calc(100% - 12px); grid-template-columns: repeat(var(--pjs-market-columns, 5), minmax(0, 1fr)); justify-content: stretch; justify-items: stretch; justify-self: stretch; transform: none; }
+  body.view-mobile.mode-popjam-score #sharedMarket .hand-tile { width: 100%; min-width: 0; max-width: 100%; height: auto; aspect-ratio: 1 / 1; flex: none; }
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }

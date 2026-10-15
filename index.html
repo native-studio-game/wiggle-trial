@@ -10411,10 +10411,10 @@
   body.view-mobile.mode-popjam-score .board-wrap { box-shadow: none !important; border: 0 !important; background: transparent !important; margin-top: 18px !important; }
   /* 手番のプレイヤーの色は画面全体の背景で表す（盤面の裏には色を敷かない） */
   body.mode-popjam-score { transition: background-color 220ms ease; }
-  body.mode-popjam-score[data-turn-color="red"] { background-color: #fbe3e3 !important; }
-  body.mode-popjam-score[data-turn-color="yellow"] { background-color: #fdf3c4 !important; }
-  body.mode-popjam-score[data-turn-color="blue"] { background-color: #dcecfb !important; }
-  body.mode-popjam-score[data-turn-color="green"] { background-color: #dff3e0 !important; }
+  body.mode-popjam-score[data-turn-color="red"] { background-color: #fdf1f1 !important; }
+  body.mode-popjam-score[data-turn-color="yellow"] { background-color: #fefae6 !important; }
+  body.mode-popjam-score[data-turn-color="blue"] { background-color: #eff7fd !important; }
+  body.mode-popjam-score[data-turn-color="green"] { background-color: #f0f9f1 !important; }
   /* 5x5 の盤面（中央の枠内）は白にする。合法手・予備配置・仮置きのマスは、その色を優先する */
   body.mode-popjam-score .board .cell.pjs-board-cell:not(.ghost-legal):not(.ghost-illegal):not(.placeable):not(:has(.ghost-preview)) { background-color: #ffffff; }
   /* 白いマスを薄くしない（置けないマスも白のまま。置けるマスは緑で示す） */

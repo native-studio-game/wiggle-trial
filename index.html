@@ -13907,8 +13907,7 @@
         selectedHandIndexes: [],
         targetPlayerId: null,
         context: context,
-        // 置いた直後の連続タップで、ムーブの対象を誤って選ばないよう少し待つ
-        pickReadyAt: Date.now() + 600
+        startedAt: performance.now()
       };
 
       scheduleToastHide();
@@ -14113,12 +14112,18 @@
       return false;
     }
 
+    let lastBoardPointerDownAt = 0;
+    document.addEventListener("pointerdown", function () {
+      lastBoardPointerDownAt = performance.now();
+    }, true);
+
     function selectReplaceBoardTile(row, col) {
       const action = state.pendingAction;
       if (!action || (action.type !== "replace" && action.type !== "replace-place")) {
         return;
       }
-      if (action.pickReadyAt && Date.now() < action.pickReadyAt) {
+      // 置いた指がまだ残っている（前の操作の続き）間は選ばない。ムーブ開始後に押し直した操作だけ対象にする
+      if (!(lastBoardPointerDownAt > (action.startedAt || 0)) || performance.now() - (action.startedAt || 0) < 400) {
         return;
       }
 

@@ -10297,8 +10297,8 @@
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto !important; }
   body.view-mobile.mode-popjam-score .layout { align-content: start !important; height: auto !important; }
   body.view-mobile.mode-popjam-score .play-area { align-content: start !important; }
-  body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 288px)) auto !important; }
-  body.view-mobile.mode-popjam-score .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 288px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 288px)) !important; aspect-ratio: auto !important; }
+  body.view-mobile.mode-popjam-score .play-area, body.view-mobile.mode-classic .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 288px)) auto !important; }
+  body.view-mobile.mode-popjam-score .board-wrap, body.view-mobile.mode-classic .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 288px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 288px)) !important; aspect-ratio: auto !important; }
   body.view-mobile.mode-popjam-score .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 288px)) 60px auto !important; }
   body.view-mobile.mode-popjam-score .board-instruction { margin: 2px 0 2px !important; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel { display: flex !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
@@ -10336,8 +10336,6 @@
   /* クラシック: 空の効果説明欄は共有札の上に出さない */
   body.view-mobile.mode-classic .board-instruction.is-empty { display: none !important; }
   /* クラシック: 盤面の大きさはポップジャムと同じ（幅・高さとも min(100vw - 8px, 100dvh - 288px) の正方形） */
-  body.view-mobile.mode-classic .board-wrap { width: min(calc(100vw - 8px), calc(100dvh - 288px)) !important; height: min(calc(100vw - 8px), calc(100dvh - 288px)) !important; aspect-ratio: auto !important; }
-  body.view-mobile.mode-classic .play-area { grid-template-rows: min(calc(100vw - 8px), calc(100dvh - 288px)) auto !important; }
   body.view-mobile.mode-popjam-score .corner-controls { display: flex; justify-content: flex-end; align-items: flex-start; gap: 8px; }
   body.view-mobile.mode-popjam-score .corner-controls .corner-button { position: static !important; top: auto !important; left: auto !important; right: auto !important; pointer-events: auto; }
   body.view-mobile.mode-popjam-score .layout { padding-top: 6px !important; }

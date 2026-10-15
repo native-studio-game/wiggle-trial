@@ -13637,10 +13637,31 @@
       }
 
       // 発動順が結果に関係するときだけ選ばせる（カラーズ・オールカラーズ・スーパーカラーズ・スポットライトなどは順番を選ばない）
-      // ポップジャム（得点モード）は、隅などで同時に2つ以上ハテナが発動するときは必ず順番を選んでから発動する
-      const needsOrderChoice = slots.length > 1 && (isPopjamScoreMode() || slots.some(function (slot) {
-        return slot.tile && ["swap", "collect", "replace"].indexOf(slot.tile.effect) !== -1;
-      }));
+      // 順番が結果に関係する組み合わせだけ選ばせる。
+      // ・入れ替え・キープ・ムーブ同士、またはそれらとロックの組み合わせ（ロックはムーブを止めるため）
+      // ・スポットライトや色系は得点時に判定するので、置いた順にそのまま発動する
+      const orderSensitive = ["swap", "collect", "replace"];
+      const orderMatters = function (a, b) {
+        const ea = a.tile && a.tile.effect;
+        const eb = b.tile && b.tile.effect;
+        const aMove = orderSensitive.indexOf(ea) !== -1;
+        const bMove = orderSensitive.indexOf(eb) !== -1;
+        return (aMove && (bMove || eb === "lock")) || (bMove && ea === "lock");
+      };
+      let needsOrderChoice = false;
+      if (slots.length > 1) {
+        if (isPopjamScoreMode()) {
+          for (let i = 0; i < slots.length && !needsOrderChoice; i++) {
+            for (let j = i + 1; j < slots.length && !needsOrderChoice; j++) {
+              needsOrderChoice = orderMatters(slots[i], slots[j]);
+            }
+          }
+        } else {
+          needsOrderChoice = slots.some(function (slot) {
+            return slot.tile && orderSensitive.indexOf(slot.tile.effect) !== -1;
+          });
+        }
+      }
 
       if (player && !player.isCpu && needsOrderChoice) {
         state.pendingQuestionEffects = slots.map(function (slot) {

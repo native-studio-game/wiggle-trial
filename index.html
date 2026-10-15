@@ -2505,6 +2505,7 @@
       box-shadow: none;
     }
     /* 置けない所=常時は何も出さず、ホバー時だけ赤い点線（サバイバルと統一） */
+    .bl-ghost.bl-spare img { opacity: 0.4; }
     .bl-ghost-illegal {
       border: 2px dashed transparent;
       cursor: not-allowed;
@@ -10303,8 +10304,8 @@
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel { display: flex !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel > strong { font-size: 14px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
   body.view-mobile.mode-popjam-score .board-instruction #instructionBody { width: 100%; }
-  body.view-mobile.mode-popjam-score .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
-  body.view-mobile.mode-popjam-score .hand-tile.selected img { outline: none !important; }
+  body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
+  body.view-mobile.mode-popjam-score .hand-tile.selected img, body.view-mobile.mode-classic .hand-tile.selected img { outline: none !important; }
   .external-question.effect-source img, .cell.inner-question.effect-source img { outline: 3px solid #7c3aed !important; outline-offset: 2px !important; box-shadow: 0 0 0 5px rgba(124,58,237,0.25) !important; }
   /* 盤面を大きくするため、得点欄と手札・共有札を詰める（ポップジャム・スマホ） */
   body.view-mobile.mode-popjam-score .bl-scores { gap: 3px !important; }
@@ -10320,8 +10321,8 @@
   body.view-mobile.mode-popjam-score .shared-market-label:not([hidden]) { position: static !important; transform: none !important; display: block; width: max-content; margin: 0 auto 2px !important; padding: 0 8px; }
   .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
   body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }
-  body.view-mobile.mode-popjam-score .hand-tile.selected { border-radius: 4px !important; }
-  body.view-mobile.mode-popjam-score .hand-tile.selected { outline-offset: 0 !important; }
+  body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { border-radius: 4px !important; }
+  body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline-offset: 0 !important; }
   body.view-mobile.mode-popjam-score .layout { padding-top: 0 !important; }
   body.view-mobile.mode-popjam-score .board-wrap { padding: 0 !important; }
   body.view-mobile.mode-popjam-score .player { padding-top: 5px !important; padding-bottom: 5px !important; }
@@ -15490,7 +15491,7 @@
     }
 
     function marketTileRotation(index) {
-      if (!isPopjamScoreMode() || !Number.isInteger(index)) {
+      if (!usesSharedMarket() || !Number.isInteger(index)) {
         return 0;
       }
       return state.marketRotations && Number.isFinite(state.marketRotations[index])
@@ -15499,7 +15500,7 @@
     }
 
     function rememberMarketTileRotation() {
-      if (!isPopjamScoreMode() || state.selectedHandIndex === null) {
+      if (!usesSharedMarket() || state.selectedHandIndex === null) {
         return;
       }
       if (!state.marketRotations) {
@@ -24784,6 +24785,7 @@
           const previewSpots = isHarvestMode() && Object.keys(state.blBoard || {}).length === 0
             ? [{ r: 0, c: 0 }]
             : WiggleRules.placeableSpotsDynamic(state.blBoard, null);
+          let dynamicSpareShown = false;
           previewSpots.forEach(function (spot) {
             if (!harvestSeasonAllowsCell(spot.r, spot.c)) {
               return;
@@ -24818,6 +24820,10 @@
             ghost.style.top = (spot.r * BL_CELL) + "px";
 
             const fillPreview = function () {
+              document.querySelectorAll(".bl-ghost.bl-spare").forEach(function (spare) {
+                spare.classList.remove("bl-spare");
+                spare.innerHTML = "";
+              });
               clearAllPlacementPreviews(ghost);
               ghost.classList.remove("bl-ghost-legal", "bl-ghost-illegal", "bl-ghost-armed");
               ghost.removeAttribute("title");
@@ -24882,6 +24888,17 @@
                 ghost.classList.remove("bl-ghost-legal", "bl-ghost-illegal", "bl-ghost-armed");
               }
             });
+            // 予備配置: 手札・共有札を選んでいて、ホバー/タップの仮置きが無い時だけ、置ける最初のマスに半透明で1枚出す
+            if (!dynamicSpareShown && !hoverCell && placementAssist !== "off" && legal && !koBlocked
+              && !activePlacementPreviewCell(true)) {
+              dynamicSpareShown = true;
+              ghost.classList.add("bl-spare");
+              const spareImg = document.createElement("img");
+              spareImg.src = tilePath + displayTileSrc(tile, { forceFace: true });
+              spareImg.alt = "";
+              applyRotationStyle(spareImg, rotation, null);
+              ghost.appendChild(spareImg);
+            }
             // 回転などの再描画後も、仮置き中のマスのプレビューを復元
             const activePreviewCell = activePlacementPreviewCell(true);
             if (activePreviewCell && activePreviewCell.r === spot.r && activePreviewCell.c === spot.c) {

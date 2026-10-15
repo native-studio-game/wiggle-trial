@@ -12248,7 +12248,10 @@
       clearMobilePlacementConfirm();
       pushHistory();
       const titleScreenEl = document.getElementById("titleScreen");
-      if (titleScreenEl) { titleScreenEl.hidden = true; }
+      if (titleScreenEl) { titleScreenEl.hidden = true; titleScreenEl.scrollTop = 0; }
+      // 名前欄の入力中に開始すると、ページ全体がずれたまま固定されることがあるので先頭に戻す
+      if (document.activeElement && typeof document.activeElement.blur === "function") { document.activeElement.blur(); }
+      window.scrollTo(0, 0);
       const setupConfig = applyTitlePlayerSetup(getSetupConfig());
       state.mode = setupConfig.mode;
       state.cpuEnabled = setupConfig.cpuEnabled;

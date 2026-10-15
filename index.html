@@ -19003,8 +19003,8 @@
           if (!map[slotKey]) {
             map[slotKey] = { tris: [], lines: [] };
           }
-          TRI_EDGE_DEFS[frameD].forEach(function (e, k) {
-            if (k === 0) { return; } // 盤に面する辺は盤のタイルと共有する
+          // 盤に面する辺も含めて囲う（ハテナタイルの白線まで囲う）
+          TRI_EDGE_DEFS[frameD].forEach(function (e) {
             map[slotKey].lines.push({ x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, color: pattern.color });
           });
         });

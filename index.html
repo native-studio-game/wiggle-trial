@@ -18988,7 +18988,10 @@
         }
         // 手札・共有札のタイルを選んでいるとき、置ける空きマスに半透明の予備配置を出す
         const spareSpot = renderContext.spareSpot;
-        if (spareSpot && spareSpot.row === row && spareSpot.col === col && !boardTile) {
+        // 置けないマスを選んでいる間（ゴーストが赤）は、ほかの置けるマスの予備配置も出さない
+        const focusedCell = activePlacementPreviewCell(false);
+        const focusedIllegal = Boolean(focusedCell) && !ghostIsLegalAt(focusedCell.r, focusedCell.c);
+        if (spareSpot && spareSpot.row === row && spareSpot.col === col && !boardTile && !focusedIllegal) {
           const spareTarget = currentSpareTarget();
           if (spareTarget) {
             const spare = document.createElement("div");
@@ -19294,6 +19297,15 @@
 
         elements.board.appendChild(createExternalQuestionButton(slot));
       });
+    }
+
+    // そのマスに今の札（ムーブ中は動かす札）を置けるか。showGhost と同じ判定。
+    function ghostIsLegalAt(row, col) {
+      if (state.pendingAction && state.pendingAction.type === "replace-place") {
+        return canReplaceTileTo(row, col, state.pendingAction);
+      }
+      const tile = selectedPlacementTile();
+      return Boolean(tile) && canPlaceTileAt(row, col, tile, state.selectedRotation);
     }
 
     function showGhost(cell, row, col) {

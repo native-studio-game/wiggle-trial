@@ -19933,7 +19933,7 @@
       }
       const keepPlayer = currentPlayer();
       const keepState = keepBonusState(keepPlayer);
-      if (keepState && (keepState.sharedUsed || keepState.handUsed) && !hasPendingAction() && !hasPendingQuestionEffects() && keepBonusHasOption(keepPlayer)) {
+      if (keepState && !hasPendingAction() && !hasPendingQuestionEffects() && keepBonusHasOption(keepPlayer)) {
         // ハテナの効果説明と同じ形: 左に画像、右に見出し・説明、さらに右端に「使わず終わる」ボタン
         const keepPanel = document.createElement("div");
         keepPanel.className = "action-target-panel";
@@ -19957,15 +19957,18 @@
         keepText.appendChild(keepTitle);
         keepText.appendChild(keepNote);
         keepHead.appendChild(keepText);
-        const keepActions = document.createElement("div");
-        keepActions.className = "question-head-actions";
-        const keepBtn = document.createElement("button");
-        keepBtn.type = "button";
-        keepBtn.className = "keep-skip-link";
-        keepBtn.textContent = "置かずに終わる";
-        keepBtn.addEventListener("click", endKeepBonus);
-        keepActions.appendChild(keepBtn);
-        keepHead.appendChild(keepActions);
+        // 置かずに終わるは1枚目を置いた後から出す
+        if (keepState.sharedUsed || keepState.handUsed) {
+          const keepActions = document.createElement("div");
+          keepActions.className = "question-head-actions";
+          const keepBtn = document.createElement("button");
+          keepBtn.type = "button";
+          keepBtn.className = "keep-skip-link";
+          keepBtn.textContent = "置かずに終わる";
+          keepBtn.addEventListener("click", endKeepBonus);
+          keepActions.appendChild(keepBtn);
+          keepHead.appendChild(keepActions);
+        }
         keepPanel.appendChild(keepHead);
         elements.instructionBody.appendChild(keepPanel);
         elements.instructionPanel.classList.remove("is-empty");

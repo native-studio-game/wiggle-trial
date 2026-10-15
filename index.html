@@ -812,6 +812,59 @@
     }
 
     /* 同点判定の内訳（WINの下） */
+    /* 同点判定の内訳: 項目ごとに「項目名 / 各プレイヤーの値 / 結果」の3段で読みやすく */
+    .deal-result-ribbon .tiebreak .tb-row,
+    .board-result-card .tiebreak .tb-row {
+      display: grid;
+      gap: 3px;
+      margin: 5px 0;
+      padding: 6px 9px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.5);
+      text-align: left;
+    }
+    .deal-result-ribbon .tiebreak .tb-row.decided,
+    .board-result-card .tiebreak .tb-row.decided {
+      background: rgba(34, 197, 94, 0.14);
+    }
+    .deal-result-ribbon .tiebreak .tb-label,
+    .board-result-card .tiebreak .tb-label {
+      font-size: 11px;
+      font-weight: 850;
+      opacity: 0.9;
+    }
+    .deal-result-ribbon .tiebreak .tb-no,
+    .board-result-card .tiebreak .tb-no {
+      display: inline-block;
+      min-width: 16px;
+      margin-right: 4px;
+      font-weight: 950;
+    }
+    .deal-result-ribbon .tiebreak .tb-vals,
+    .board-result-card .tiebreak .tb-vals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      font-size: 13px;
+      font-weight: 850;
+    }
+    .deal-result-ribbon .tiebreak .tb-value b,
+    .board-result-card .tiebreak .tb-value b {
+      margin-left: 3px;
+      font-size: 15px;
+      font-weight: 950;
+      color: #20242a;
+    }
+    .deal-result-ribbon .tiebreak .tb-result,
+    .board-result-card .tiebreak .tb-result {
+      font-size: 12px;
+      font-weight: 900;
+      color: #6f6043;
+    }
+    .deal-result-ribbon .tiebreak .tb-row.decided .tb-result,
+    .board-result-card .tiebreak .tb-row.decided .tb-result {
+      color: #1d6b46;
+    }
     .board-result-card .tiebreak {
       margin-top: 9px;
       padding-top: 8px;
@@ -23400,14 +23453,18 @@
         const decided = i === tb.decidedIndex;
         const vals = ln.vals.map(function (v) {
           return "<span class=\"tb-value\">" + playerName(v.playerId, v.name)
-            + "<span>" + escapeHtml(String(v.v)) + "</span></span>";
-        }).join(" / ");
-        const result = ln.winnerId !== null && ln.winnerId !== undefined
-          ? "<span class=\"tb-result\">" + playerName(ln.winnerId) + "<span>の勝ち</span></span>"
-          : escapeHtml(ln.result || "");
+            + "<b>" + escapeHtml(String(v.v)) + "</b></span>";
+        }).join("");
+        let result = "";
+        if (ln.winnerId !== null && ln.winnerId !== undefined) {
+          result = "→ " + playerName(ln.winnerId) + "<span>の勝ち</span>";
+        } else if (ln.result) {
+          result = "→ " + escapeHtml(ln.result);
+        }
         html += "<div class=\"tb-row" + (decided ? " decided" : "") + "\">"
-          + (i + 1) + ". " + escapeHtml(ln.label) + "：" + vals
-          + (result ? "　→ " + result : "")
+          + "<div class=\"tb-label\"><span class=\"tb-no\">" + (i + 1) + "</span>" + escapeHtml(ln.label) + "</div>"
+          + "<div class=\"tb-vals\">" + vals + "</div>"
+          + (result ? "<div class=\"tb-result\">" + result + "</div>" : "")
           + "</div>";
       });
       html += "</div>";

@@ -10310,6 +10310,8 @@
   body.mode-popjam-score .board .cell.ghost-legal { outline: 0 !important; border: 0 !important; background: #d3eedd !important; border-radius: 2px; }
   /* 置けない場所は赤い点線の枠を残す（上の枠線を消す指定より優先） */
   body.mode-popjam-score .board .cell.ghost-illegal { outline: 3px dashed #c84242 !important; outline-offset: -4px; border: 0 !important; border-radius: 4px; }
+  /* ムーブ中に選べない札は、ロック中の札と同じ暗さにそろえる */
+  body.mode-popjam-score .board .cell.pick-muted img { filter: brightness(0.72) saturate(0.8); }
   body.view-mobile.mode-popjam-score .layout { grid-template-rows: auto auto auto !important; }
   body.view-mobile.mode-popjam-score .board-instruction { position: relative !important; left: auto !important; right: auto !important; bottom: auto !important; top: auto !important; transform: none !important; width: 100% !important; height: auto !important; height: 56px; min-height: 56px; max-height: 56px; overflow: hidden; margin: 4px 0 0; padding: 6px 12px; line-height: 1.3; border-radius: 14px; display: flex; flex-direction: column; justify-content: center; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15,23,42,0.08); text-align: center; overflow: visible; }
   body.view-mobile.mode-popjam-score .board-instruction.is-empty { visibility: hidden; }
@@ -18958,6 +18960,10 @@
         if (boardTile.tile.start && state.startTileAnimating) {
           cell.classList.add("tile-drop");
           renderContext.usedStartAnimation = true;
+        }
+        if (state.pendingAction && state.pendingAction.type === "replace" && (boardTile.tile.start || isInnerQuestionTile(boardTile.tile) || isCellLocked(row, col))) {
+          // ムーブで選べない札（スタートタイル・内側のハテナ・ロック中）は暗くして、選べる札と区別する
+          cell.classList.add("pick-muted");
         }
         if (state.pendingAction && state.pendingAction.type === "replace" && !boardTile.tile.start && !isInnerQuestionTile(boardTile.tile) && !isCellLocked(row, col)) {
           cell.classList.add("action-target", "pick-target");

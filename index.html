@@ -10529,7 +10529,8 @@
   /* タイトル画面：ゲーム選択のカード（画像・名前・情報を左右に切り替え）。タイトルの文字は Noto Serif JP Bold */
   .title-logo { font-family: "Noto Serif JP", "Noto Serif CJK JP", serif; font-weight: 700; }
   .title-carousel { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-  .title-track { display: flex; overflow: hidden; border-radius: 18px; touch-action: pan-y; }
+  .title-viewport { overflow: hidden; border-radius: 18px; touch-action: pan-y; }
+  .title-track { display: flex; }
   .title-track { transition: transform 320ms ease; }
   .title-slide { flex: 0 0 100%; min-width: 100%; display: flex; flex-direction: column; gap: 8px; text-align: left; }
   .title-art { aspect-ratio: 1 / 1; border-radius: 14px; overflow: hidden; background: #ffffff; }
@@ -10567,6 +10568,7 @@
       </div>
       <h1 class="title-logo">Wiggle</h1>
       <div class="title-carousel" id="titleCarousel" aria-label="ゲームを選ぶ">
+        <div class="title-viewport">
         <div class="title-track" id="titleTrack">
           <article class="title-slide" data-mode="classic">
             <div class="title-art"><img src="assets/title/classic-key.png" alt="クラシック"></div>
@@ -10580,6 +10582,7 @@
             <p class="title-game-tag">ハテナタイルで効果が連鎖する、拡張セット</p>
             <div class="title-facts"><span>2-3人</span><span>15-20分</span><span>8歳以上</span></div>
           </article>
+        </div>
         </div>
         <div class="title-nav">
           <button type="button" class="title-arrow" id="titlePrev" aria-label="前のゲーム">‹</button>

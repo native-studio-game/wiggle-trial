@@ -10886,6 +10886,7 @@
       popjamWinners: null,
       popjamExtraPlacements: 0,
       keepBonus: null,
+      keepBonusNext: null,
       popjamPostDiscardPlacement: null,
       popjamWinDiscardShowcase: null,
       harvestLine: 3,
@@ -12338,6 +12339,7 @@
       state.currentPlayer = (state.currentPlayer + 1) % state.players.length;
       state.turn++;
       beginTurn();
+      armKeepBonusForCurrentTurn();
       trackTurnMilestone();
     }
 
@@ -13907,7 +13909,8 @@
         addLog(currentPlayer().name + " が共有札から " + collected.name + " をキープしました。");
         const collector = state.players.find(function (candidate) { return candidate.id === action.playerId; });
         if (collector && !collector.isCpu && isPopjamMode()) {
-          state.keepBonus = { playerId: action.playerId, sharedUsed: false, handUsed: false };
+          // キープした手番では追加配置は使えず、次の自分の手番から使える
+          state.keepBonusNext = action.playerId;
         }
       }
       finishPendingQuestionAction();
@@ -14812,6 +14815,15 @@
         state.selectedRotation = marketTileRotation(sharedIndex);
       } else if (!k.handUsed && player.hand.length > 0) {
         state.selectedHandIndex = state.sharedMarket.length;
+      }
+    }
+
+    function armKeepBonusForCurrentTurn() {
+      const player = currentPlayer();
+      state.keepBonus = null;
+      if (player && !player.isCpu && state.keepBonusNext === player.id) {
+        state.keepBonus = { playerId: player.id, sharedUsed: false, handUsed: false };
+        state.keepBonusNext = null;
       }
     }
 

@@ -21028,8 +21028,19 @@
       });
     });
     elements.modeSelect.addEventListener("change", function () {
-      populatePlayerCountOptions(currentMode());
       const setupConfig = getSetupConfig();
+      // ゲーム途中のモード変更は盤面と判定がずれるので、確認してから始め直す（いいえなら元のモードに戻す）
+      if (state.started && !state.over && setupConfig.mode !== state.mode) {
+        const previousMode = state.mode;
+        confirmThen("ゲームを新しいモードで始め直しますか？", function () {
+          setupGame();
+        }, function () {
+          elements.modeSelect.value = previousMode;
+          populatePlayerCountOptions(currentMode());
+        });
+        return;
+      }
+      populatePlayerCountOptions(currentMode());
       state.mode = setupConfig.mode;
       state.cpuEnabled = setupConfig.cpuEnabled;
       state.lifeCpuStrong = Boolean(setupConfig.lifeCpuStrong);

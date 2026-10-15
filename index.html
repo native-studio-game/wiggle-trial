@@ -18863,25 +18863,31 @@
         const since = patternGlowSince[pattern.key];
         // ハテナ枠（question）は盤の外側の区画で、盤上のマスの三角として描くと位置がずれて余計な線になる。
         // そのため輪郭も光りも盤上の実タイルの三角だけで作る（ハテナ側の辺は描かない）。
-        const allTris = pattern.triangles || [];
-        const tris = allTris.filter(function (tri) { return !tri.question; });
+        const tris = (pattern.triangles || []).filter(function (tri) { return !tri.question; });
         // この模様に属する三角の集合（スタート含む。白線の内外判定に使う）
         const member = {};
         tris.forEach(function (tri) { member[tri.r + "," + tri.c + "," + tri.d] = true; });
-        // ハテナ枠（盤の外の三角）も模様の一部。盤上の辺がハテナ枠に面していても内側の線にしない
-        allTris.forEach(function (qt) {
-          if (!qt.question) { return; }
-          const pd = DIR_OPP[qt.d];
-          member[(qt.r + DIR_VEC[pd][0]) + "," + (qt.c + DIR_VEC[pd][1]) + "," + DIR_OPP[pd]] = true;
-          // 枠の三角の輪郭: 盤に面する辺（TRI_EDGE_DEFS[d][0]）は盤のタイルと共有するので描かない。残りの2辺を枠側に描く
-          const slot = questionSlotForBoardEdge(qt.r, qt.c, pd);
-          if (!slot) { return; }
+        // ハテナ枠（盤の外の三角）も模様の色の一部として外周に含める。
+        // 盤の端の三角が、表示されていて同じ色のハテナ枠に面していれば、その枠の三角も囲いに入れる（ハテナ側の辺は盤のタイルと共有するので描かない）。
+        const frameDone = {};
+        tris.forEach(function (tri) {
+          const pd = tri.d;
+          if (hasPlacedTile(tri.r + DIR_VEC[pd][0], tri.c + DIR_VEC[pd][1])) {
+            return;
+          }
+          const slot = questionSlotForBoardEdge(tri.r, tri.c, pd);
+          if (!slot || frameDone[slot.id] || !questionTileConnectsToColor(slot, pattern.color)) {
+            return;
+          }
+          frameDone[slot.id] = true;
+          const frameD = DIR_OPP[pd];
+          member[(tri.r + DIR_VEC[pd][0]) + "," + (tri.c + DIR_VEC[pd][1]) + "," + frameD] = true;
           const slotKey = "slot:" + slot.id;
           if (!map[slotKey]) {
             map[slotKey] = { tris: [], lines: [] };
           }
-          TRI_EDGE_DEFS[qt.d].forEach(function (e, i) {
-            if (i === 0) { return; }
+          TRI_EDGE_DEFS[frameD].forEach(function (e, k) {
+            if (k === 0) { return; } // 盤に面する辺は盤のタイルと共有する
             map[slotKey].lines.push({ x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, color: pattern.color });
           });
         });

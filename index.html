@@ -13729,6 +13729,25 @@
       return context;
     }
 
+    // 選んで発動させる札（入れ替え・キープ・ムーブ・ロック）以外は、待たせずにその場で発動する
+    // （色系・スポットライトなどは順番を選ばせない）
+    function settleNonChoicePendingEffects(context) {
+      if (!Array.isArray(state.pendingQuestionEffects) || state.pendingQuestionEffects.length === 0) {
+        return;
+      }
+      const choiceEffects = ["swap", "collect", "replace", "lock"];
+      const kept = [];
+      state.pendingQuestionEffects.forEach(function (slotId) {
+        const slot = findQuestionSlotById(slotId);
+        if (slot && slot.tile && choiceEffects.indexOf(slot.tile.effect) === -1) {
+          applyQuestionEffect(slot, context);
+          return;
+        }
+        kept.push(slotId);
+      });
+      state.pendingQuestionEffects = kept;
+    }
+
     function resolveQuestionEffectsInOrder(slots, context) {
       for (let i = 0; i < slots.length; i++) {
         if (applyQuestionEffect(slots[i], context)) {
@@ -13736,6 +13755,7 @@
             return slot.id;
           });
           state.pendingQuestionContext = context;
+          settleNonChoicePendingEffects(context);
           return true;
         }
         const remainingSlotIds = slots.slice(i + 1).map(function (slot) {
@@ -13768,6 +13788,7 @@
         render();
         return;
       }
+      settleNonChoicePendingEffects(context);
 
       if (interruptQuestionEffectsForPopjamScore(context, state.pendingQuestionEffects.slice())) {
         render();

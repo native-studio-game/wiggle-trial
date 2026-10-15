@@ -10521,6 +10521,11 @@
   body.view-mobile.mode-popjam-score .corner-controls { z-index: 9 !important; }
   /* 置ける手がなくなった終了の前に、共有札を左から順に揺らす */
   .hand-tile.end-shake { animation: market-end-shake 420ms ease-in-out var(--shake-delay, 0ms) both; }
+  /* スマホの画面では、ブラウザのスクロール・拡大（ピンチ・ダブルタップ）を止める。盤面や得点のスワイプは回転に使う。
+     手札・共有札・山札は、横スクロールやタップのためにブラウザの横方向の操作を残す */
+  body.view-mobile { overscroll-behavior: none; }
+  body.view-mobile .layout { touch-action: none; }
+  body.view-mobile #handRow, body.view-mobile #handPanel, body.view-mobile #deckPanel, body.view-mobile #sharedMarket { touch-action: pan-x; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->

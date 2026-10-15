@@ -14524,7 +14524,7 @@
       state.marketEndShakeAt = performance.now();
       render();
       // 最後の札の揺れが終わってから少し間を置いて結果を出す（揺れの直後だと結果を認識しにくいため）
-      const total = (state.sharedMarket.length - 1) * 750 + 420 + 900;
+      const total = (state.sharedMarket.length - 1) * 750 + 420 + 600;
       setTimeout(function () {
         state.popjamEndingShake = false;
         state.marketEndShake = false;

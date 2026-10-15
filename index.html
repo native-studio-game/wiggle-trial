@@ -25256,8 +25256,20 @@
       // 得点表示は完成時に出して、少し経つと消える（盤面に残り続けない）。
       const markerSeen = {};
       const nowMarker = performance.now();
+      // 終了後（ポップジャム以外）は、得点を「+」なし・消えない数字で各模様に残す（ポップジャムの結果表示と統一）
+      const finalBlScores = Boolean(state.over && state.started && !isPopjamScoreMode());
       WiggleRules.detectClosedPatternsDynamic(dynamicScoringBoard()).forEach(function (pattern) {
         if (!ownerForColor(pattern.color)) { return; }
+        if (finalBlScores) {
+          const finalInfo = dynamicPatternScoreInfo(pattern);
+          const finalMarker = document.createElement("span");
+          finalMarker.className = "bl-score-marker final-pattern-score " + pattern.color;
+          finalMarker.style.left = (pattern.centerC * BL_CELL) + "px";
+          finalMarker.style.top = (pattern.centerR * BL_CELL) + "px";
+          finalMarker.innerHTML = scoreMarkerHtml(finalInfo.points, 0, true);
+          els.world.appendChild(finalMarker);
+          return;
+        }
         const endAt = patternGlowEndAt[pattern.key];
         if (!endAt || nowMarker >= endAt) { return; }
         if (scoreMarkerSince[pattern.key] === undefined) {
@@ -25287,7 +25299,8 @@
       if (resultViewMode() === "details") {
         resultScoreHighlightItems(true)
           .filter(function (item) {
-            return item.borderless && Number.isFinite(item.centerR) && Number.isFinite(item.centerC);
+            return item.borderless && Number.isFinite(item.centerR) && Number.isFinite(item.centerC)
+              && !(finalBlScores && item.kind === "score");
           })
           .forEach(function (item) {
             const marker = document.createElement("span");

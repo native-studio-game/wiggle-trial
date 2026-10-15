@@ -10264,6 +10264,19 @@
   #titleScreen #modeSelect { width: 100%; font-size: 16px; padding: 10px 12px; border-radius: 12px; }
   body #titleScreen .title-card #newGameButton { display: flex; justify-content: center; position: static; width: 100%; min-width: 0; max-width: none; height: auto; min-height: 0; padding: 14px; margin: 0; border: 0; border-radius: 999px; background: #1f2937; color: #ffffff; font-size: 18px; font-weight: 800; line-height: 1.2; overflow: visible; text-indent: 0; }
   body #titleScreen .title-card #newGameButton::before, body #titleScreen .title-card #newGameButton::after { content: none !important; display: none !important; }
+  /* タイトル画面の見た目（ボードと同じドット背景、タイルの飾り、影の強さ） */
+  #titleScreen { background: radial-gradient(circle at 1px 1px, rgba(15,23,42,0.07) 1px, transparent 1.6px) 0 0 / 18px 18px, #f7f4ef; }
+  .title-card { border: 1px solid rgba(15,23,42,0.06); box-shadow: 0 18px 40px rgba(15,23,42,0.16); padding: 30px 24px 26px; }
+  .title-tiles { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 2px; }
+  .title-tiles img { width: 46px; height: 46px; border-radius: 10px; box-shadow: 0 6px 14px rgba(15,23,42,0.18); }
+  .title-tiles img:nth-child(1) { transform: rotate(-8deg); }
+  .title-tiles img:nth-child(2) { transform: translateY(-6px); }
+  .title-tiles img:nth-child(3) { transform: rotate(8deg); }
+  .title-logo { letter-spacing: 0.06em; }
+  .title-mode .label { font-size: 12px; font-weight: 700; color: #64748b; letter-spacing: 0.08em; }
+  #titleScreen #modeSelect { border: 1px solid #cbd5e1; background: #ffffff; color: #1f2937; font-weight: 700; }
+  body #titleScreen .title-card #newGameButton { transition: transform 120ms ease, box-shadow 120ms ease; box-shadow: 0 8px 18px rgba(31,41,55,0.25); }
+  body #titleScreen .title-card #newGameButton:active { transform: scale(0.98); box-shadow: 0 4px 10px rgba(31,41,55,0.2); }
   body #cornerControls .corner-button { width: 34px; height: 34px; min-height: 0; padding: 0; margin: 0; border-radius: 50%; border: 1px solid #d1d5db; background: #ffffff; color: #374151; box-shadow: 0 2px 6px rgba(15,23,42,0.12); font-size: 16px; font-weight: 800; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; cursor: pointer; }
   body #cornerControls .corner-button::before, body #cornerControls .corner-button::after { content: none !important; display: none !important; }
   body #cornerControls #settingsButton span { display: block; width: 14px; height: 2px; background: #374151; border-radius: 2px; }
@@ -10380,6 +10393,11 @@
   <div class="deal-animation-layer" id="dealAnimationLayer"></div>
     <section class="title-screen" id="titleScreen" aria-label="はじめる">
     <div class="title-card">
+      <div class="title-tiles" aria-hidden="true">
+        <img src="assets/tiles/tile-001-red.png" alt="">
+        <img src="assets/tiles/tile-002-yellow.png" alt="">
+        <img src="assets/tiles/tile-003-blue.png" alt="">
+      </div>
       <h1 class="title-logo">Wiggle</h1>
       <label class="title-mode">
         <span class="label">モード</span>
@@ -11968,6 +11986,11 @@
       const snapshot = JSON.parse(state.history.pop());
       Object.assign(state, snapshot);
       state.cpuThinking = false;
+      // 巻き戻した盤面に対する確認・仮置きは残さない（移動の確認などが古い状態を指さないように）
+      inlineConfirm = null;
+      hoverCell = null;
+      clearMobilePlacementConfirm();
+      clearAllPlacementPreviews();
       questionRevealAnimationSlots = [];
       dealAnimationQueue.length = 0;
       riverAnimationQueue.length = 0;
@@ -13941,6 +13964,9 @@
 
     function placePendingReplaceTile(row, col) {
       const action = state.pendingAction;
+      if (!action || action.type !== "replace-place" || !action.source) {
+        return;
+      }
       if (!canReplaceTileTo(row, col, action)) {
         return;
       }

@@ -21674,6 +21674,36 @@
     elements.endTurnButton.addEventListener("click", openPassConfirm);
     elements.loseButton.addEventListener("click", handleDeclareButton);
     elements.boardWrap.addEventListener("click", handleResultAreaTap);
+    /* プレイ画面の上での縦方向のスワイプでページがスクロールしないように止める（iPhone の Safari は touch-action だけでは止まらないため）。
+       ただし、中身が動かせる場所（横に並ぶ手札など、スクロールできる要素）の上では止めない */
+    let playTouchBlock = false;
+    function touchInsideScrollable(target) {
+      let el = target;
+      while (el && el !== document.body && el !== document.documentElement) {
+        if (el.classList && el.classList.contains("layout")) {
+          return false;
+        }
+        const style = getComputedStyle(el);
+        const scrollable = /(auto|scroll)/.test(style.overflowX + " " + style.overflowY);
+        if (scrollable && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)) {
+          return true;
+        }
+        el = el.parentElement;
+      }
+      return false;
+    }
+    document.addEventListener("touchstart", function (event) {
+      const target = event.target;
+      playTouchBlock = Boolean(target && target.closest && target.closest(".layout") && !touchInsideScrollable(target));
+    }, { passive: true });
+    document.addEventListener("touchmove", function (event) {
+      if (playTouchBlock && event.cancelable) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+    document.addEventListener("touchend", function () { playTouchBlock = false; }, { passive: true });
+    document.addEventListener("touchcancel", function () { playTouchBlock = false; }, { passive: true });
+
     /* スワイプ回転は、盤面・効果説明欄・得点まで続けて使える（山札・共有札・手札の上では使わない） */
     const swipeArea = document.querySelector(".layout");
     if (swipeArea) {

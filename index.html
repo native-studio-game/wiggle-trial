@@ -14368,6 +14368,7 @@
       clearTransientScoreEffectsAtEnd();
       state.stats.endedAt = Date.now();
       const ranking = updatePopjamWinnersByRank();
+      applyPopjamScoreTiebreak();
       const topScore = ranking.length > 0 ? ranking[0].score : 0;
       addLog((reason || "終了") + " 得点最多(" + topScore + "点)のプレイヤーが勝ちです。");
     }
@@ -17945,6 +17946,7 @@
 
     // ポップジャム終了時の短い勝者ライン（順位の長文は順位パネルに集約）
     function buildPopjamWinnerLine() {
+      if (isDrawResult()) { return "DRAW"; }
       if (Array.isArray(state.popjamWinners) && state.popjamWinners.length > 0) {
         const winners = state.popjamWinners.map(function (id) {
           return state.players.find(function (player) {
@@ -23300,40 +23302,66 @@
       return a.id - b.id;
     }
 
-    // 同点の内訳（表示用）。どの基準で決まったかと各値を返す。
+    // 同点の内訳（表示用）。上から順に比較し、前の項目で絞れた候補だけで次の項目を比べる。
+    // 戻り値: winnerId（決まらなければ null）、decidedIndex（決まった項目の番号、なければ -1）、lines（表示用）。
     function dynamicTiebreakInfo(tied) {
-      function crit(getter, lowerWins) {
-        const vals = tied.map(function (p) { return { p: p, v: getter(p) }; });
-        const nums = vals.map(function (x) { return x.v; });
-        const best = lowerWins ? Math.min.apply(null, nums) : Math.max.apply(null, nums);
-        const winners = vals.filter(function (x) { return x.v === best; }).map(function (x) { return x.p; });
-        return { vals: vals, winners: winners, decided: winners.length === 1 };
-      }
-      const order = [
-        crit(function (p) { return p.maxPattern || 0; }, false),
-        crit(function (p) { return p.completed || 0; }, false)
+      const crits = [
+        { label: "最大の模様の得点", get: function (p) { return p.maxPattern || 0; }, lowerWins: false },
+        { label: "模様の数", get: function (p) { return p.completed || 0; }, lowerWins: false }
       ];
-      const labels = ["最大の模様の得点", "模様の数"];
       if ((state.sharedMarket || []).length > 0) {
-        order.push(crit(function (p) { return marketColorArea(p.color); }, true));
-        labels.push("共有札に残った自色の面積が少ない");
+        crits.push({ label: "共有札に残った自色の面積が少ない", get: function (p) { return marketColorArea(p.color); }, lowerWins: true });
       }
+      let candidates = tied.slice();
       let winnerId = null;
       let decidedIndex = -1;
-      for (let i = 0; i < order.length; i++) {
-        if (order[i].decided) { winnerId = order[i].winners[0].id; decidedIndex = i; break; }
-      }
-      const lines = order.map(function (c, i) {
-        return {
-          label: labels[i],
-          vals: c.vals.map(function (x) { return { playerId: x.p.id, name: x.p.name, v: x.v }; }),
-          winnerId: i === decidedIndex && c.winners[0] ? c.winners[0].id : null,
-          result: (decidedIndex >= 0 && i < decidedIndex) ? "引き分け"
-            : (i === decidedIndex) ? (c.winners[0].name + " の勝ち")
-            : (decidedIndex < 0 ? "引き分け" : "")
-        };
+      const lines = crits.map(function (c, i) {
+        const vals = tied.map(function (p) { return { playerId: p.id, name: p.name, v: c.get(p) }; });
+        if (decidedIndex >= 0) {
+          return { label: c.label, vals: vals, winnerId: null, result: "" };
+        }
+        const nums = candidates.map(function (p) { return c.get(p); });
+        const best = c.lowerWins ? Math.min.apply(null, nums) : Math.max.apply(null, nums);
+        const winners = candidates.filter(function (p) { return c.get(p) === best; });
+        if (winners.length === 1) {
+          decidedIndex = i;
+          winnerId = winners[0].id;
+          return { label: c.label, vals: vals, winnerId: winners[0].id, result: winners[0].name + " の勝ち" };
+        }
+        candidates = winners;
+        return { label: c.label, vals: vals, winnerId: null, result: "引き分け" };
       });
       return { winnerId: winnerId, decidedIndex: decidedIndex, lines: lines };
+    }
+
+    // ポップジャム（得点型）の同点判定。クラシックと同じ基準。
+    // 最大の模様の得点 = その人の模様の中で一番高い点数、模様の数 = その人の完成模様の数。
+    // 決まらなければ引き分け（勝者なし）。
+    function applyPopjamScoreTiebreak() {
+      state.tiebreak = null;
+      if (!isPopjamScoreMode() || !Array.isArray(state.popjamWinners) || state.popjamWinners.length <= 1) {
+        return;
+      }
+      const entries = Object.keys(state.popjamScorePatterns || {}).map(function (k) { return state.popjamScorePatterns[k]; });
+      const tied = state.players.filter(function (p) { return state.popjamWinners.indexOf(p.id) >= 0; }).map(function (p) {
+        const mine = entries.filter(function (e) { return e && e.playerId === p.id; });
+        return {
+          id: p.id,
+          name: p.name,
+          color: p.color,
+          maxPattern: mine.reduce(function (m, e) { return Math.max(m, e.points || 0); }, 0),
+          completed: mine.length
+        };
+      });
+      const info = dynamicTiebreakInfo(tied);
+      state.tiebreak = info;
+      if (info.winnerId !== null && info.winnerId !== undefined) {
+        state.popjamWinners = [info.winnerId];
+        state.winnerId = info.winnerId;
+      } else {
+        state.popjamWinners = [];
+        state.winnerId = null;
+      }
     }
 
     function appendHarvestSeasonFixedCells(world) {

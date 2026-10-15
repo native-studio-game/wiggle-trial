@@ -19396,10 +19396,13 @@
         || (state.pendingAction && state.pendingAction.type === "replace-place"))
         && !state.over && !isCpuTurn()) {
         cell.addEventListener("mouseenter", function () {
+          // 置き先の確認中は、別のマスに触れても置き先の表示を動かさない（確認は最初のマスのまま）
+          if (inlineConfirm && inlineConfirm.blocksBoard) { return; }
           hoverCell = { r: row, c: col };
           showGhost(cell, row, col);
         });
         cell.addEventListener("mouseleave", function () {
+          if (inlineConfirm && inlineConfirm.blocksBoard) { return; }
           if (hoverCell && hoverCell.r === row && hoverCell.c === col) { hoverCell = null; }
           clearGhost(cell);
         });

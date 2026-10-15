@@ -10520,7 +10520,7 @@
   /* 右上の「？」「≡」は、強調されたハテナ枠より前面に置く */
   body.view-mobile.mode-popjam-score .corner-controls { z-index: 9 !important; }
   /* 置ける手がなくなった終了の前に、共有札を左から順に揺らす */
-  .hand-tile.end-shake { animation: market-end-shake 300ms ease-in-out var(--shake-delay, 0ms) both; }
+  .hand-tile.end-shake { animation: market-end-shake 420ms ease-in-out var(--shake-delay, 0ms) both; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
@@ -14522,7 +14522,7 @@
       state.marketEndShake = true;
       render();
       // 揺れが終わってから少し間を置いて結果を出す（揺れの直後だと結果を認識しにくいため）
-      const total = state.sharedMarket.length * 380 + 300 + 900;
+      const total = state.sharedMarket.length * 520 + 420 + 900;
       setTimeout(function () {
         state.popjamEndingShake = false;
         state.marketEndShake = false;
@@ -20760,7 +20760,7 @@
         }
         if (state.marketEndShake && index < state.sharedMarket.length) {
           button.classList.add("end-shake");
-          button.style.setProperty("--shake-delay", (index * 380) + "ms");
+          button.style.setProperty("--shake-delay", (index * 520) + "ms");
         }
         button.dataset.marketIndex = String(index);
         if (state.selectedHandIndex === index) {

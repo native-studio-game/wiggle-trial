@@ -10362,6 +10362,8 @@
   body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active { display: grid; box-sizing: border-box; width: calc(100% - 20px); max-width: calc(100% - 20px); grid-template-columns: repeat(var(--pjs-market-columns, 5), minmax(0, 1fr)); justify-content: stretch; justify-items: stretch; justify-self: stretch; transform: none; }
   body.view-mobile.mode-popjam-score #sharedMarket .hand-tile { width: 100%; min-width: 0; max-width: 100%; height: auto; min-height: 0; max-height: none; aspect-ratio: 1 / 1; flex: none; }
   body .hand-tile.keep-used img { opacity: 0.35; filter: grayscale(1); }
+  .question-head-actions .keep-skip-link, .instruction-panel .keep-skip-link, body .keep-skip-link { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; min-height: 0 !important; height: auto !important; min-width: 0 !important; }
+  .keep-skip-link { appearance: none; background: none; border: 0; padding: 4px 2px; margin: 0; font: inherit; font-size: 12px; color: #64748b; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; white-space: nowrap; }
   /* クラシック: パス・完成ボタンを小さく */
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
   body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }
@@ -19939,8 +19941,9 @@
         const keepThumbs = document.createElement("div");
         keepThumbs.className = "question-thumbs";
         const keepImg = document.createElement("img");
-        keepImg.src = tilePath + "tile-086-question-keep.png";
-        keepImg.alt = "";
+        const keptTile = currentPlayer().hand[0];
+        keepImg.src = tilePath + displayTileSrc(keptTile);
+        keepImg.alt = keptTile ? keptTile.name : "";
         keepThumbs.appendChild(keepImg);
         keepHead.appendChild(keepThumbs);
         const keepText = document.createElement("div");
@@ -19957,8 +19960,8 @@
         keepActions.className = "question-head-actions";
         const keepBtn = document.createElement("button");
         keepBtn.type = "button";
-        keepBtn.className = "question-skip-button";
-        keepBtn.textContent = "追加で置かずに終わる";
+        keepBtn.className = "keep-skip-link";
+        keepBtn.textContent = "置かずに終わる";
         keepBtn.addEventListener("click", endKeepBonus);
         keepActions.appendChild(keepBtn);
         keepHead.appendChild(keepActions);

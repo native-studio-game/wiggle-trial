@@ -10547,8 +10547,9 @@
   .title-dot.on { width: 22px; border-radius: 6px; background: #c8102e; }
   /* タイトル画面：上のロゴとタイルは出さず、ゲームのカードをできるだけ大きく出す */
   #titleScreen .title-tiles, #titleScreen .title-logo { display: none; }
-  #titleScreen .title-card { width: min(94vw, 440px); padding: 14px; gap: 14px; }
-  #titleScreen .title-art { border-radius: 18px; }
+  #titleScreen .title-card { width: min(94vw, 440px); padding: 12px; gap: 10px; }
+  #titleScreen .title-art { border-radius: 18px; width: min(100%, calc(100vh - 400px)); width: min(100%, calc(100dvh - 400px)); margin: 0 auto; }
+  #titleScreen .title-card:has(.title-player-row:nth-child(3)) .title-art { width: min(100%, calc(100vh - 450px)); width: min(100%, calc(100dvh - 450px)); }
   #titleScreen .title-game-name { font-size: 26px; margin-top: 8px; }
   #titleScreen .title-game-tag { font-size: 14px; min-height: 0; }
   #titleScreen .title-carousel { gap: 12px; }

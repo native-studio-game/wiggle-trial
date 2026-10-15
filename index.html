@@ -10395,6 +10395,12 @@
   body.view-mobile.mode-popjam-score .board-instruction { margin: 2px 0 2px !important; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel { display: flex !important; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
   body.view-mobile.mode-popjam-score .board-instruction .inline-confirm-panel > strong { font-size: 14px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
+  /* ポップジャム: 盤面の枠（白い影と縁）をやめ、盤面の外側の背景を手番のプレイヤーの色にする。盤面は少し下げて余白を取る */
+  body.view-mobile.mode-popjam-score .board-wrap { box-shadow: none !important; border: 0 !important; background: var(--pj-turn-tint, #ffffff) !important; margin-top: 18px !important; transition: background-color 220ms ease; }
+  body.mode-popjam-score[data-turn-color="red"] { --pj-turn-tint: #fbe3e3; }
+  body.mode-popjam-score[data-turn-color="yellow"] { --pj-turn-tint: #fdf3c4; }
+  body.mode-popjam-score[data-turn-color="blue"] { --pj-turn-tint: #dcecfb; }
+  body.mode-popjam-score[data-turn-color="green"] { --pj-turn-tint: #dff3e0; }
   body.view-mobile.mode-popjam-score .board-instruction #instructionBody { width: 100%; }
   body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img, body.view-mobile.mode-classic .hand-tile.selected img { outline: none !important; }
@@ -19482,6 +19488,12 @@
       elements.board.classList.toggle("hide-coords", !state.showCoords);
 
       if (isPopjamScoreMode()) {
+        const turnPlayer = currentPlayer();
+        if (turnPlayer && turnPlayer.color) {
+          document.body.dataset.turnColor = turnPlayer.color;
+        } else {
+          delete document.body.dataset.turnColor;
+        }
         renderPopjamScoreStage(renderContext);
       } else {
         for (let row = 0; row < size; row++) {

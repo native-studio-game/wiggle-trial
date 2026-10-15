@@ -10729,12 +10729,13 @@
       return name + " " + points + "点";
     }
 
-    function scoreMarkerText(points) {
-      return "+" + points;
+    // 完成した模様の点数はプラスなし（plain）、増えた分は「+」付き
+    function scoreMarkerText(points, plain) {
+      return plain ? String(points) : "+" + points;
     }
 
-    function scoreMarkerHtml(points, bonus) {
-      const main = "<span>" + escapeHtml(scoreMarkerText(points)) + "</span>";
+    function scoreMarkerHtml(points, bonus, plain) {
+      const main = "<span>" + escapeHtml(scoreMarkerText(points, plain)) + "</span>";
       return bonus > 0
         ? main + "<span class=\"bonus-line\">BONUS +" + escapeHtml(String(bonus)) + "</span>"
         : main;
@@ -12651,8 +12652,8 @@
         localX: pattern.localX,
         localY: pattern.localY,
         color: color,
-        text: scoreMarkerText(points),
-        html: scoreMarkerHtml(points, opts.bonus || 0),
+        text: scoreMarkerText(points, opts.plain === true),
+        html: scoreMarkerHtml(points, opts.bonus || 0, opts.plain === true),
         since: glowTiming ? glowTiming.since : performance.now(),
         endAt: glowTiming ? glowTiming.endAt : performance.now() + PATTERN_GLOW_BURST_MS
       });
@@ -13159,17 +13160,17 @@
         if (!old) {
           gained += points;
           state.stats.completions++;
-          queueCompletionVisual(pattern, { color: pattern.color, points: points, marker: true });
+          queueCompletionVisual(pattern, { color: pattern.color, points: points, marker: true, plain: true });
         } else if (old.playerId === owner.id && points > (old.points || 0)) {
           // 同じ人の模様が伸びた場合は、マイナスを出さず増えた分だけをプラスで出す（マイナスとプラスが重なって減ったように見えないように）
           const increase = points - (old.points || 0);
           gained += increase;
-          queueCompletionVisual(pattern, { color: pattern.color, points: increase, marker: true });
+          queueCompletionVisual(pattern, { color: pattern.color, points: increase, marker: true, plain: false });
         } else if (old.playerId !== owner.id || old.points !== points) {
           lost += old.points || 0;
           gained += points;
           queuePopjamScoreLossVisual(old);
-          queueCompletionVisual(pattern, { color: pattern.color, points: points, marker: true });
+          queueCompletionVisual(pattern, { color: pattern.color, points: points, marker: true, plain: true });
         }
       });
 

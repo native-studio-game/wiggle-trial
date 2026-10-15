@@ -17838,6 +17838,11 @@
         && state.tiebreak.decidedIndex < 0);
     }
 
+    // 勝敗のリボン（YOU WIN / YOU LOSE）を出すモード。見出しと表示条件を共通にする。
+    function usesYouResultRibbon() {
+      return isClassicOrBorderlessMode() || isOpen7Mode() || isPopjamScoreMode();
+    }
+
     function buildResultTitle() {
       if (isDrawResult()) {
         return "DRAW";
@@ -17851,7 +17856,7 @@
         return getPlayerOutcome(0) === "lose" ? "YOU LOSE" : "YOU WIN";
       }
 
-      if (isClassicOrBorderlessMode() || isOpen7Mode()) {
+      if (usesYouResultRibbon()) {
         return getPlayerOutcome(0) === "lose" ? "YOU LOSE" : "YOU WIN";
       }
 
@@ -17979,7 +17984,7 @@
         return;
       }
       const showDealResult = isDealSurvivalMode();
-      const showScoreResult = isClassicOrBorderlessMode() || isOpen7Mode();
+      const showScoreResult = usesYouResultRibbon();
       const show = (showDealResult || showScoreResult)
         && currentMode() === state.mode
         && state.started

@@ -16579,6 +16579,10 @@
       if (event.target.closest("button:not(.cell), select, input, textarea, a")) {
         return;
       }
+      // 山札・共有札・手札の上では回転のスワイプをしない（手札の選択・横スクロールに任せる）
+      if (event.target.closest("#handRow, #handPanel, #deckPanel, #sharedMarket")) {
+        return;
+      }
       fixedBoardSwipeRotate = {
         pointerId: event.pointerId,
         x: event.clientX,
@@ -16586,9 +16590,6 @@
         lastX: event.clientX,
         lastY: event.clientY
       };
-      if (event.currentTarget && typeof event.currentTarget.setPointerCapture === "function") {
-        try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {}
-      }
     }
 
     function moveFixedBoardSwipeRotate(event) {
@@ -21668,17 +21669,13 @@
     elements.endTurnButton.addEventListener("click", openPassConfirm);
     elements.loseButton.addEventListener("click", handleDeclareButton);
     elements.boardWrap.addEventListener("click", handleResultAreaTap);
-    elements.board.addEventListener("pointerdown", beginFixedBoardSwipeRotate);
-    elements.board.addEventListener("pointermove", moveFixedBoardSwipeRotate);
-    elements.board.addEventListener("pointercancel", cancelFixedBoardSwipeRotate);
-    elements.board.addEventListener("pointerup", endFixedBoardSwipeRotate);
-    /* 効果説明欄(共有札より上)でもボードと同じスワイプ回転を使えるようにする */
-    const instructionSwipeArea = document.getElementById("instructionPanel");
-    if (instructionSwipeArea) {
-      instructionSwipeArea.addEventListener("pointerdown", beginFixedBoardSwipeRotate);
-      instructionSwipeArea.addEventListener("pointermove", moveFixedBoardSwipeRotate);
-      instructionSwipeArea.addEventListener("pointercancel", cancelFixedBoardSwipeRotate);
-      instructionSwipeArea.addEventListener("pointerup", endFixedBoardSwipeRotate);
+    /* スワイプ回転は、盤面・効果説明欄・得点まで続けて使える（山札・共有札・手札の上では使わない） */
+    const swipeArea = document.querySelector(".layout");
+    if (swipeArea) {
+      swipeArea.addEventListener("pointerdown", beginFixedBoardSwipeRotate);
+      swipeArea.addEventListener("pointermove", moveFixedBoardSwipeRotate);
+      swipeArea.addEventListener("pointercancel", cancelFixedBoardSwipeRotate);
+      swipeArea.addEventListener("pointerup", endFixedBoardSwipeRotate);
     }
     elements.confirmCompletionYes.addEventListener("click", confirmTurnDeclaration);
     elements.confirmCompletionNo.addEventListener("click", closeCompletionConfirm);

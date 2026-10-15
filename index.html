@@ -13785,11 +13785,12 @@
       state.pendingQuestionEffects.splice(index, 1);
 
       if (slot && applyQuestionEffect(slot, context)) {
+        settleNonChoicePendingEffects(context);
         render();
         return;
       }
-      settleNonChoicePendingEffects(context);
 
+      settleNonChoicePendingEffects(context);
       if (interruptQuestionEffectsForPopjamScore(context, state.pendingQuestionEffects.slice())) {
         render();
         return;

@@ -10363,6 +10363,11 @@
   body[data-pick-kind="keep"] .pick-target img, body[data-pick-kind="keep"] .swap-target img, body[data-pick-kind="keep"] .swap-picked img { outline-color: #1fdc6b !important; box-shadow: none !important; }
   body[data-pick-kind="swap"] .pick-target img, body[data-pick-kind="swap"] .swap-target img, body[data-pick-kind="swap"] .swap-picked img { outline-color: #ff2bd6 !important; box-shadow: none !important; }
   body[data-pick-kind="move"] .cell.action-target { outline-color: #a03cff !important; }
+  /* 選んだタイルは、候補より太い枠と色の地（キープ=緑、スワップ=マゼンタ）で変わって見せる */
+  body[data-pick-kind="keep"] .hand-tile.collect-picked { background-color: rgba(31, 220, 107, 0.28) !important; border-radius: 10px; }
+  body[data-pick-kind="keep"] .hand-tile.collect-picked img { outline: 4px solid #1fdc6b !important; outline-offset: -4px !important; box-shadow: none !important; }
+  body[data-pick-kind="swap"] .external-question.swap-picked { background-color: rgba(255, 43, 214, 0.28) !important; border-radius: 10px; }
+  body[data-pick-kind="swap"] .external-question.swap-picked img { outline: 4px solid #ff2bd6 !important; outline-offset: -4px !important; box-shadow: none !important; }
   body[data-pick-kind="keep"] .cell.action-target { outline-color: #1fdc6b !important; }
   body[data-pick-kind="swap"] .cell.action-target { outline-color: #ff2bd6 !important; }
   body.view-mobile.mode-popjam-score .board-wrap { border: 0 !important; box-shadow: var(--board-emboss) !important; border-radius: 18px !important; }
@@ -10428,7 +10433,7 @@
   body.view-mobile.mode-popjam-score .hand-tile.selected, body.view-mobile.mode-classic .hand-tile.selected { outline: 3px solid #1f2937 !important; outline-offset: 3px !important; box-shadow: 0 10px 16px rgba(15,23,42,0.28) !important; transform: translateY(-6px) !important; z-index: 2; position: relative; }
   body.view-mobile.mode-popjam-score .hand-tile.selected img, body.view-mobile.mode-classic .hand-tile.selected img { outline: none !important; }
   .external-question.effect-source img, .cell.inner-question.effect-source img { outline: 3px solid #bba4fb !important; outline-offset: 2px !important; box-shadow: none !important; }
-  .external-question.effect-source[data-source-kind="keep"] img, .cell.inner-question.effect-source[data-source-kind="keep"] img { outline-color: #9adbb9 !important; }
+  .external-question.effect-source[data-source-kind="keep"] img, .cell.inner-question.effect-source[data-source-kind="keep"] img { outline-color: #66c796 !important; }
   .external-question.effect-source[data-source-kind="swap"] img, .cell.inner-question.effect-source[data-source-kind="swap"] img { outline-color: #f1a9ef !important; }
   /* 盤面を大きくするため、得点欄と手札・共有札を詰める（ポップジャム・スマホ） */
   body.view-mobile.mode-popjam-score .bl-scores { gap: 3px !important; }

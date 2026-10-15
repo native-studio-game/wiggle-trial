@@ -10331,6 +10331,11 @@
   body.view-mobile.mode-popjam-score .hand-row .deck img { height: 100% !important; width: auto !important; max-height: 52px !important; }
   body.view-mobile.mode-popjam-score #sharedMarket.shared-market.active, body.view-mobile.mode-classic #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 48px) / 5)); }
   body.view-mobile.mode-popjam-score .hand-panel.has-extra-hand #sharedMarket.shared-market.active, body.view-mobile.mode-classic .hand-panel.has-extra-hand #sharedMarket.shared-market.active { --pjs-market-tile-size: min(50px, calc((100vw - 76px) / 6)); }
+  /* クラシック: 手札列の左にデッキ分の幅があるため、共有札5枚＋隙間が枠（約290px）に収まるよう縮める */
+  body.view-mobile.mode-classic #sharedMarket.shared-market.active { --pjs-market-tile-size: min(58px, calc((100vw - 106px - 4 * var(--pjs-market-gap)) / 5)); }
+  /* クラシック: パス・完成ボタンを小さく */
+  body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row { gap: 6px; }
+  body.view-mobile.mode-classic .action-declare-slot > .primary-declare-panel .button-row button { min-height: 28px; padding: 3px 6px; font-size: 11px; border-radius: 10px; }
   body.view-mobile.mode-popjam-score .shared-market-label:not([hidden]) { position: static !important; transform: none !important; display: block; width: max-content; margin: 0 auto 2px !important; padding: 0 8px; }
   .corner-controls { position: static; inset: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 36px; padding: 2px 8px 0; box-sizing: border-box; pointer-events: auto; z-index: auto; }
   body #cornerControls #guideCornerButton, body #cornerControls #settingsButton { position: static; top: auto; left: auto; right: auto; width: 32px; height: 32px; }

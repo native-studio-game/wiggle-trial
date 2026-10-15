@@ -20261,13 +20261,21 @@
       if (!questionEffectFocus || !slotId || questionEffectFocus.slotId !== slotId) {
         return false;
       }
-      if (questionEffectFocus.actionType === undefined) {
-        questionEffectFocus.actionType = state.pendingAction ? state.pendingAction.type : null;
-      }
-      if (state.pendingAction && state.pendingAction.type === questionEffectFocus.actionType) {
+      // 発動中（効果の順番待ちも含む）だけ強調する。終わったら強調の記録を消し、枠が残らないようにする
+      if (hasPendingQuestionEffects() && state.pendingQuestionEffects.indexOf(slotId) !== -1) {
         return true;
       }
-      return hasPendingQuestionEffects() && state.pendingQuestionEffects.indexOf(slotId) !== -1;
+      if (!state.pendingAction && !hasPendingQuestionEffects()) {
+        questionEffectFocus = null;
+        return false;
+      }
+      if (state.pendingAction) {
+        if (questionEffectFocus.actionType === undefined) {
+          questionEffectFocus.actionType = state.pendingAction.type;
+        }
+        return state.pendingAction.type === questionEffectFocus.actionType;
+      }
+      return false;
     }
 
     function renderInstructionPanel() {

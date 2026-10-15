@@ -10552,6 +10552,20 @@
   #titleScreen .title-game-name { font-size: 26px; margin-top: 8px; }
   #titleScreen .title-game-tag { font-size: 14px; min-height: 0; }
   #titleScreen .title-carousel { gap: 12px; }
+  /* プレイヤー設定（色と名前）。枠が増えても画面内でスクロールできるようにする */
+  #titleScreen { overflow-y: auto; align-items: flex-start; }
+  #titleScreen .title-card { margin: auto; }
+  .title-players { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .title-players[hidden] { display: none; }
+  .title-player-row { display: flex; align-items: center; gap: 8px; }
+  .title-player-label { flex: 0 0 auto; width: 16px; font-size: 12px; font-weight: 800; color: #64748b; text-align: center; }
+  .title-kind { flex: 0 0 auto; width: 64px; height: 30px; padding: 0 8px; border-radius: 999px; border: 1px solid #cbd5e1; background: #f8fafc; color: #1f2937; font-size: 12px; font-weight: 800; cursor: pointer; }
+  .title-kind[aria-pressed="true"] { background: #1f2937; border-color: #1f2937; color: #ffffff; }
+  .title-swatches { display: flex; gap: 4px; flex: 0 0 auto; }
+  .title-swatch { width: 26px; height: 26px; flex: 0 0 26px; padding: 0; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 0 1px rgba(15,23,42,0.18); color: #ffffff; font-size: 12px; line-height: 1; cursor: pointer; }
+  .title-swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #1f2937; }
+  .title-swatch, .title-kind { min-width: 0; min-height: 0; box-sizing: border-box; }
+  .title-player-name { flex: 1 1 auto; min-width: 0; width: 100%; font-size: 16px; padding: 7px 10px; border: 1px solid #d1d5db; border-radius: 12px; background: #ffffff; color: #1f2937; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
@@ -10599,6 +10613,7 @@
           <button type="button" class="title-arrow" id="titleNext" aria-label="次のゲーム">›</button>
         </div>
       </div>
+      <div class="title-players" id="titlePlayers" aria-label="プレイヤー設定"></div>
       <select id="modeSelect" title="モード" hidden>
         <option value="classic">クラシック</option>
         <option value="popjamScoreOpen">ポップジャム</option>
@@ -11643,11 +11658,14 @@
     function createPlayers(playerCount, cpuEnabled) {
       const colors = playerColorsForCount(playerCount);
       return colors.map(function (color, index) {
+        const setup = state.titlePlayerSetup && state.titlePlayerSetup.length === playerCount
+          ? state.titlePlayerSetup[index]
+          : null;
         return {
           id: index,
-          name: color.toUpperCase(),
-          color: color,
-          isCpu: Boolean(cpuEnabled && index > 0),
+          name: setup ? setup.name : color.toUpperCase(),
+          color: setup ? setup.color : color,
+          isCpu: setup ? setup.cpu : Boolean(cpuEnabled && index > 0),
           hand: [],
           lifeLocked: 0,
           lifeDamageSources: {},
@@ -11957,6 +11975,21 @@
       elements.playerCountSelect.value = stillExists ? previous : options[0].value;
     }
 
+    // タイトルで決めた色と名前を、これから始めるゲームの枠に渡す（2人/3人とも人間が操作する）
+    function applyTitlePlayerSetup(config) {
+      const slots = window.wiggleTitlePlayers && window.wiggleTitlePlayers[config.mode];
+      state.titlePlayerSetup = null;
+      if (!slots || (config.mode !== "classic" && config.mode !== "popjamScoreOpen")) {
+        return config;
+      }
+      config.cpuEnabled = slots.some(function (slot) { return slot.cpu; });
+      config.playerCount = slots.length;
+      state.titlePlayerSetup = slots.map(function (slot) {
+        return { color: slot.color, name: (slot.name || "").trim() || colorNames[slot.color], cpu: Boolean(slot.cpu) };
+      });
+      return config;
+    }
+
     function getSetupConfig() {
       let mode = currentMode();
       const setupValue = elements.playerCountSelect.value;
@@ -12216,7 +12249,7 @@
       pushHistory();
       const titleScreenEl = document.getElementById("titleScreen");
       if (titleScreenEl) { titleScreenEl.hidden = true; }
-      const setupConfig = getSetupConfig();
+      const setupConfig = applyTitlePlayerSetup(getSetupConfig());
       state.mode = setupConfig.mode;
       state.cpuEnabled = setupConfig.cpuEnabled;
       state.lifeCpuStrong = Boolean(setupConfig.lifeCpuStrong);
@@ -25952,6 +25985,100 @@
     window.addEventListener("load", function () { show(indexForMode(select.value), false); });
   })();
   </script>
+<script>
+(function () {
+  var COLORS = [
+    { color: "red", label: "赤", bg: "#e8474a", sym: "▲" },
+    { color: "yellow", label: "黄", bg: "#f2b705", sym: "■" },
+    { color: "blue", label: "青", bg: "#0a84d0", sym: "●" },
+    { color: "green", label: "緑", bg: "#2e9e4f", sym: "◆" }
+  ];
+  var DEFAULTS = {
+    classic: ["red", "blue"],
+    popjamScoreOpen: ["red", "yellow", "blue"]
+  };
+  var setups = {};
+  Object.keys(DEFAULTS).forEach(function (mode) {
+    setups[mode] = DEFAULTS[mode].map(function (c) { return { color: c, name: "", cpu: false }; });
+  });
+  window.wiggleTitlePlayers = setups;
+  var box = document.getElementById("titlePlayers");
+  var select = document.getElementById("modeSelect");
+
+  function info(c) {
+    return COLORS.filter(function (x) { return x.color === c; })[0];
+  }
+
+  function render(mode) {
+    if (!box) { return; }
+    var slots = setups[mode];
+    box.innerHTML = "";
+    box.hidden = !slots;
+    if (!slots) { return; }
+    slots.forEach(function (slot, i) {
+      var row = document.createElement("div");
+      row.className = "title-player-row";
+      var label = document.createElement("span");
+      label.className = "title-player-label";
+      label.textContent = String(i + 1);
+      row.appendChild(label);
+
+      // 人間かCPUか。人間が1人もいない組み合わせにはしない
+      var kind = document.createElement("button");
+      kind.type = "button";
+      kind.className = "title-kind";
+      kind.textContent = slot.cpu ? "CPU" : "人間";
+      kind.setAttribute("aria-pressed", slot.cpu ? "true" : "false");
+      kind.addEventListener("click", function () {
+        var humans = slots.filter(function (x) { return !x.cpu; }).length;
+        if (!slot.cpu && humans <= 1) { return; }
+        slot.cpu = !slot.cpu;
+        render(mode);
+      });
+      row.appendChild(kind);
+
+      var swatches = document.createElement("div");
+      swatches.className = "title-swatches";
+      COLORS.forEach(function (c) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "title-swatch";
+        b.style.background = c.bg;
+        b.textContent = c.sym;
+        b.title = c.label;
+        b.setAttribute("aria-label", c.label);
+        b.setAttribute("aria-pressed", slot.color === c.color ? "true" : "false");
+        b.addEventListener("click", function () {
+          // 既に別の枠が使っている色なら、その枠と入れ替える
+          var other = slots.filter(function (x) { return x.color === c.color; })[0];
+          if (other && other !== slot) { other.color = slot.color; }
+          slot.color = c.color;
+          render(mode);
+        });
+        swatches.appendChild(b);
+      });
+      row.appendChild(swatches);
+
+      var input = document.createElement("input");
+      input.type = "text";
+      input.className = "title-player-name";
+      input.maxLength = 8;
+      input.placeholder = info(slot.color).label;
+      input.value = slot.name;
+      input.setAttribute("aria-label", "プレイヤー" + (i + 1) + "の名前");
+      input.addEventListener("input", function () { slot.name = input.value; });
+      row.appendChild(input);
+      box.appendChild(row);
+    });
+  }
+
+  if (select) {
+    select.addEventListener("change", function () { render(select.value); });
+  }
+  render(select ? select.value : "");
+  window.addEventListener("load", function () { render(select ? select.value : ""); });
+})();
+</script>
 </body>
 </html>
 

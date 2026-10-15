@@ -19314,7 +19314,10 @@
       const rotation = state.pendingAction && state.pendingAction.type === "replace-place"
         ? (state.pendingAction.rotation || 0)
         : state.selectedRotation;
-      const legal = canPlaceTileAt(row, col, tile, rotation);
+      // ムーブ中は動かすタイルを盤から一時的に外して判定する（canReplaceTileTo と同じ判定にそろえる）
+      const legal = state.pendingAction && state.pendingAction.type === "replace-place"
+        ? canReplaceTileTo(row, col, state.pendingAction)
+        : canPlaceTileAt(row, col, tile, rotation);
       const placementAssist = currentPlacementAssistMode();
       if (placementAssist !== "off") {
         cell.classList.add(legal ? "ghost-legal" : "ghost-illegal");

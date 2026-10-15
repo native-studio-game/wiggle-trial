@@ -12042,6 +12042,7 @@
           return;
         }
         setupBorderless();
+        maybeStartFirstRunGuide();
         return;
       }
 
@@ -20841,12 +20842,24 @@
     // ===== はじめてガイド（独立モジュール：コアのゲームロジックには干渉しない） =====
     var guideIndex = 0;
     var guideActive = false;
-    var GUIDE_STEPS = [
+    // ガイドの文面はモードごとに持つ（クラシックはハテナタイルの説明を省く）
+    var GUIDE_STEPS_POPJAM = [
       { text: "まずは画面の下から、置きたいタイルを1枚えらぼう。", target: function () { return document.getElementById("handRow"); } },
-      { text: "色がつながる場所がうっすら光るよ。光ったマスにタイルを置こう。", target: function () { return document.getElementById("board"); } },
-      { text: "同じ色を線でぐるっと囲むと、その色があなたの得点になるよ！", target: function () { return document.getElementById("board"); } },
+      { text: "色がつながる場所がうっすら光るよ。光ったマスにタイルを置こう。", target: function () { return guideBoardTarget(); } },
+      { text: "同じ色を線でぐるっと囲むと、その色があなたの得点になるよ！", target: function () { return guideBoardTarget(); } },
       { text: "あとは自由に！ ハテナタイルの隣に置くと、いろんな効果が発動するよ。さあ、遊んでみよう！", target: null }
     ];
+    var GUIDE_STEPS_CLASSIC = [
+      { text: "まずは画面の下から、置きたいタイルを1枚えらぼう。", target: function () { return document.getElementById("handRow"); } },
+      { text: "色がつながる場所がうっすら光るよ。光ったマスにタイルを置こう。", target: function () { return guideBoardTarget(); } },
+      { text: "同じ色を線でぐるっと囲むと、その色があなたの得点になるよ！", target: function () { return guideBoardTarget(); } },
+      { text: "あとは自由に！ 好きなところに置いて、遊んでみよう！", target: null }
+    ];
+    var guideSteps = GUIDE_STEPS_POPJAM;
+    function guideBoardTarget() {
+      // クラシックは盤面が動的なのでビューポートを囲む
+      return isClassicSharedMode() ? document.getElementById("blViewport") : document.getElementById("board");
+    }
     function guideEl(id) { return document.getElementById(id); }
     function positionGuide() {
       if (!guideActive) { return; }
@@ -20854,7 +20867,7 @@
       var spot = guideEl("guideSpotlight");
       var bubble = guideEl("guideBubble");
       if (!overlay || !spot || !bubble) { return; }
-      var step = GUIDE_STEPS[guideIndex];
+      var step = guideSteps[guideIndex];
       var tgt = step && step.target ? step.target() : null;
       var vh = window.innerHeight || document.documentElement.clientHeight;
       if (tgt) {
@@ -20880,19 +20893,20 @@
       }
     }
     function renderGuideStep() {
-      var step = GUIDE_STEPS[guideIndex];
+      var step = guideSteps[guideIndex];
       if (!step) { finishGuide(); return; }
       var textEl = guideEl("guideText");
       var progressEl = guideEl("guideProgress");
       var nextEl = guideEl("guideNext");
       if (textEl) { textEl.textContent = step.text; }
-      if (progressEl) { progressEl.textContent = (guideIndex + 1) + " / " + GUIDE_STEPS.length; }
-      if (nextEl) { nextEl.textContent = (guideIndex === GUIDE_STEPS.length - 1) ? "はじめる" : "次へ"; }
+      if (progressEl) { progressEl.textContent = (guideIndex + 1) + " / " + guideSteps.length; }
+      if (nextEl) { nextEl.textContent = (guideIndex === guideSteps.length - 1) ? "はじめる" : "次へ"; }
       positionGuide();
     }
     function startGuide() {
       var overlay = guideEl("guideOverlay");
       if (!overlay) { return; }
+      guideSteps = isClassicSharedMode() ? GUIDE_STEPS_CLASSIC : GUIDE_STEPS_POPJAM;
       guideIndex = 0;
       guideActive = true;
       overlay.hidden = false;
@@ -20902,7 +20916,7 @@
     }
     function nextGuideStep() {
       guideIndex += 1;
-      if (guideIndex >= GUIDE_STEPS.length) { finishGuide(); return; }
+      if (guideIndex >= guideSteps.length) { finishGuide(); return; }
       renderGuideStep();
     }
     function finishGuide() {
@@ -20911,16 +20925,19 @@
       if (overlay) { overlay.hidden = true; }
       window.removeEventListener("resize", positionGuide);
       window.removeEventListener("scroll", positionGuide, true);
-      try { window.localStorage.setItem("wiggle_popjam_guide_seen", "1"); } catch (e) {}
+      try { window.localStorage.setItem(guideSeenKey(), "1"); } catch (e) {}
     }
-    function popjamGuideApplicable() {
-      return (typeof isPopjamMode === "function" && isPopjamMode())
-        || (typeof isPopjamScoreMode === "function" && isPopjamScoreMode());
+    function guideApplicable() {
+      return isPopjamMode() || isClassicSharedMode();
+    }
+    // 既読フラグはガイドの版ごとに分ける（ポップジャムの既読キーは従来の名前を維持）
+    function guideSeenKey() {
+      return isClassicSharedMode() ? "wiggle_classic_guide_seen" : "wiggle_popjam_guide_seen";
     }
     function maybeStartFirstRunGuide() {
-      if (!popjamGuideApplicable()) { return; }
+      if (!guideApplicable()) { return; }
       var seen = false;
-      try { seen = window.localStorage.getItem("wiggle_popjam_guide_seen") === "1"; } catch (e) {}
+      try { seen = window.localStorage.getItem(guideSeenKey()) === "1"; } catch (e) {}
       if (seen) { return; }
       setTimeout(function () { if (!guideActive) { startGuide(); } }, 500);
     }

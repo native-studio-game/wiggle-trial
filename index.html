@@ -16507,6 +16507,14 @@
       if (!delta) {
         return false;
       }
+      if (Number.isInteger(gesture.handIndex) && state.selectedHandIndex !== gesture.handIndex) {
+        if (hasPendingAction() || hasPendingQuestionEffects() || (inlineConfirm && inlineConfirm.blocksBoard)) {
+          return false;
+        }
+        rememberMarketTileRotation();
+        state.selectedHandIndex = gesture.handIndex;
+        state.selectedRotation = marketTileRotation(gesture.handIndex);
+      }
       if (rotateSelected(delta)) {
         blSwipeSuppressClickUntil = Date.now() + 320;
         if (event.cancelable) {
@@ -16594,19 +16602,23 @@
         return;
       }
       // ハテナ（盤面の外周のボタン）の上から始めたスワイプは回転にする。操作ボタン・入力欄の上は除く
-      if (event.target.closest("button:not(.cell):not(.external-question), select, input, textarea, a")) {
+      // 山札・共有札・手札の上から始めたスワイプも回転にする（タイルのボタンも対象）
+      const tileArea = event.target.closest("#handRow, #handPanel, #deckPanel, #sharedMarket");
+      if (!tileArea && event.target.closest("button:not(.cell):not(.external-question), select, input, textarea, a")) {
         return;
       }
-      // 山札・共有札・手札の上では回転のスワイプをしない（手札の選択・横スクロールに任せる）
-      if (event.target.closest("#handRow, #handPanel, #deckPanel, #sharedMarket")) {
+      if (tileArea && event.target.closest("select, input, textarea, a")) {
         return;
       }
+      const tileButton = event.target.closest("[data-swipe-index]");
+      const swipeIndex = tileButton ? Number(tileButton.dataset.swipeIndex) : NaN;
       fixedBoardSwipeRotate = {
         pointerId: event.pointerId,
         x: event.clientX,
         y: event.clientY,
         lastX: event.clientX,
-        lastY: event.clientY
+        lastY: event.clientY,
+        handIndex: Number.isInteger(swipeIndex) ? swipeIndex : null
       };
     }
 
@@ -20614,6 +20626,7 @@
           }
           rotateSelected(90);
         });
+        button.dataset.swipeIndex = String(placementIndex);
         button.addEventListener("wheel", function (event) {
           rotateSelectedByWheel(event, placementIndex);
         }, { passive: false });
@@ -20825,6 +20838,7 @@
           }
           rotateSelected(90);
         });
+        button.dataset.swipeIndex = String(index);
         button.addEventListener("wheel", function (event) {
           rotateSelectedByWheel(event, index);
         }, { passive: false });
@@ -20916,6 +20930,7 @@
           }
           rotateSelected(90);
         });
+        button.dataset.swipeIndex = String(index);
         button.addEventListener("wheel", function (event) {
           rotateSelectedByWheel(event, index);
         }, { passive: false });

@@ -10320,7 +10320,7 @@
   .title-logo { margin: 0; font-size: 40px; font-weight: 800; color: #1f2937; }
   .title-mode { display: flex; flex-direction: column; gap: 6px; text-align: left; }
   #titleScreen #modeSelect { width: 100%; font-size: 16px; padding: 10px 12px; border-radius: 12px; }
-  body #titleScreen .title-card #newGameButton { display: flex; justify-content: center; position: static; width: 100%; min-width: 0; max-width: none; height: auto; min-height: 0; padding: 14px; margin: 0; border: 0; border-radius: 999px; background: #1f2937; color: #ffffff; font-size: 18px; font-weight: 800; line-height: 1.2; overflow: visible; text-indent: 0; }
+  body #titleScreen .title-card #newGameButton { display: flex; justify-content: center; position: static; width: 100%; min-width: 0; max-width: none; height: auto; min-height: 0; padding: 11px; margin: 0; border: 0; border-radius: 999px; background: #1f2937; color: #ffffff; font-size: 18px; font-weight: 800; line-height: 1.2; overflow: visible; text-indent: 0; }
   body #titleScreen .title-card #newGameButton::before, body #titleScreen .title-card #newGameButton::after { content: none !important; display: none !important; }
   /* タイトル画面の見た目（ボードと同じドット背景、タイルの飾り、影の強さ） */
   #titleScreen { background: radial-gradient(circle at 1px 1px, rgba(15,23,42,0.07) 1px, transparent 1.6px) 0 0 / 18px 18px, #f7f4ef; }
@@ -10541,33 +10541,33 @@
   .title-facts span { display: inline-flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; }
   .title-facts img { height: 16px; width: auto; flex: 0 0 auto; }
   .title-nav { display: flex; align-items: center; justify-content: space-between; }
-  .title-arrow { width: 42px; height: 42px; border-radius: 50%; border: 0; background: #ffffff; box-shadow: 0 4px 12px rgba(15,23,42,0.12); font-size: 20px; line-height: 1; color: #1f2937; cursor: pointer; }
+  .title-arrow { width: 34px; height: 34px; border-radius: 50%; border: 0; background: #ffffff; box-shadow: 0 4px 12px rgba(15,23,42,0.12); font-size: 20px; line-height: 1; color: #1f2937; cursor: pointer; }
   .title-dots { display: flex; gap: 8px; align-items: center; }
   .title-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: width 200ms ease, background 200ms ease; }
   .title-dot.on { width: 22px; border-radius: 6px; background: #c8102e; }
   /* タイトル画面：上のロゴとタイルは出さず、ゲームのカードをできるだけ大きく出す */
   #titleScreen .title-tiles, #titleScreen .title-logo { display: none; }
-  #titleScreen .title-card { width: min(94vw, 440px); padding: 12px; gap: 10px; }
-  #titleScreen .title-art { border-radius: 18px; width: min(100%, calc(100vh - 400px)); width: min(100%, calc(100dvh - 400px)); margin: 0 auto; }
-  #titleScreen .title-card:has(.title-player-row:nth-child(3)) .title-art { width: min(100%, calc(100vh - 450px)); width: min(100%, calc(100dvh - 450px)); }
-  #titleScreen .title-game-name { font-size: 26px; margin-top: 8px; }
+  #titleScreen .title-card { width: min(94vw, 440px); padding: 10px; gap: 8px; }
+  #titleScreen .title-art { border-radius: 18px; width: min(100%, calc(100vh - 400px)); width: min(100%, calc(100dvh - 390px)); margin: 0 auto; }
+  #titleScreen .title-card:has(.title-player-row:nth-child(3)) .title-art { width: min(100%, calc(100vh - 436px)); width: min(100%, calc(100dvh - 436px)); }
+  #titleScreen .title-game-name { font-size: 26px; margin-top: 4px; }
   #titleScreen .title-game-tag { font-size: 14px; min-height: 0; }
-  #titleScreen .title-carousel { gap: 12px; }
-  /* プレイヤー設定（色と名前）。枠が増えても画面内でスクロールできるようにする */
+  #titleScreen .title-carousel { gap: 8px; }
+  /* プレイヤー設定（種類・色・名前）。行を詰めて、絵をできるだけ大きく残す */
   #titleScreen { overflow-x: hidden; overflow-y: auto; align-items: flex-start; }
-  #titleScreen .title-card { margin: auto; }
-  .title-players { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .title-players { display: flex; flex-direction: column; gap: 6px; }
   .title-players[hidden] { display: none; }
-  .title-player-row { display: flex; align-items: center; gap: 8px; }
-  .title-player-label { flex: 0 0 auto; width: 16px; font-size: 12px; font-weight: 800; color: #64748b; text-align: center; }
-  .title-kind { flex: 0 0 auto; width: 64px; height: 30px; padding: 0 8px; border-radius: 999px; border: 1px solid #cbd5e1; background: #f8fafc; color: #1f2937; font-size: 12px; font-weight: 800; cursor: pointer; }
-  .title-kind[aria-pressed="true"] { background: #1f2937; border-color: #1f2937; color: #ffffff; }
-  .title-swatches { display: flex; gap: 4px; flex: 0 0 auto; }
-  .title-swatch { width: 26px; height: 26px; flex: 0 0 26px; padding: 0; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 0 1px rgba(15,23,42,0.18); color: #ffffff; font-size: 12px; line-height: 1; cursor: pointer; }
-  .title-swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #1f2937; }
-  .title-swatch, .title-kind { min-width: 0; min-height: 0; box-sizing: border-box; }
-  .title-player-name { flex: 1 1 auto; min-width: 0; width: 100%; font-size: 16px; padding: 7px 10px; border: 1px solid #d1d5db; border-radius: 12px; background: #ffffff; color: #1f2937; }
-  @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
+  .title-player-row { display: flex; align-items: center; gap: 6px; padding: 3px 6px; border-radius: 14px; background: #f3f5f8; }
+  .title-player-no { flex: 0 0 16px; width: 16px; text-align: center; font-size: 12px; font-weight: 800; color: #64748b; }
+  .title-player-kind-col { flex: 0 0 86px; width: 86px; }
+  .title-player-color-col { flex: 0 0 auto; width: 104px; }
+  .title-player-name-col { flex: 1 1 auto; min-width: 0; }
+  .title-kind { width: 86px; height: 30px; padding: 0; white-space: nowrap; border-radius: 999px; border: 1px solid #cbd5e1; background: #f8fafc; color: #1f2937; font-size: 12px; font-weight: 800; cursor: pointer; }
+  .title-kind[aria-pressed="true"] { background: #475569; border-color: #475569; color: #ffffff; }
+  .title-swatches { display: flex; gap: 6px; }
+  .title-swatch { width: 26px; height: 26px; min-width: 0; min-height: 0; padding: 0; border-radius: 50%; border: none; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.12); }
+  .title-swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #1f2937; }
+  .title-player-name { width: 100%; min-width: 0; height: 30px; font-size: 16px; padding: 0 10px; border: 1px solid #d1d5db; border-radius: 10px; background: #ffffff; color: #1f2937; box-sizing: border-box; }  @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26005,9 +26005,9 @@
 <script>
 (function () {
   var COLORS = [
-    { color: "red", label: "赤", bg: "#e8474a", sym: "▲" },
-    { color: "yellow", label: "黄", bg: "#f2b705", sym: "■" },
-    { color: "blue", label: "青", bg: "#0a84d0", sym: "●" }
+    { color: "red", label: "赤", bg: "#e8474a" },
+    { color: "yellow", label: "黄", bg: "#f2b705" },
+    { color: "blue", label: "青", bg: "#0a84d0" }
   ];
   var DEFAULTS = {
     classic: ["red", "blue"],
@@ -26021,8 +26021,11 @@
   var box = document.getElementById("titlePlayers");
   var select = document.getElementById("modeSelect");
 
-  function info(c) {
-    return COLORS.filter(function (x) { return x.color === c; })[0];
+  function head(text, cls) {
+    var span = document.createElement("span");
+    span.className = cls;
+    span.textContent = text;
+    return span;
   }
 
   function render(mode) {
@@ -26031,28 +26034,35 @@
     box.innerHTML = "";
     box.hidden = !slots;
     if (!slots) { return; }
+
     slots.forEach(function (slot, i) {
       var row = document.createElement("div");
       row.className = "title-player-row";
-      var label = document.createElement("span");
-      label.className = "title-player-label";
-      label.textContent = String(i + 1);
-      row.appendChild(label);
 
-      // 人間かCPUか。人間が1人もいない組み合わせにはしない
+      var no = head(String(i + 1), "title-player-no");
+      row.appendChild(no);
+
+      // 種類: プレイヤー / CPU（CPUを選ぶと濃い表示）。人が1人も残らない組み合わせは選べない
+      var kindCol = document.createElement("div");
+      kindCol.className = "title-player-kind-col";
       var kind = document.createElement("button");
       kind.type = "button";
       kind.className = "title-kind";
-      kind.textContent = slot.cpu ? "CPU" : "人間";
+      kind.textContent = slot.cpu ? "CPU" : "プレイヤー";
       kind.setAttribute("aria-pressed", slot.cpu ? "true" : "false");
+      kind.setAttribute("aria-label", "プレイヤー" + (i + 1) + "の種類: " + kind.textContent);
       kind.addEventListener("click", function () {
         var humans = slots.filter(function (x) { return !x.cpu; }).length;
         if (!slot.cpu && humans <= 1) { return; }
         slot.cpu = !slot.cpu;
         render(mode);
       });
-      row.appendChild(kind);
+      kindCol.appendChild(kind);
+      row.appendChild(kindCol);
 
+      // 色: 図形は出さず、色の丸だけ。選んだ色は外側のリングで示す
+      var colorCol = document.createElement("div");
+      colorCol.className = "title-player-color-col";
       var swatches = document.createElement("div");
       swatches.className = "title-swatches";
       COLORS.forEach(function (c) {
@@ -26060,9 +26070,8 @@
         b.type = "button";
         b.className = "title-swatch";
         b.style.background = c.bg;
-        b.textContent = c.sym;
         b.title = c.label;
-        b.setAttribute("aria-label", c.label);
+        b.setAttribute("aria-label", "色: " + c.label);
         b.setAttribute("aria-pressed", slot.color === c.color ? "true" : "false");
         b.addEventListener("click", function () {
           // 既に別の枠が使っている色なら、その枠と入れ替える
@@ -26073,17 +26082,23 @@
         });
         swatches.appendChild(b);
       });
-      row.appendChild(swatches);
+      colorCol.appendChild(swatches);
+      row.appendChild(colorCol);
 
+      // 名前: 色は表示しない。空欄なら後で決まる名前になる
+      var nameCol = document.createElement("div");
+      nameCol.className = "title-player-name-col";
       var input = document.createElement("input");
       input.type = "text";
       input.className = "title-player-name";
       input.maxLength = 8;
-      input.placeholder = info(slot.color).label;
+      input.placeholder = "名前";
       input.value = slot.name;
       input.setAttribute("aria-label", "プレイヤー" + (i + 1) + "の名前");
       input.addEventListener("input", function () { slot.name = input.value; });
-      row.appendChild(input);
+      nameCol.appendChild(input);
+      row.appendChild(nameCol);
+
       box.appendChild(row);
     });
   }

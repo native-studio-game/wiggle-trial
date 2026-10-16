@@ -10573,6 +10573,9 @@
   .turn-cut-in.blue { background: rgba(10,132,208,0.95); }
   @keyframes turn-cut-in { 0% { opacity: 0; transform: translateX(-24px); } 14% { opacity: 1; transform: translateX(0); } 78% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(16px); } }
   @media (prefers-reduced-motion: reduce) { .turn-cut-in { animation: none; opacity: 1; } }
+  .result-choice { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 3500; display: flex; gap: 8px; padding: 10px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 26px rgba(15,23,42,0.22); }
+  .result-choice button { flex: 1 1 0; min-height: 46px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .result-choice .result-choice-again { background: #1f2937; border-color: #1f2937; color: #ffffff; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
@@ -12299,6 +12302,7 @@
           return;
         }
         setupBorderless();
+        showTurnCutIn(currentPlayer());
         maybeStartFirstRunGuide();
         return;
       }
@@ -18452,6 +18456,8 @@
     }
 
     function render() {
+      // 結果の後の選択（もう一度/タイトル）は、盤面の描き方に関係なく出す
+      renderResultChoice();
       // 効果の対象を選ぶ間は、対象の枠の色を効果の色（説明書と同じ）にする
       const pendingType = state.pendingAction ? state.pendingAction.type : "";
       const pickKind = ({ replace: "move", "replace-place": "move", collect: "keep", swap: "swap" })[pendingType] || "";
@@ -21489,6 +21495,38 @@
       }
       event.preventDefault();
       advanceResultViewMode();
+    }
+
+    // 結果の後に「もう一度遊ぶ」か「タイトルに戻る」を選べるようにする
+    function renderResultChoice() {
+      const box = document.getElementById("resultChoice");
+      if (!(state.started && state.over)) {
+        if (box) { box.remove(); }
+        return;
+      }
+      if (box) { return; }
+      const wrap = document.createElement("div");
+      wrap.id = "resultChoice";
+      wrap.className = "result-choice";
+      const again = document.createElement("button");
+      again.type = "button";
+      again.className = "result-choice-again";
+      again.textContent = "もう一度遊ぶ";
+      again.addEventListener("click", function () {
+        wrap.remove();
+        elements.resetButton.click();
+      });
+      const title = document.createElement("button");
+      title.type = "button";
+      title.className = "result-choice-title";
+      title.textContent = "タイトルに戻る";
+      title.addEventListener("click", function () {
+        wrap.remove();
+        returnToTitle();
+      });
+      wrap.appendChild(title);
+      wrap.appendChild(again);
+      document.body.appendChild(wrap);
     }
 
     function renderResult() {

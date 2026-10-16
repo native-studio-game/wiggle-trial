@@ -10576,6 +10576,11 @@
   .result-choice { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 3500; display: flex; gap: 8px; padding: 10px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 26px rgba(15,23,42,0.22); }
   .result-choice button { flex: 1 1 0; min-height: 46px; border-radius: 12px; border: 1px solid #d1d5db; background: #ffffff; color: #1f2937; font-size: 15px; font-weight: 800; cursor: pointer; }
   .result-choice .result-choice-again { background: #1f2937; border-color: #1f2937; color: #ffffff; }
+  .winner-name { font-weight: 800; }
+  .winner-name.red { color: #e8474a; }
+  .winner-name.yellow { color: #c98f00; }
+  .winner-name.blue { color: #0a84d0; }
+  .winner-name.green { color: #2e9e4f; }
   @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
@@ -12002,7 +12007,7 @@
         if (slot.cpu) {
           // CPUに名前を入れたら「名前(CPU)」、無入力なら「CPU＋番号」
           const cpuName = (slot.name || "").trim();
-          name = cpuName ? cpuName + "(CPU)" : "CPU" + (index + 1);
+          name = cpuName ? cpuName + "(CPU)" : "CPU";
         } else {
           name = (slot.name || "").trim() || (anyCpu && humanCount === 1 ? "YOU" : colorNames[slot.color]);
         }
@@ -18359,7 +18364,12 @@
     }
 
     // ポップジャム終了時の短い勝者ライン（順位の長文は順位パネルに集約）
-    function buildPopjamWinnerLine() {
+    function buildPopjamWinnerLine(asHtml) {
+      const nameOf = function (player) {
+        return asHtml
+          ? "<span class=\"winner-name " + player.color + "\">" + escapeHtml(player.name) + "</span>"
+          : player.name;
+      };
       if (isDrawResult()) { return "DRAW"; }
       if (Array.isArray(state.popjamWinners) && state.popjamWinners.length > 0) {
         const winners = state.popjamWinners.map(function (id) {
@@ -18367,9 +18377,7 @@
             return player.id === id;
           });
         }).filter(Boolean);
-        const names = winners.map(function (player) {
-          return player.name;
-        }).join("・");
+        const names = winners.map(nameOf).join("・");
         const prefix = winners.length > 1 ? "同時勝利: " : "勝者: ";
         if (isPopjamScoreMode()) {
           // 勝者表示には点数を出さない（内訳はタップで見る）
@@ -18383,7 +18391,7 @@
       if (ranking.length === 0) { return "ゲーム終了"; }
       const firstRank = ranking[0].rank;
       const winners = ranking.filter(function (e) { return e.rank === firstRank; });
-      const names = winners.map(function (e) { return e.player.name; }).join("・");
+      const names = winners.map(function (e) { return nameOf(e.player); }).join("・");
       const prefix = winners.length > 1 ? "同点1位: " : "勝者: ";
       if (isPopjamScoreMode()) {
         return prefix + names;
@@ -21538,12 +21546,12 @@
       const isPop = isPopjamMode();
       // ポップジャムは順位の長文を順位パネルへ集約。重複を避けるため濃い結果ボックスは隠し、
       // オーバーレイは短い勝者ラインのみにする。
-      const overlayText = isPop ? buildPopjamWinnerLine() : buildResultText();
+      const overlayText = isPop ? buildPopjamWinnerLine(true) : buildResultText();
       // 目標欄のリザルト表示は順位/得点パネルと重複するため常に非表示
       elements.resultBox.hidden = true;
       elements.resultBox.textContent = "";
       const overlayBody = isPop
-        ? "<span>" + escapeHtml(overlayText) + "</span>"
+        ? "<span>" + overlayText + "</span>"
         : buildResultRowsHtml();
       if (resultViewMode() !== "details") {
         elements.boardResultOverlay.hidden = true;

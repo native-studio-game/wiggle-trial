@@ -10835,7 +10835,7 @@
     .guide-spotlight{position:absolute;border-radius:14px;box-shadow:0 0 0 9999px rgba(17,24,39,0.6);outline:3px solid #f4c430;outline-offset:2px;pointer-events:none;transition:left .25s ease,top .25s ease,width .25s ease,height .25s ease;}
     .guide-overlay.guide-no-target .guide-spotlight{display:none;}
     .guide-bubble{position:absolute;left:50%;transform:translateX(-50%);width:min(86vw,340px);background:#fff;color:#1f2937;border-radius:14px;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,.3);pointer-events:auto;font-size:15px;line-height:1.55;}
-    .guide-bubble .guide-text{margin:0 0 12px;font-weight:600;}
+    .guide-bubble .guide-text{margin:0 0 12px;font-weight:600;white-space:pre-line;}
     .guide-bubble .guide-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;}
     .guide-bubble .guide-progress{font-size:12px;color:#6b7280;}
     .guide-bubble button{border:0;border-radius:999px;font-weight:700;cursor:pointer;}
@@ -21705,10 +21705,10 @@
       { text: "周りにあるのはハテナタイル。不思議な力で、いろんな効果が起こるよ。隣にタイルを置くと発動するよ！", target: null }
     ];
     var GUIDE_STEPS_CLASSIC = [
-      { text: "まずは画面の下から、置きたいタイルを1枚えらぼう。えらんだタイルは、スワイプすると回転するよ。", target: function () { return document.getElementById("handRow"); } },
-      { text: "色がつながる場所がうっすら光るよ。光ったマスを2回タップするとタイルを置けるよ。", target: function () { return guideBoardTarget(); } },
-      { text: "同じ色を線でぐるっと囲むと、その色のプレイヤーの得点になるよ！", target: function () { return guideBoardTarget(); } },
-      { text: "あとは自由に！ 好きなところに置いて、遊んでみよう！", target: null }
+      { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return document.getElementById("handRow"); } },
+      { text: "色をつなげてタイルを置こう！\n光ったマスを２回タップするとタイルを置ける", target: function () { return guideBoardTarget(); } },
+      { text: "色を白い線で囲えると、その色のプレイヤーの得点となるよ！", target: function () { return guideBoardTarget(); } },
+      { text: "合計得点が多いプレイヤーの勝利となる\n5×5の範囲の中に好きなように置いてみよう！", target: null }
     ];
     var guideSteps = GUIDE_STEPS_POPJAM;
     function guideBoardTarget() {

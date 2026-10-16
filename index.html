@@ -10523,8 +10523,8 @@
   .hand-tile.end-shake { animation: market-end-shake 420ms ease-in-out var(--shake-delay, 0ms) both; }
   /* スマホの画面では、ブラウザのスクロール・拡大（ピンチ・ダブルタップ）を止める。盤面や得点のスワイプは回転に使う。
      手札・共有札・山札は、横スクロールやタップのためにブラウザの横方向の操作を残す */
-  body.view-mobile { overscroll-behavior: none; }
-  body.view-mobile .layout { touch-action: none; }
+  body.view-mobile { overscroll-behavior: none; overflow-y: auto; }
+  body.view-mobile .layout { touch-action: pan-y; }
   body.view-mobile #handRow, body.view-mobile #handPanel, body.view-mobile #deckPanel, body.view-mobile #sharedMarket { touch-action: none; }
   /* タイトル画面：ゲーム選択のカード（画像・名前・情報を左右に切り替え）。タイトルの文字は Noto Serif JP Bold */
   .title-logo { font-family: "Noto Serif JP", "Noto Serif CJK JP", serif; font-weight: 700; }
@@ -21921,11 +21921,7 @@
       // 画面全体でページのスクロールを止める。ダイアログの中と、中身が動かせる場所（横スクロールなど）は除く
       playTouchBlock = Boolean(target && target.closest && !target.closest(".dialog-backdrop") && !touchInsideScrollable(target));
     }, { passive: true });
-    document.addEventListener("touchmove", function (event) {
-      if (playTouchBlock && event.cancelable) {
-        event.preventDefault();
-      }
-    }, { passive: false });
+    // 2026-10: ページが動かなくなって戻せない不具合のため、縦方向のスクロールは止めない（盤面は touch-action: none で回転に使う）
     document.addEventListener("touchend", function () { playTouchBlock = false; }, { passive: true });
     document.addEventListener("touchcancel", function () { playTouchBlock = false; }, { passive: true });
 

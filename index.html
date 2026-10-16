@@ -21699,16 +21699,17 @@
     var guideActive = false;
     // ガイドの文面はモードごとに持つ（クラシックはハテナタイルの説明を省く）
     var GUIDE_STEPS_POPJAM = [
-      { text: "まずは画面の下から、置きたいタイルを1枚えらぼう。えらんだタイルは、スワイプすると回転するよ。", target: function () { return document.getElementById("handRow"); } },
-      { text: "色がつながる場所がうっすら光るよ。光ったマスを2回タップするとタイルを置けるよ。", target: function () { return guideBoardTarget(); } },
-      { text: "同じ色を線でぐるっと囲むと、その色のプレイヤーの得点になるよ！", target: function () { return guideBoardTarget(); } },
+      { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return document.getElementById("handRow"); } },
+      { text: "色をつなげてタイルを置こう！\n光ったマスを２回タップするとタイルを置ける", target: function () { return guideBoardTarget(); } },
+      { text: "色を白い線で囲むと、その色のプレイヤーの得点となるよ！", target: function () { return guideBoardTarget(); } },
       { text: "周りにあるのはハテナタイル。不思議な力で、いろんな効果が起こるよ。隣にタイルを置くと発動するよ！", target: null }
     ];
     var GUIDE_STEPS_CLASSIC = [
       { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return document.getElementById("handRow"); } },
       { text: "色をつなげてタイルを置こう！\n光ったマスを２回タップするとタイルを置ける", target: function () { return guideBoardTarget(); } },
       { text: "色を白い線で囲むと、その色のプレイヤーの得点となるよ！", target: function () { return guideBoardTarget(); } },
-      { text: "合計得点が多いプレイヤーの勝利となる\n5×5の範囲の中に好きなように置いてみよう！", target: null }
+      { text: "合計得点が多いプレイヤーの勝利となる", target: null },
+      { text: "5×5の範囲の中に好きなように置いてみよう！", target: null }
     ];
     var guideSteps = GUIDE_STEPS_POPJAM;
     function guideBoardTarget() {

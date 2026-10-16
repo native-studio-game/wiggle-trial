@@ -10567,7 +10567,13 @@
   .title-swatches { display: flex; gap: 6px; }
   .title-swatch { width: 26px; height: 26px; min-width: 0; min-height: 0; padding: 0; border-radius: 50%; border: none; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.12); }
   .title-swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #1f2937; }
-  .title-player-name { width: 100%; min-width: 0; height: 30px; font-size: 16px; padding: 0 10px; border: 1px solid #d1d5db; border-radius: 10px; background: #ffffff; color: #1f2937; box-sizing: border-box; }  @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
+  .title-player-name { width: 100%; min-width: 0; height: 30px; font-size: 16px; padding: 0 10px; border: 1px solid #d1d5db; border-radius: 10px; background: #ffffff; color: #1f2937; box-sizing: border-box; }  .turn-cut-in { position: fixed; left: 0; right: 0; top: 38%; z-index: 4000; pointer-events: none; text-align: center; padding: 14px 16px; font-size: 22px; font-weight: 800; color: #ffffff; background: rgba(31,41,55,0.92); box-shadow: 0 8px 22px rgba(15,23,42,0.25); animation: turn-cut-in 1100ms ease both; }
+  .turn-cut-in.red { background: rgba(232,71,74,0.95); }
+  .turn-cut-in.yellow { background: rgba(242,183,5,0.95); color: #1f2937; }
+  .turn-cut-in.blue { background: rgba(10,132,208,0.95); }
+  @keyframes turn-cut-in { 0% { opacity: 0; transform: translateX(-24px); } 14% { opacity: 1; transform: translateX(0); } 78% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(16px); } }
+  @media (prefers-reduced-motion: reduce) { .turn-cut-in { animation: none; opacity: 1; } }
+  @keyframes market-end-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-4px) rotate(-5deg); } 75% { transform: translateX(4px) rotate(5deg); } }
 </style>
   <!-- Google Analytics (GA4) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12639,8 +12645,23 @@
       }, 360);
     }
 
+    // 手番が変わるときに「〇〇のターン」を一瞬出す（操作はさえぎらない）
+    function showTurnCutIn(player) {
+      if (!player || !state.started || state.over) { return; }
+      const old = document.getElementById("turnCutIn");
+      if (old) { old.remove(); }
+      const el = document.createElement("div");
+      el.id = "turnCutIn";
+      el.className = "turn-cut-in " + (player.color || "");
+      el.setAttribute("aria-live", "polite");
+      el.textContent = player.name + "のターン";
+      document.body.appendChild(el);
+      setTimeout(function () { el.remove(); }, 1100);
+    }
+
     function beginTurn() {
       const player = currentPlayer();
+      showTurnCutIn(player);
       state.selectedHandIndex = null;
       state.selectedRotation = 0;
       state.discardPending = 0;
@@ -21143,7 +21164,8 @@
           rankById[entry.player.id] = entry.rank;
           return entry.player;
         });
-      } else if (isScoreRank || isSurvivalRank) {
+      } else if ((isScoreRank || isSurvivalRank) && !isPopjamScoreMode()) {
+        // ポップジャム得点モードは順位で入れ替えず、プレイヤーの並び（1・2・3番）のまま表示する
         const ranking = computeScoreRanking();
         order = ranking.map(function (entry) {
           rankById[entry.player.id] = entry.rank;

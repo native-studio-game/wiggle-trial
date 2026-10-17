@@ -26083,7 +26083,8 @@
   };
   var setups = {};
   Object.keys(DEFAULTS).forEach(function (mode) {
-    setups[mode] = DEFAULTS[mode].map(function (c) { return { color: c, name: "", cpu: false }; });
+    // 初期設定: 1人目だけがプレイヤー、残りはCPU。名前は入力せず、色と種類で決める
+    setups[mode] = DEFAULTS[mode].map(function (c, i) { return { color: c, name: "", cpu: i > 0 }; });
   });
   window.wiggleTitlePlayers = setups;
   var box = document.getElementById("titlePlayers");
@@ -26153,19 +26154,6 @@
       colorCol.appendChild(swatches);
       row.appendChild(colorCol);
 
-      // 名前: 色は表示しない。空欄なら後で決まる名前になる
-      var nameCol = document.createElement("div");
-      nameCol.className = "title-player-name-col";
-      var input = document.createElement("input");
-      input.type = "text";
-      input.className = "title-player-name";
-      input.maxLength = 8;
-      input.placeholder = "名前";
-      input.value = slot.name;
-      input.setAttribute("aria-label", "プレイヤー" + (i + 1) + "の名前");
-      input.addEventListener("input", function () { slot.name = input.value; });
-      nameCol.appendChild(input);
-      row.appendChild(nameCol);
 
       box.appendChild(row);
     });

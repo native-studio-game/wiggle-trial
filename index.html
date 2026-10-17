@@ -10524,6 +10524,9 @@
   /* スマホの画面では、ブラウザのスクロール・拡大（ピンチ・ダブルタップ）を止める。盤面や得点のスワイプは回転に使う。
      手札・共有札・山札は、横スクロールやタップのためにブラウザの横方向の操作を残す */
   body.view-mobile { overscroll-behavior: none; overflow-y: auto; }
+  /* スマホのプレイ中は、長押しや2回タップで文字が選択されたり、長押しメニューが出ないようにする（入力欄は除く） */
+  body.view-mobile { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  body.view-mobile input, body.view-mobile textarea { -webkit-user-select: text; user-select: text; }
   body.view-mobile .layout { touch-action: pan-y; }
   body.view-mobile #handRow, body.view-mobile #handPanel, body.view-mobile #deckPanel, body.view-mobile #sharedMarket { touch-action: none; }
   /* タイトル画面：ゲーム選択のカード（画像・名前・情報を左右に切り替え）。タイトルの文字は Noto Serif JP Bold */

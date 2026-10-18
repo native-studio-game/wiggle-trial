@@ -21702,22 +21702,43 @@
     var guideActive = false;
     // ガイドの文面はモードごとに持つ（クラシックはハテナタイルの説明を省く）
     var GUIDE_STEPS_POPJAM = [
-      { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return document.getElementById("handRow"); } },
+      { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return guideHandTarget(); } },
       { text: "色をつなげてタイルを置こう！\n光ったマスを２回タップするとタイルを置ける", target: function () { return guideBoardTarget(); } },
       { text: "色を白い線で囲むと、その色のプレイヤーの得点となるよ！", target: function () { return guideBoardTarget(); } },
-      { text: "周りにあるのはハテナタイル。不思議な力で、いろんな効果が起こるよ。隣にタイルを置くと発動するよ！", target: null },
+      { text: "周りにあるのはハテナタイル。不思議な力で、いろんな効果が起こるよ。隣にタイルを置くと発動するよ！", target: function () { return document.getElementById("board"); } },
       { text: "合計得点が多いプレイヤーの勝利となる\n配置の工夫やハテナタイルを上手に使って高得点を目指そう！", target: null }
     ];
     var GUIDE_STEPS_CLASSIC = [
-      { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return document.getElementById("handRow"); } },
+      { text: "まずは下から タイルを1枚えらぼう！\n選んだタイルは、スワイプで回転するよ", target: function () { return guideHandTarget(); } },
       { text: "色をつなげてタイルを置こう！\n光ったマスを２回タップするとタイルを置ける", target: function () { return guideBoardTarget(); } },
       { text: "色を白い線で囲むと、その色のプレイヤーの得点となるよ！", target: function () { return guideBoardTarget(); } },
       { text: "合計得点が多いプレイヤーの勝利となる\n5×5の範囲の中に好きなように置いてみよう！", target: null }
     ];
     var guideSteps = GUIDE_STEPS_POPJAM;
     function guideBoardTarget() {
-      // クラシックは盤面が動的なのでビューポートを囲む
-      return isClassicSharedMode() ? document.getElementById("blViewport") : document.getElementById("board");
+      // クラシックは盤面が動的なのでビューポートを囲む。ポップジャムは周りのハテナタイルを除いた5×5のマスだけを囲む
+      if (isClassicSharedMode()) { return document.getElementById("blViewport"); }
+      var board = document.getElementById("board");
+      var cells = board ? board.querySelectorAll(".cell") : [];
+      return cells.length ? Array.prototype.slice.call(cells) : board;
+    }
+    function guideHandTarget() {
+      // 山札は除いて、えらぶタイルの並びだけを囲む
+      return document.getElementById("handPanel") || document.getElementById("handRow");
+    }
+    // 要素（または要素の並び）を囲む四角を返す。見えていなければ null
+    function guideTargetRect(tgt) {
+      var list = Array.isArray(tgt) ? tgt : [tgt];
+      var box = null;
+      list.forEach(function (el) {
+        if (!el || !el.getBoundingClientRect) { return; }
+        var r = el.getBoundingClientRect();
+        if (r.width <= 0 || r.height <= 0) { return; }
+        if (!box) { box = { left: r.left, top: r.top, right: r.right, bottom: r.bottom }; return; }
+        box.left = Math.min(box.left, r.left); box.top = Math.min(box.top, r.top);
+        box.right = Math.max(box.right, r.right); box.bottom = Math.max(box.bottom, r.bottom);
+      });
+      return box;
     }
     function guideEl(id) { return document.getElementById(id); }
     function positionGuide() {
@@ -21729,26 +21750,35 @@
       var step = guideSteps[guideIndex];
       var tgt = step && step.target ? step.target() : null;
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      if (tgt) {
+      var vw = window.innerWidth || document.documentElement.clientWidth;
+      var r = tgt ? guideTargetRect(tgt) : null;
+      if (r) {
         overlay.classList.remove("guide-no-target");
-        var r = tgt.getBoundingClientRect();
         var pad = 6;
-        spot.style.left = (r.left - pad) + "px";
-        spot.style.top = (r.top - pad) + "px";
-        spot.style.width = (r.width + pad * 2) + "px";
-        spot.style.height = (r.height + pad * 2) + "px";
-        var centerY = r.top + r.height / 2;
-        if (centerY > vh / 2) {
-          bubble.style.top = "16px";
-          bubble.style.bottom = "auto";
-        } else {
+        var edge = 4;
+        // 画面の外にはみ出さないように、囲む枠を画面の内側におさめる
+        var left = Math.max(edge, r.left - pad);
+        var top = Math.max(edge, r.top - pad);
+        var right = Math.min(vw - edge, r.right + pad);
+        var bottom = Math.min(vh - edge, r.bottom + pad);
+        spot.style.left = left + "px";
+        spot.style.top = top + "px";
+        spot.style.width = Math.max(0, right - left) + "px";
+        spot.style.height = Math.max(0, bottom - top) + "px";
+        bubble.style.transform = "translateX(-50%)";
+        // 吹き出しは、囲んだ場所の上と下で広く空いている側に置く
+        if (top > vh - bottom) {
           bubble.style.top = "auto";
-          bubble.style.bottom = "16px";
+          bubble.style.bottom = Math.max(16, vh - top + 12) + "px";
+        } else {
+          bubble.style.top = Math.min(vh - 16 - bubble.offsetHeight, bottom + 12) + "px";
+          bubble.style.bottom = "auto";
         }
       } else {
         overlay.classList.add("guide-no-target");
         bubble.style.top = "50%";
         bubble.style.bottom = "auto";
+        bubble.style.transform = "translate(-50%, -50%)";
       }
     }
     function renderGuideStep() {
@@ -21761,6 +21791,9 @@
       if (progressEl) { progressEl.textContent = (guideIndex + 1) + " / " + guideSteps.length; }
       if (nextEl) { nextEl.textContent = (guideIndex === guideSteps.length - 1) ? "はじめる" : "次へ"; }
       positionGuide();
+      // 画面の大きさが落ち着いてからもう一度合わせる（開始直後のカットインやアドレスバーの出入りでずれるため）
+      setTimeout(positionGuide, 250);
+      setTimeout(positionGuide, 700);
     }
     function startGuide() {
       var overlay = guideEl("guideOverlay");
@@ -21772,6 +21805,7 @@
       renderGuideStep();
       window.addEventListener("resize", positionGuide);
       window.addEventListener("scroll", positionGuide, true);
+      if (window.visualViewport) { window.visualViewport.addEventListener("resize", positionGuide); }
     }
     function nextGuideStep() {
       guideIndex += 1;
@@ -21784,6 +21818,7 @@
       if (overlay) { overlay.hidden = true; }
       window.removeEventListener("resize", positionGuide);
       window.removeEventListener("scroll", positionGuide, true);
+      if (window.visualViewport) { window.visualViewport.removeEventListener("resize", positionGuide); }
       try { window.localStorage.setItem(guideSeenKey(), "1"); } catch (e) {}
     }
     function guideApplicable() {

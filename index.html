@@ -10892,7 +10892,6 @@
         </label>
       </div>
       <div class="settings-actions">
-        <button type="button" id="settingsGoalButton">目標・説明を見る</button>
         <button type="button" id="settingsResetButton">リセット</button>
         <button type="button" id="settingsBackToTitleButton">モード選択に戻る</button>
       </div>
@@ -21885,10 +21884,6 @@
     }
     document.getElementById("guideCornerButton").addEventListener("click", function () {
       startGuide();
-    });
-    document.getElementById("settingsGoalButton").addEventListener("click", function () {
-      closeSettingsDialog(false);
-      openGoalDialog();
     });
     document.getElementById("settingsResetButton").addEventListener("click", function () {
       closeSettingsDialog(false);
